@@ -13,6 +13,8 @@ related_code:
 ---
 # Quickstart
 
+> **Just want to see it?** Visit **[price.games](https://price.games)** — the live version is free to play and needs no account. Come back here when you want to run it yourself.
+
 A linear path from `git clone` to a working local dev server. If you just want the system overview, read [`ARCHITECTURE.md`](./ARCHITECTURE.md) instead.
 
 ## Prerequisites
