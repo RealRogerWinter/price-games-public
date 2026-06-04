@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: infra
 audience: operator
 category: operations
-summary: Using the /admin dashboard: products, rewards, banners, content pages, ghost users, 2FA.
+summary: "Using the /admin dashboard: products, rewards, banners, content pages, ghost users, 2FA."
 related_code:
   - apps/web/src/pages/admin
   - apps/server/src/routes

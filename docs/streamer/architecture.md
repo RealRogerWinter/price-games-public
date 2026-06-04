@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: The runner loop: lifecycle → driver → observer → strategy → enact → outcome → narrator → mood.
+summary: "The runner loop: lifecycle → driver → observer → strategy → enact → outcome → narrator → mood."
 related_code:
   - packages/bot-streamer/src/runner
   - packages/bot-streamer/src/lifecycle

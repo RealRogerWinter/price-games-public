@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: game-design
-summary: Inviting friends to a lobby: links, QR codes, and the reward economy.
+summary: "Inviting friends to a lobby: links, QR codes, and the reward economy."
 related_code:
   - apps/server/src/routes
   - apps/server/src/socket

@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: game-design
-summary: Quickplay matchmaking: auto-spawned lobbies, bot disguise, fill-up logic.
+summary: "Quickplay matchmaking: auto-spawned lobbies, bot disguise, fill-up logic."
 related_code:
   - apps/server/src/socket
   - apps/server/src/routes

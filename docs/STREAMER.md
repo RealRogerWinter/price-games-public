@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: operator
 category: streamer
-summary: Ops runbook: deployment, day-to-day operations, persona swaps, music updates, monitoring.
+summary: "Ops runbook: deployment, day-to-day operations, persona swaps, music updates, monitoring."
 related_code:
   - packages/bot-streamer
   - infra/streamer

@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: architecture
-summary: The big picture: how the server, client, shared package, extension, and streamer bot fit together.
+summary: "The big picture: how the server, client, shared package, extension, and streamer bot fit together."
 related_code:
   - apps
   - packages

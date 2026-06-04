@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: meta
-summary: How the docs are tracked — frontmatter schema, the generated index, and the docs:check linter.
+summary: "How the docs are tracked — frontmatter schema, the generated index, and the docs:check linter."
 related_code:
   - scripts/check-docs.mjs
 ---
@@ -39,7 +39,7 @@ last_reviewed: 2026-06-03 # YYYY-MM-DD — bump when you verify the doc vs the c
 owner: core               # owning area, NOT a person: core | infra | growth | streamer | web
 audience: contributor     # contributor | operator | user | all
 category: api             # drives the index grouping (see below)
-summary: All REST endpoints — public, authenticated, and admin.
+summary: "All REST endpoints — public, authenticated, and admin."
 related_code:             # paths/dirs this doc describes; used for staleness checks
   - apps/server/src/routes/
   - packages/shared/src/

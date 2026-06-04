@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: infra
 audience: operator
 category: operations
-summary: Running in production: Docker, Caddy, CI/CD, env vars.
+summary: "Running in production: Docker, Caddy, CI/CD, env vars."
 related_code:
   - Dockerfile
   - docker-compose.prod.yml

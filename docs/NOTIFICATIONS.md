@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: features
-summary: Web-push: VAPID, urgency, badge format, Chrome quirks.
+summary: "Web-push: VAPID, urgency, badge format, Chrome quirks."
 related_code:
   - apps/server/src/routes
   - apps/web/src
