@@ -1,0 +1,1306 @@
+/*
+ * Broadcast-mode glass-overlay layout.
+ *
+ * Activated by `body.broadcast` (set by BroadcastShell when ?broadcast=1).
+ * The shell renders panels ON TOP of the full-bleed 1920×1080 game canvas
+ * — game pixels are never scaled; panels float on alpha glass over the
+ * letterbox margins the game UI naturally leaves on the sides.
+ *
+ * `pointer-events: none` on `.broadcast-shell` ensures panels never
+ * intercept clicks intended for the game. Phase B's MotionEngine + aim
+ * reticle need unmodified mouse routing.
+ *
+ * No `backdrop-filter` for v1 — Xvfb has no GPU acceleration and blur
+ * falls back to software, hurting encoder CPU. Solid alpha glass
+ * (rgba(11,14,20,0.78)) reads cleanly at 1080p H.264.
+ */
+
+body.broadcast {
+  /* Hide scroll artifacts from the streamed frame. The price.games
+   * pages already manage their own scrolling, so clipping the body
+   * just removes the capture-time scrollbar on overflow. */
+  overflow: hidden;
+}
+
+/* Hide the OS cursor on the broadcast page. The streamer renders a
+ * DOM cursor (FAKE_CURSOR_INIT_SCRIPT in packages/bot-streamer) that
+ * follows synthetic CDP mouse events, but the host browser also
+ * paints its native cursor — without this rule both render and
+ * viewers see two pointers. */
+body.broadcast,
+body.broadcast * {
+  cursor: none !important;
+}
+
+body.broadcast .top-bar,
+body.broadcast .site-footer,
+body.broadcast .promo-banner,
+body.broadcast .rejoin-banner,
+body.broadcast .cookie-banner,
+body.broadcast .cookie-modal-overlay,
+body.broadcast .notif-prompt-overlay,
+body.broadcast .ios-install-overlay {
+  display: none !important;
+}
+
+/* ---- Glass-overlay shell ---------------------------------------- */
+
+.broadcast-shell {
+  position: fixed;
+  inset: 0;
+  /* Stream-safety pad: Twitch's mobile clients sometimes overlay
+   * platform UI in the bottom-left. Panels stay 16px from edges so
+   * nothing important sits flush against the safe-area boundary. */
+  padding: 0;
+  pointer-events: none;
+  z-index: 9000; /* Above game UI, below the bot's injected cursor (z=2147483647). */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #f5f7fa;
+}
+
+.broadcast-shell > * {
+  /* Re-enable pointer events inside panels — useful for future
+   * per-panel interactions (e.g. a debug-only "click to refresh"
+   * button on the BotCard). Game-area clicks still pass through
+   * because the shell's outer div is `pointer-events: none` and
+   * panels occupy only the edges. */
+  pointer-events: auto;
+}
+
+.broadcast-panel {
+  position: absolute;
+  background: rgba(11, 14, 20, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ---- HeaderBar (top-left brand block, NOT a full-width bar) ------ */
+
+/* Compact top-left block. No background bar across the screen — the
+ * old full-width header occluded the centred game canvas at common
+ * viewports. This sits inside the same 280px column as the bot card
+ * stack so the left rail reads as one branded surface. */
+.broadcast-header {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px 16px;
+  background: rgba(11, 14, 20, 0.78);
+  border: 1px solid rgba(15, 191, 164, 0.28);
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  z-index: 9100;
+}
+
+.broadcast-header-logo-img {
+  width: 100%;
+  height: auto;
+  max-height: 78px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
+
+.broadcast-header-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #0fbfa4;
+  text-transform: uppercase;
+}
+
+.broadcast-header-cta {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(245, 247, 250, 0.78);
+  letter-spacing: 0.02em;
+}
+
+.broadcast-header-cta-url {
+  color: #f5f7fa;
+  font-weight: 800;
+}
+
+/* ---- GiveawayBanner (top-right brand block, mirrors HeaderBar) --- */
+
+/* Top-right glass block promoting the $50 Amazon gift-card giveaway.
+ * Mirrors `.broadcast-header` so the stage reads as a balanced
+ * two-block top edge. Shares the same width (280px) as the HeaderBar
+ * AND the right-side chat rail beneath it — viewers see one stacked
+ * column on the right, just as the brand+rail stack works on the
+ * left. The right rail's `top` is bumped down to clear this block. */
+.broadcast-giveaway {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 280px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(11, 14, 20, 0.78);
+  border: 1px solid rgba(15, 191, 164, 0.28);
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  z-index: 9100;
+  box-sizing: border-box;
+}
+
+.broadcast-giveaway-icon {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
+
+.broadcast-giveaway-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.broadcast-giveaway-tag {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f5b041;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+.broadcast-giveaway-cta {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(245, 247, 250, 0.78);
+  letter-spacing: 0.02em;
+}
+
+.broadcast-giveaway-cta-url {
+  color: #f5f7fa;
+  font-weight: 800;
+}
+
+/* ---- Avatar (animated streamer mascot, top of left rail) -------- */
+
+/*
+ * Pricey, the streamer-bot piggy-bank mascot. Path A revamp: a
+ * single body sprite (selected by mood) with an SVG mouth overlay
+ * drawn on top. The overlay's `transform: scaleY(--mouth-aperture)`
+ * is updated continuously from a smoothed RMS amplitude envelope —
+ * see `Avatar.tsx`. No more discrete sprite swaps; the mouth opens
+ * and closes with the audio rhythm.
+ */
+
+.broadcast-avatar {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45));
+  /* Idle breathing bob — a tiny vertical drift so the avatar never
+   * looks frozen between lines. */
+  animation: avatar-breathe 4.2s ease-in-out infinite;
+}
+
+.broadcast-avatar-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Horizontal flip: Pricey faces right (toward the speech bubble that
+   * emanates from the avatar's mouth into the game canvas). Applied
+   * per-frame rather than on the parent so the parent's breathing
+   * `translateY` stays in its own transform stack. All three frames
+   * (body + mid + wide overlays) flip together so the mouth overlays
+   * stay aligned to the body's painted mouth. */
+  transform: scaleX(-1);
+  pointer-events: none;
+  /* Mouth-state swaps are discrete (closed/mid/wide), not
+   * continuous; this transition smooths the discrete opacity flip
+   * (0↔1) into a quick morph so each shape change reads as a
+   * mouth movement rather than a hard cut. 50ms is short enough
+   * that fast syllables (e.g. "Wow!" / "Yes!") don't lag the
+   * audio, but long enough to mask the bitmap edges of the
+   * underlying overlay. The closed body sprite stays pinned at
+   * opacity 1 (see Avatar.applyAperture) so this transition only
+   * animates the mid/wide overlays cross-fading on top — no
+   * background flash mid-transition. */
+  transition: opacity 50ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .broadcast-avatar-frame {
+    transition: none;
+  }
+}
+
+@keyframes avatar-breathe {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .broadcast-avatar {
+    animation: none;
+  }
+}
+
+/* ---- Left side panel (Avatar + Pricey's brain) -------------------- */
+
+.broadcast-panel-left {
+  /* Hand-tuned to clear the top-left HeaderBar block (top:16px, the
+   * 280px-wide column above this one, height auto). 200px is loose
+   * enough to absorb a stretched logo aspect or a wrapped CTA — if
+   * the block grows substantially, raise this.
+   *
+   * Width bumped from 280→340px after BotCard + RecentRounds were
+   * removed; the NN visualiser ("Pricey's brain") wants horizontal
+   * room for its 480×270-native canvases. */
+  top: 200px;
+  bottom: 58px; /* 1080 - 1036 + 14px gap from 44px-tall footer = 58px */
+  left: 16px;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 12px;
+}
+
+/* ---- MoodWheel (viewer-facing mood indicator) -------------------- */
+
+/*
+ * Circular mood wheel: a smooth warm→cool spectrum ring around a
+ * dominant central hub readout, with a clear slider-style indicator
+ * that rotates along the rim as Pricey's mood transitions.
+ *
+ * Layer order (bottom → top):
+ *   1. Conic-gradient ring backdrop (HTML div, masked to an annulus).
+ *   2. SVG sector hit-regions (transparent), wrap divider, rim text
+ *      labels, and the indicator (arrow + slider thumb).
+ *   3. Hub overlay: emoji + label + caret + optional streak pill.
+ *
+ * The active mood drives `--mood-color`, which tints the panel
+ * border, glow, hub label, indicator arrow, and streak pill so the
+ * panel reads as a unified colour identity at any moment.
+ */
+.broadcast-mood-wheel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 4px 8px;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.55) 70%, rgba(15, 23, 42, 0.5) 100%);
+  border: 1px solid var(--mood-color, rgba(255, 255, 255, 0.14));
+  border-radius: 16px;
+  box-shadow: 0 0 28px -8px var(--mood-color, transparent), inset 0 0 24px -8px rgba(0, 0, 0, 0.6);
+  transition: border-color 320ms ease-out, box-shadow 320ms ease-out;
+}
+
+.broadcast-mood-wheel[data-cold-start="true"] {
+  opacity: 0.78;
+  filter: saturate(0.55);
+}
+
+/* Smooth conic-gradient ring backdrop. Sized to match the SVG's
+ * wheel diameter (170px) and centred in the panel. The radial-
+ * gradient mask carves the rim band: rim outer radius 85, inner 67,
+ * leaving 18px of visible coloured band. */
+.broadcast-mood-wheel-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 170px;
+  height: 170px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  -webkit-mask: radial-gradient(circle at center, transparent 66px, black 68px, black 84px, transparent 86px);
+          mask: radial-gradient(circle at center, transparent 66px, black 68px, black 84px, transparent 86px);
+  /* Slight inner shadow + outer rim of darkness via a second masked
+   * gradient layer would be ideal but adds complexity; for now we
+   * lean on the indicator's drop-shadow + the panel border for
+   * definition. */
+  transition: filter 320ms ease-out;
+  pointer-events: none;
+}
+
+.broadcast-mood-wheel[data-cold-start="true"] .broadcast-mood-wheel-ring {
+  filter: saturate(0.5) brightness(0.85);
+}
+
+.broadcast-mood-wheel-svg {
+  position: relative;
+  display: block;
+  overflow: visible;
+}
+
+/* Sector hit-regions are transparent — the conic ring carries the
+ * colour. We keep them in the DOM for `data-state` styling hooks
+ * (future hover/selection affordances) and for component testing. */
+.broadcast-mood-wheel-sector {
+  pointer-events: none;
+}
+
+/* Rim text labels — short uppercase mood names placed at each
+ * sector midline just outside the rim. All labels are
+ * center-anchored so the wheel reads as evenly subdivided around
+ * its circumference; the active label brightens and bumps a
+ * fraction larger so the eye still finds it without pulling away
+ * from the hub readout. */
+.broadcast-mood-wheel-rim-label {
+  font-family: system-ui, sans-serif;
+  font-weight: 600;
+  /* 8.5px is the smallest size that survives a 6 Mbps H.264
+   * encode without the strokes blurring into the rim. Anything
+   * smaller looks like a smudge after Twitch's transcode. */
+  font-size: 8.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  fill: rgba(226, 232, 240, 0.72);
+  paint-order: stroke;
+  stroke: rgba(15, 23, 42, 0.92);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+  user-select: none;
+  transition: fill 320ms ease-out, font-size 320ms ease-out, opacity 320ms ease-out;
+}
+.broadcast-mood-wheel-rim-label[data-state="dim"] { opacity: 0.6; }
+.broadcast-mood-wheel-rim-label[data-state="adjacent"] {
+  opacity: 0.9;
+  fill: rgba(241, 245, 249, 0.95);
+}
+.broadcast-mood-wheel-rim-label[data-state="active"] {
+  opacity: 1;
+  fill: #f8fafc;
+  font-size: 10px;
+  font-weight: 700;
+  filter: drop-shadow(0 0 4px var(--mood-color, transparent));
+}
+
+/* Sector-boundary ticks: thin radial hairlines at every 45° offset.
+ * Subdivide the smooth gradient ring into eight equal slots so the
+ * eye reads "evenly divided wheel" without breaking the colour
+ * blend. */
+.broadcast-mood-wheel-tick {
+  stroke: rgba(15, 23, 42, 0.45);
+  stroke-width: 1px;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+/* Indicator group rotates around the wheel centre. The wrapping <g>
+ * sits at the SVG centre; the inline transform: rotate() drives
+ * cumulative angle, CSS interpolates. */
+.broadcast-mood-wheel-indicator {
+  transform-origin: 0 0;
+  filter: drop-shadow(0 0 8px var(--mood-color, transparent));
+}
+
+/* Slider thumb gets its own subtle glow so it pops off the rim. */
+.broadcast-mood-wheel-indicator-thumb {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
+}
+
+/* Hub: absolutely positioned in the centre of the panel, above the
+ * SVG. Vertical stack: emoji, label, direction caret, optional
+ * streak pill. Sized to fit comfortably inside the inner-rim hole. */
+.broadcast-mood-wheel-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 108px;
+  height: 108px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.broadcast-mood-wheel-emoji {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.65));
+}
+
+.broadcast-mood-wheel-label {
+  margin: 0;
+  font: 700 12.5px/1.1 system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  /* Lift the active mood's hue: brighten the dark anchor with a
+   * lightness boost via color-mix so the hub label reads bright
+   * against the dark glass even when the mood colour is a deep
+   * 800-tier shade. Falls back to the mood colour directly on
+   * older browsers. */
+  color: color-mix(in srgb, var(--mood-color, #f8fafc) 65%, #f8fafc);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85), 0 0 8px rgba(0, 0, 0, 0.5);
+}
+@supports not (color: color-mix(in srgb, white, black)) {
+  .broadcast-mood-wheel-label { color: var(--mood-color, #f8fafc); }
+}
+
+.broadcast-mood-wheel-direction {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  font: 500 9.5px/1 system-ui, sans-serif;
+  color: rgba(226, 232, 240, 0.82);
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+.broadcast-mood-wheel-direction-caret {
+  font-weight: 700;
+  color: color-mix(in srgb, var(--mood-color, #e2e8f0) 60%, #f8fafc);
+}
+
+.broadcast-mood-wheel-streak {
+  margin-top: 2px;
+  padding: 1.5px 7px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid color-mix(in srgb, var(--mood-color, #94a3b8) 70%, #f8fafc 30%);
+  font: 700 9px/1 system-ui, sans-serif;
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--mood-color, #e2e8f0) 50%, #f8fafc);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Idle ambience — a very slow hub breathing so the panel doesn't
+ * read as "frozen overlay" between updates. Gated below by
+ * prefers-reduced-motion. */
+@keyframes broadcast-mood-wheel-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.02); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .broadcast-mood-wheel:not([data-cold-start="true"]) .broadcast-mood-wheel-hub {
+    animation: broadcast-mood-wheel-breathe 4.2s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .broadcast-mood-wheel,
+  .broadcast-mood-wheel-ring,
+  .broadcast-mood-wheel-rim-label,
+  .broadcast-mood-wheel-indicator {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* "Pricey's brain" — wraps the NN visualisation stack with a
+ * labelled header so viewers know what the panels show. */
+.broadcast-brain {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.broadcast-brain-title {
+  margin: 0;
+  font: 600 13px/1.2 system-ui, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ---- Recent rounds list ------------------------------------------ */
+
+.broadcast-recent-rounds {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-height: 0; /* allow overflow */
+}
+
+.broadcast-recent-rounds-title,
+.broadcast-chat-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(245, 247, 250, 0.5);
+  text-transform: uppercase;
+  margin: 6px 4px 4px;
+}
+
+/* Chat title sized larger than the recent-rounds title (which uses the
+ * same shared base above) so it stays proportionate to the bumped 17px
+ * message rows. */
+.broadcast-chat-title {
+  font-size: 13px;
+}
+
+.broadcast-recent-rounds-empty {
+  font-size: 13px;
+  color: rgba(245, 247, 250, 0.4);
+  margin: 0 4px;
+  font-style: italic;
+}
+
+/* Chat empty placeholder uses the same italic treatment as recent-rounds
+ * but at the bumped 16px so it pairs with the larger message rows. */
+.broadcast-chat-empty {
+  font-size: 16px;
+  color: rgba(245, 247, 250, 0.4);
+  margin: 0 4px;
+  font-style: italic;
+}
+
+.broadcast-recent-rounds-list,
+.broadcast-chat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  /* Hide scrollbar — auto-scroll keeps the latest message at the
+   * bottom of the visible viewport, so the bar conveys no useful
+   * positional info and just clutters the panel chrome. */
+  scrollbar-width: none;
+}
+.broadcast-recent-rounds-list::-webkit-scrollbar,
+.broadcast-chat-list::-webkit-scrollbar {
+  display: none;
+}
+
+.broadcast-recent-round {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.broadcast-recent-round-glyph {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.broadcast-recent-round.outcome-correct .broadcast-recent-round-glyph {
+  color: #0fbfa4;
+}
+
+.broadcast-recent-round.outcome-incorrect .broadcast-recent-round-glyph {
+  color: #ff5f56;
+}
+
+.broadcast-recent-round.outcome-partial .broadcast-recent-round-glyph {
+  color: #f5b041;
+}
+
+.broadcast-recent-round-mode {
+  color: rgba(245, 247, 250, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.broadcast-recent-round-points {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: rgba(245, 247, 250, 0.75);
+}
+
+/* ---- Right side panel (Chat) ------------------------------------- */
+
+.broadcast-panel-right {
+  /* Top tuned to clear the GiveawayBanner above (top:16, ~84px tall,
+   * + 16px gap). If the banner content grows, raise this in lockstep. */
+  top: 116px;
+  /* Bottom keys off the NeuralDebugHud's reserved vertical strip
+   * (--broadcast-debug-hud-bottom + max-height + gap) so the chat
+   * never overlaps the bottom-right HUD. When the debug panel is
+   * gated off via `?panels=` the strip is still reserved — the gap
+   * just becomes empty space, which is preferable to the chat
+   * snapping back over a HUD that's about to be re-enabled. */
+  bottom: calc(
+    var(--broadcast-debug-hud-bottom)
+    + var(--broadcast-debug-hud-max-height)
+    + var(--broadcast-debug-hud-gap)
+  );
+  right: 16px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  border-radius: 12px;
+}
+
+.broadcast-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.broadcast-chat-list {
+  /* Bottom-aligned auto-scroll: the latest messages stay flush with
+   * the panel bottom (matches a streamer chat overlay convention). */
+  margin-top: auto;
+}
+
+/* Chat message rows. Font-size bumped from 13→17px so messages are
+ * legible from a couch viewing distance on a streamed 1080p frame.
+ * The trade-off is fewer visible messages in the rail — that's
+ * intentional; the auto-scroll already keeps the latest pinned and
+ * a wall of unreadable 13px text was worse than a shorter readable
+ * tail. The platform badge and gap scale with the row so the grid
+ * stays vertically aligned. */
+.broadcast-chat-message {
+  display: grid;
+  grid-template-columns: 28px auto 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 6px;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.broadcast-chat-platform {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(245, 247, 250, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 2px 5px;
+  text-align: center;
+}
+
+.broadcast-chat-user {
+  font-weight: 700;
+  color: #0fbfa4;
+}
+
+.broadcast-chat-text {
+  color: rgba(245, 247, 250, 0.92);
+  word-break: break-word;
+}
+
+/* ---- Footer (MusicTicker) ---------------------------------------- */
+
+/* 44px gives the music line room to breathe without stealing
+ * vertical space from the centred game canvas. */
+.broadcast-panel-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  background: linear-gradient(0deg, rgba(11, 14, 20, 0.92) 0%, rgba(11, 14, 20, 0.65) 100%);
+  border-top: 1px solid rgba(15, 191, 164, 0.35);
+  font-size: 14px;
+}
+
+.broadcast-music-ticker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+}
+
+.broadcast-music-icon {
+  color: #0fbfa4;
+  font-size: 20px;
+}
+
+.broadcast-music-now strong {
+  color: #f5f7fa;
+}
+
+.broadcast-music-artist,
+.broadcast-music-album {
+  color: rgba(245, 247, 250, 0.65);
+}
+
+.broadcast-music-idle {
+  color: rgba(245, 247, 250, 0.35);
+  font-style: italic;
+}
+
+/* ---- ThoughtBubble — compact glass tooltip above-right of Pricey -- */
+
+/*
+ * Pinned above-and-right of the avatar slot. Style matches the
+ * broadcast panel system (dark indigo glass + teal accent edge +
+ * off-white type) so the cue reads as part of the same UI rather
+ * than a foreign cartoon overlay. Trailing puffs descend toward
+ * Pricey's head to keep the "thought" reading.
+ */
+/*
+ * ThoughtFeed: the parent stack that anchors above-right of Pricey
+ * and grows downward as new thoughts arrive. Replaces the legacy
+ * single-bubble fixed position — individual bubbles inside become
+ * statically positioned children of the flex column.
+ */
+.broadcast-thought-feed {
+  position: fixed;
+  top: 60px;
+  left: 308px;
+  z-index: 9200;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.broadcast-thought-bubble {
+  position: relative;
+  width: 100%;
+  padding: 10px 14px 10px 36px;
+  background: rgba(11, 14, 20, 0.92);
+  color: #f5f7fa;
+  border: 1px solid rgba(15, 191, 164, 0.55);
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: pgThoughtBubbleEnter 200ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  transition: opacity 320ms ease-out;
+  opacity: 1;
+}
+
+/*
+ * Trailing puffs only descend from the BOTTOM-MOST bubble in the
+ * stack toward Pricey's head. Hiding them on every-bubble-but-the-
+ * last keeps the stack reading as one connected thought volume
+ * rather than N independent bubbles each pointing at the avatar.
+ */
+.broadcast-thought-feed .broadcast-thought-bubble:not(:last-child) .broadcast-thought-bubble-trail {
+  display: none;
+}
+
+.broadcast-thought-bubble.dimmed {
+  opacity: 0.55;
+}
+
+/*
+ * Two trailing puffs descending from the bubble's lower-left toward
+ * Pricey's head — same glass + teal-alpha border as the bubble so the
+ * trail reads as a single object.
+ */
+.broadcast-thought-bubble-trail {
+  position: absolute;
+  background: rgba(11, 14, 20, 0.92);
+  border: 1px solid rgba(15, 191, 164, 0.55);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.broadcast-thought-bubble-trail-large {
+  width: 14px;
+  height: 14px;
+  bottom: -18px;
+  left: 24px;
+}
+
+.broadcast-thought-bubble-trail-small {
+  width: 8px;
+  height: 8px;
+  bottom: -34px;
+  left: 12px;
+}
+
+.broadcast-thought-bubble-icon {
+  position: absolute;
+  top: 11px;
+  left: 12px;
+  width: 18px;
+  height: 18px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.broadcast-thought-bubble-prefix {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #0fbfa4;
+  text-transform: uppercase;
+}
+
+.broadcast-thought-bubble-text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #f5f7fa;
+  word-break: normal;
+}
+
+@keyframes pgThoughtBubbleEnter {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ---- AimReticle (B3) -------------------------------------------- */
+
+.broadcast-aim-reticle-ring {
+  fill: none;
+  stroke: rgba(15, 191, 164, 0.85);
+  stroke-width: 3;
+  stroke-dasharray: 6 6;
+  /* Contraction: starts at the ring's natural radius (1.4× target),
+   * shrinks to ~75% (which on the SVG is 1.05× target after the
+   * 1.4× wrapper sizing). 600ms ease-out matches the cursor's
+   * arrival cadence. */
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: pgAimContract 600ms ease-out forwards, pgAimPulse 1200ms ease-in-out 600ms infinite;
+  opacity: 0.85;
+}
+
+@keyframes pgAimContract {
+  from { transform: scale(1); opacity: 0.85; }
+  to   { transform: scale(0.75); opacity: 0.65; }
+}
+
+@keyframes pgAimPulse {
+  0%, 100% { opacity: 0.65; }
+  50%      { opacity: 0.45; }
+}
+
+/* ---- Subtitles — compact speech-bubble emanating from Pricey ----- */
+
+/*
+ * Glass-styled speech bubble at avatar mouth height with a leftward
+ * tail pointing back at Pricey. Palette + radii match the broadcast
+ * panel system. The ::before / ::after pair draws the tail: ::before
+ * is the 1px teal-alpha outline edge; ::after is the dark glass fill,
+ * inset 1px so the outline reads continuous along the bubble edge.
+ */
+.broadcast-subtitles {
+  position: fixed;
+  top: 296px;
+  left: 308px;
+  max-width: 420px;
+  min-width: 200px;
+  padding: 10px 16px;
+  background: rgba(11, 14, 20, 0.92);
+  color: #f5f7fa;
+  border: 1px solid rgba(15, 191, 164, 0.55);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  z-index: 9150;
+  pointer-events: none;
+  animation: pgSubtitleEnter 200ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+.broadcast-subtitles::before {
+  /* Outline tail edge (teal-alpha to match bubble border). */
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 10px solid rgba(15, 191, 164, 0.55);
+}
+
+.broadcast-subtitles::after {
+  /* Fill tail, inset by 1px so the outline reads continuous. */
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 9px solid rgba(11, 14, 20, 0.92);
+}
+
+.broadcast-subtitles-text {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #f5f7fa;
+  text-align: left;
+}
+
+@keyframes pgSubtitleEnter {
+  from { transform: scale(0.94) translateX(-8px); opacity: 0; }
+  to   { transform: scale(1) translateX(0); opacity: 1; }
+}
+
+
+/* ---- LobbyRadar (B7) -------------------------------------------- */
+
+.broadcast-lobby-radar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 36px 48px;
+  background: rgba(11, 14, 20, 0.86);
+  border: 1px solid rgba(15, 191, 164, 0.4);
+  border-radius: 18px;
+  color: #f5f7fa;
+  z-index: 9110;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  animation: pgLobbyRadarEnter 320ms ease-out both;
+}
+
+.broadcast-lobby-radar-rings {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.broadcast-lobby-radar-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(15, 191, 164, 0.45);
+  /* Each ring contracts independently to imply a sweep. */
+  animation: pgRadarRing 2400ms ease-out infinite;
+}
+
+.broadcast-lobby-radar-ring.ring-0 { width: 220px; height: 220px; animation-delay: 0ms; }
+.broadcast-lobby-radar-ring.ring-1 { width: 220px; height: 220px; animation-delay: 800ms; }
+.broadcast-lobby-radar-ring.ring-2 { width: 220px; height: 220px; animation-delay: 1600ms; }
+
+.broadcast-lobby-radar-pulse {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #0fbfa4;
+  box-shadow: 0 0 18px #0fbfa4;
+  animation: pgRadarPulse 1200ms ease-in-out infinite alternate;
+}
+
+@keyframes pgRadarRing {
+  from { transform: scale(0); opacity: 0.7; }
+  to   { transform: scale(1); opacity: 0; }
+}
+
+@keyframes pgRadarPulse {
+  from { opacity: 0.5; }
+  to   { opacity: 1; }
+}
+
+.broadcast-lobby-radar-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.broadcast-lobby-radar-status {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.broadcast-lobby-radar-meta {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  font-size: 14px;
+  color: rgba(245, 247, 250, 0.7);
+}
+
+.broadcast-lobby-radar-code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.broadcast-lobby-radar-code-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(245, 247, 250, 0.45);
+  text-transform: uppercase;
+}
+
+.broadcast-lobby-radar-code-value {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #0fbfa4;
+}
+
+.broadcast-lobby-radar-countdown strong {
+  color: #f5b041;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes pgLobbyRadarEnter {
+  from { transform: translate(-50%, -50%) scale(0.92); opacity: 0; }
+  to   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* ---- NN visualisation panel stack ------------------------------- */
+/* Lives inside the `.broadcast-brain` wrapper inside the left rail.
+ * The rail is 340px wide (312px after padding). Each panel sits in a
+ * `.broadcast-nn-card` with its own labeled header. The MLP card
+ * carries `data-dominant="1"` and gets `flex: 1 1 auto` so it absorbs
+ * leftover vertical space and reads as the focal element; the three
+ * other cards are `flex: 0 0 auto` and size to their own content.
+ * Stack-level `overflow: hidden` is the safety net — if total height
+ * exceeds the rail, the bottom of the last card clips, never scrolls. */
+.broadcast-nn-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+  scrollbar-width: none;
+}
+.broadcast-nn-stack::-webkit-scrollbar {
+  display: none;
+}
+
+.broadcast-nn-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.broadcast-nn-card[data-dominant="1"] {
+  flex: 1 1 auto;
+  min-height: 180px;
+}
+
+.broadcast-nn-card-title {
+  margin: 0;
+  font: 600 10px/1 system-ui, sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
+}
+
+.broadcast-nn-stack canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Dominant card (NeuralNet) lets its canvas grow to fill the card's
+ * leftover height. Non-dominant card canvases still scale to fit
+ * width with aspect preserved. */
+.broadcast-nn-card[data-dominant="1"] canvas {
+  max-height: 100%;
+  width: auto;
+  max-width: 100%;
+  /* Center on the cross-axis when height-bound. */
+  margin: 0 auto;
+}
+
+/* ---- NN panel animations ----------------------------------------- */
+
+/* Tick mark slide on ConfidenceGauge — back-out style overshoot so
+ * the price guess "slams" into place. */
+.nn-panel-gauge-tick {
+  transition: left 360ms cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* Halo breathing while the bot is "thinking". Idle/result phases
+ * leave the halo static so the bar reads as decided. */
+@keyframes haloBreathe {
+  0%, 100% { transform: scaleX(1); opacity: 1; }
+  50%      { transform: scaleX(1.05); opacity: 0.85; }
+}
+.nn-panel-gauge[data-phase="thinking"] .nn-panel-gauge-halo {
+  animation: haloBreathe 1.6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Newest dot in RecentAccuracy: 360 ms entrance pop + a 1.8 s ambient
+ * pulse so the rightmost dot stays subtly alive between rounds. */
+@keyframes dotEnter {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes dotAmbient {
+  0%, 100% { box-shadow: 0 0 6px currentColor; transform: scale(1); }
+  50%      { box-shadow: 0 0 12px currentColor; transform: scale(1.08); }
+}
+.nn-panel-recent-accuracy [data-newest="1"] {
+  animation:
+    dotEnter 360ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 1,
+    dotAmbient 1.8s ease-in-out 360ms infinite;
+}
+
+@keyframes blink {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.25; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nn-panel-gauge[data-phase="thinking"] .nn-panel-gauge-halo,
+  .nn-panel-recent-accuracy [data-newest="1"],
+  .nn-panel-gauge-tick {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ---- NeuralDebugHud (bottom-right telemetry overlay) -------------
+ *
+ * Anchored bottom:60 (above the MusicTicker footer). Width is bounded
+ * to 320–380px so the chat panel above it has predictable horizontal
+ * room. Total rendered height is approximately
+ * `--broadcast-debug-hud-max-height` (220px) — the chat panel above
+ * keys its bottom offset off that constant so the two never overlap.
+ * Update both together if rows are added/removed. */
+
+:root {
+  --broadcast-debug-hud-max-height: 220px;
+  --broadcast-debug-hud-bottom: 60px;
+  --broadcast-debug-hud-gap: 14px;
+}
+
+.broadcast-debug-hud {
+  position: fixed;
+  bottom: var(--broadcast-debug-hud-bottom);
+  right: 16px;
+  z-index: 9130;
+  min-width: 320px;
+  max-width: 380px;
+  padding: 8px 12px;
+  background: rgba(8, 12, 22, 0.88);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  border-radius: 10px;
+  color: #e6ecf5;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 10px;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.broadcast-debug-hud-header {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(96, 165, 250, 0.85);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.18);
+  padding-bottom: 4px;
+}
+
+.broadcast-debug-hud-cols {
+  display: flex;
+  gap: 12px;
+}
+
+.broadcast-debug-hud-col {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.broadcast-debug-hud-col + .broadcast-debug-hud-col {
+  border-left: 1px solid rgba(96, 165, 250, 0.12);
+  padding-left: 10px;
+}
+
+.broadcast-debug-hud-col-title {
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(245, 247, 250, 0.55);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.broadcast-debug-hud-rows {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.broadcast-debug-hud-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.broadcast-debug-hud-row dt {
+  margin: 0;
+  color: rgba(245, 247, 250, 0.55);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.broadcast-debug-hud-row dd {
+  margin: 0;
+  color: #f5f7fa;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.broadcast-debug-hud-hint {
+  margin-left: 4px;
+  color: rgba(96, 165, 250, 0.65);
+  font-weight: 400;
+  font-size: 9px;
+}
+
+.broadcast-debug-hud-footer-label {
+  margin-top: 5px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(96, 165, 250, 0.12);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: rgba(245, 247, 250, 0.45);
+  text-transform: uppercase;
+}
+
+.broadcast-debug-hud-rows-footer {
+  margin-top: 3px;
+}

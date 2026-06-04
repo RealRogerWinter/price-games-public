@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Price Games — Guess the Price of Real Products</title>
+    <meta name="description" content="Play Price Games — the free multiplayer price-guessing game. 12 modes, daily challenge, real-time rooms. Guess the price of real products." />
+    <meta name="theme-color" content="#1a1a2e" />
+
+    <!-- Open Graph (Facebook, iMessage, Discord, Slack, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Price Games — Guess the Price of Real Products" />
+    <meta property="og:description" content="Play Price Games — the free multiplayer price-guessing game. 12 modes, daily challenge, real-time rooms. Guess the price of real products." />
+    <meta property="og:site_name" content="Price Games" />
+    <meta property="og:url" content="https://price.games" />
+    <meta property="og:image" content="https://price.games/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Price Games — Guess the Price of Real Products" />
+    <meta name="twitter:description" content="Play Price Games — the free multiplayer price-guessing game. 12 modes, daily challenge, real-time rooms. Guess the price of real products." />
+    <meta name="twitter:image" content="https://price.games/og-image.png" />
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Preload the LCP image so it starts downloading in parallel with the
+         JS bundle rather than waiting for React to mount. Kept unhashed at
+         /logo.webp (served from apps/web/public/) so this href is stable. -->
+    <link rel="preload" as="image" href="/logo.webp" fetchpriority="high" />
+
+    <!-- Preconnect to analytics origins so DNS + TLS is warm by the time
+         the gtag request fires. Two entries are needed because the gtag
+         <script> load is no-CORS while GA's downstream /g/collect beacons
+         may be credentialed CORS; a connection opened with one mode is
+         not reused for the other. dns-prefetch is the fallback for older UAs. -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+    <!-- Organization + WebSite structured data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://price.games/#organization",
+            "name": "price.games",
+            "url": "https://price.games",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://price.games/logo512.png",
+              "width": 512,
+              "height": 512
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://price.games/#website",
+            "url": "https://price.games",
+            "name": "price.games",
+            "description": "Play the free price guessing game. Guess real product prices.",
+            "publisher": { "@id": "https://price.games/#organization" }
+          }
+        ]
+      }
+    </script>
+
+    <!-- Google Analytics (GA4) — inline bootstrap only. External gtag.js is
+         injected dynamically by analytics.ts AFTER the user grants consent
+         (or immediately at idle if they already consented in a prior visit),
+         so first-time bouncers never pay the ~160 KB / ~800 ms cost.
+         The inline script below only sets Consent Mode v2 defaults and
+         queues the initial js + config calls in dataLayer; gtag.js
+         processes the queue when (if) it eventually loads. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: 500
+      });
+      gtag('js', new Date());
+      gtag('config', 'G-94XGMPDVCY');
+    </script>
+    <!-- Cloudflare Turnstile is injected dynamically by RegisterForm when
+         the registration UI mounts. Loading it site-wide burned ~20 KB
+         and blocked the main thread on routes that never used it. -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

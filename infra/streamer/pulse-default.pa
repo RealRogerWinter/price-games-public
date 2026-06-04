@@ -1,0 +1,13 @@
+# Pulseaudio config for the streamer container.
+# Creates one virtual sink ("broadcast") that ffmpeg captures via the
+# .monitor source. mpd and Piper both route their output here.
+
+# Load the bare-minimum modules — no auto-detection, no native protocol
+# server (we don't need network access), and no esd compatibility.
+load-module module-native-protocol-unix
+load-module module-null-sink sink_name=broadcast sink_properties=device.description="Broadcast"
+
+# Make broadcast the default so any process that doesn't explicitly
+# pick a sink (e.g. an aplay invocation without --device) still routes
+# to the encoder.
+set-default-sink broadcast

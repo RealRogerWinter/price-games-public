@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    volumes:
+      - app-data:/app/apps/server/data
+    restart: unless-stopped
+
+volumes:
+  app-data:

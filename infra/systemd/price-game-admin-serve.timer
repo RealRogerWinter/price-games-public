@@ -1,0 +1,15 @@
+[Unit]
+Description=Periodic self-heal for the Price Games admin Tailscale serve rule
+Documentation=https://github.com/OneStreamer/price-game/blob/main/docs/DEPLOYMENT.md#tailscale-admin-access
+
+[Timer]
+# First run 30 seconds after boot — tailscaled and dockerd finish initializing
+# in roughly that window on this host.
+OnBootSec=30s
+# Re-check every 5 minutes. The ensure-script is a no-op when the rule is
+# healthy, so this is effectively free.
+OnUnitActiveSec=5min
+Unit=price-game-admin-serve.service
+
+[Install]
+WantedBy=timers.target

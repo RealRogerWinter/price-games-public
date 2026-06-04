@@ -1,0 +1,182 @@
+# Caddyfile — Price Games reverse proxy
+#
+# Caddy handles TLS termination (automatic HTTPS via Let's Encrypt),
+# security headers, and reverse proxying to the Express backend.
+#
+# Usage:
+#   sudo cp Caddyfile /etc/caddy/Caddyfile
+#   sudo systemctl reload caddy
+#
+# The Express app (port 3001) serves the REST API, WebSocket (Socket.IO),
+# and static frontend files. Caddy sits in front for TLS + headers.
+
+# Global options.
+# - default_bind: bind Caddy to the public interface only so `tailscale serve`
+#   can use port 443 on the Tailscale interface for admin access.
+# - admin off: the Caddy admin API (default localhost:2019) is not used; we
+#   reload via `sudo caddy reload` from the Caddyfile. Disabling it removes
+#   a local-privilege reconfig surface.
+{
+	default_bind 5.78.150.37
+	admin off
+}
+
+# ── Shared security headers ──────────────────────────────────────────────
+# Applied to both production and sandbox vhosts so the sandbox (publicly
+# reachable via DNS, running a clone of the production DB) does not expose
+# a softer posture than production.
+#
+# CSP mirrors the Helmet config in apps/server/src/index.ts. Caddy headers
+# take precedence when Helmet also sets the same name.
+(security_headers) {
+	header {
+		Content-Security-Policy "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'sha256-U6CX+C5mLqWFha8cR5RW4tv8Vag9NuPhelaZEsAKAL0=' https://challenges.cloudflare.com https://static.cloudflareinsights.com https://www.redditstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://m.media-amazon.com https://images-na.ssl-images-amazon.com https://images-eu.ssl-images-amazon.com https://ecx.images-amazon.com https://images.amazon.com https://*.tile.openstreetmap.org https://www.google-analytics.com https://www.googletagmanager.com https://alb.reddit.com; connect-src 'self' wss: https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.google.com https://challenges.cloudflare.com https://cloudflareinsights.com https://alb.reddit.com https://events.reddit.com https://pixel-config.reddit.com; font-src 'self'; object-src 'none'; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; upgrade-insecure-requests"
+		X-Frame-Options "DENY"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		-Server
+		-X-Powered-By
+	}
+}
+
+www.price.games {
+	redir https://price.games{uri} permanent
+}
+
+price.games {
+	# Encode responses with gzip/zstd for bandwidth savings.
+	# Static assets are already small, but API JSON responses benefit.
+	encode zstd gzip
+
+	import security_headers
+
+	# Admin routes are restricted to the Tailscale network.
+	# Access the admin panel via https://<tailscale-hostname>.ts.net/admin instead.
+	handle /admin* {
+		respond 404
+	}
+	handle /api/admin* {
+		respond 404
+	}
+
+	# BREAK GLASS: Uncomment to temporarily restore public admin access.
+	# handle /admin* {
+	#     reverse_proxy localhost:3001
+	# }
+	# handle /api/admin* {
+	#     reverse_proxy localhost:3001
+	# }
+
+	# Broadcast overlay is restricted to the Tailscale network — the
+	# streamer-bot's Chromium opens https://<tailscale-hostname>.ts.net/?broadcast=1
+	# (or /play/<mode>?broadcast=1) over the tailnet. Public traffic
+	# matching `?broadcast=1` is 404'd here at the network layer; the
+	# Express server also enforces the same block (defence in depth)
+	# via apps/server/src/middleware/broadcastAccess.ts.
+	@broadcast query broadcast=1
+	handle @broadcast {
+		respond 404
+	}
+
+	# BREAK GLASS: Uncomment to temporarily restore public broadcast access
+	# (e.g. when validating a deploy from outside the tailnet).
+	# handle @broadcast {
+	#     reverse_proxy localhost:3001
+	# }
+
+	# Reverse proxy everything else to the Express backend.
+	# WebSocket upgrade is handled automatically by Caddy.
+	# Caddy passes X-Forwarded-For by default (Express trusts loopback proxy).
+	#
+	# Zero-downtime deploy buffer: during a container swap the backend is
+	# briefly unreachable. lb_try_duration makes Caddy retry the upstream
+	# for up to 15s instead of returning a 502 immediately, so HTTP
+	# requests in flight across the swap just appear slow. WebSockets
+	# still drop (TCP is pinned to the old process) but Socket.IO's
+	# client auto-reconnect lands on the new container within ~1s.
+	handle {
+		reverse_proxy localhost:3001 {
+			lb_try_duration 15s
+			lb_try_interval 250ms
+			transport http {
+				read_timeout 120s
+				write_timeout 120s
+			}
+		}
+	}
+
+	# Maintenance page: if retries still can't reach the backend
+	# (deploy taking longer than 15s, or backend genuinely down),
+	# serve a friendly 503 instead of a raw Caddy 502.
+	handle_errors {
+		@upstream_down expression `{http.error.status_code} in [502, 503, 504]`
+		handle @upstream_down {
+			header Content-Type "text/html; charset=utf-8"
+			header Cache-Control "no-store"
+			respond <<HTML
+				<!doctype html>
+				<html lang="en">
+				<head>
+					<meta charset="utf-8">
+					<meta name="viewport" content="width=device-width, initial-scale=1">
+					<title>Price Games — Be right back</title>
+					<style>
+						body { font-family: system-ui, sans-serif; background: #0f1116; color: #e6e8ef; display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 1rem; }
+						main { text-align: center; max-width: 28rem; }
+						h1 { font-size: 1.5rem; margin: 0 0 0.5rem; }
+						p { color: #a0a6b8; margin: 0.25rem 0; }
+						.dot { display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #5c8cff; margin-right: 0.4rem; animation: pulse 1.2s ease-in-out infinite; }
+						@keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+					</style>
+				</head>
+				<body>
+					<main>
+						<h1><span class="dot"></span>Redeploying</h1>
+						<p>Price Games is updating. This usually takes a few seconds.</p>
+						<p>Reload in a moment and you'll be back in the game.</p>
+					</main>
+					<script>setTimeout(() => location.reload(), 5000);</script>
+				</body>
+				</html>
+				HTML 503
+		}
+	}
+
+	# Caddy manages TLS automatically via Let's Encrypt. Floor is explicit
+	# (Caddy's own default already excludes TLS 1.0/1.1, but stating it here
+	# documents the intent and guards against default drift in future Caddy
+	# releases).
+	tls {
+		protocols tls1.2 tls1.3
+	}
+}
+
+# Sandbox environment for development testing.
+# Points to the default sandbox port (3002). Start with: npm run sandbox
+sandbox.price.games {
+	encode zstd gzip
+
+	import security_headers
+
+	# Sandbox is publicly reachable via DNS (it runs a clone of the prod
+	# DB), so it must enforce the same broadcast-overlay block as
+	# production. Operators testing the bot against sandbox should hit
+	# the tailnet hostname, same as prod.
+	@broadcast query broadcast=1
+	handle @broadcast {
+		respond 404
+	}
+
+	reverse_proxy localhost:3002 {
+		transport http {
+			read_timeout 120s
+			write_timeout 120s
+		}
+	}
+
+	tls {
+		protocols tls1.2 tls1.3
+	}
+}

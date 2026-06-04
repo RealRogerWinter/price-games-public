@@ -1,0 +1,25 @@
+[Unit]
+Description=Ensure the Price Games admin Tailscale serve rule is in place
+Documentation=https://github.com/OneStreamer/price-game/blob/main/docs/DEPLOYMENT.md#tailscale-admin-access
+# The ensure-script talks to tailscaled and expects the production backend
+# on localhost:3001. Wait for both to be up before we try to verify / repair.
+After=tailscaled.service docker.service
+Requires=tailscaled.service
+
+[Service]
+Type=oneshot
+# The ensure-script is installed to /usr/local/bin during host setup (see
+# infra/systemd/README.md). This decouples the unit from any repo checkout
+# path, so branch switches and worktree moves don't break admin self-heal.
+ExecStart=/usr/local/bin/ensure-price-game-admin-serve.sh
+# The script calls `sudo tailscale serve`. We run as root so no password
+# prompt is required inside the unit.
+User=root
+# Don't let a transient tailscaled hiccup turn into a recovery loop — the
+# paired timer will retry on its own cadence.
+SuccessExitStatus=0
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

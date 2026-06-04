@@ -1,0 +1,25 @@
+{
+  "name": "@price-game/bot-streamer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@price-game/shared": "1.0.0",
+    "better-sqlite3": "^11.6.0",
+    "playwright": "^1.49.0",
+    "tmi.js": "^1.8.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "typescript": "^5.4.0",
+    "vitest": "^4.0.18"
+  }
+}

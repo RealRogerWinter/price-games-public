@@ -1,0 +1,28 @@
+---
+name: server tests
+discover: npx vitest list --filesOnly
+run: npx vitest run --reporter=default --reporter=junit --outputFile.junit="<< outputs.junit >>" --bail 0 << test.atoms >>
+analysis: |
+  LCOV_OUTPUT="<< outputs.lcov >>"
+  VITEST_SKIP_PER_FILE_THRESHOLDS=1 npx vitest run --coverage --coverage.reporter=lcov --coverage.reportsDirectory="$(dirname "$LCOV_OUTPUT")" --coverage.thresholds.lines=0 --coverage.thresholds.branches=0 --coverage.thresholds.functions=0 --coverage.thresholds.statements=0 --silent --bail 0 << test.atoms >>
+outputs:
+  junit: test-results/junit.xml
+  lcov: coverage/lcov.info
+options:
+  test-impact-analysis: true
+  dynamic-test-splitting: true
+  max-auto-rerun: 2
+---
+name: web tests
+discover: npx vitest list --filesOnly
+run: npx vitest run --reporter=default --reporter=junit --outputFile.junit="<< outputs.junit >>" --bail 0 << test.atoms >>
+analysis: |
+  LCOV_OUTPUT="<< outputs.lcov >>"
+  VITEST_SKIP_PER_FILE_THRESHOLDS=1 npx vitest run --coverage --coverage.reporter=lcov --coverage.reportsDirectory="$(dirname "$LCOV_OUTPUT")" --coverage.thresholds.lines=0 --coverage.thresholds.branches=0 --coverage.thresholds.functions=0 --coverage.thresholds.statements=0 --silent --bail 0 << test.atoms >>
+outputs:
+  junit: test-results/junit.xml
+  lcov: coverage/lcov.info
+options:
+  test-impact-analysis: true
+  dynamic-test-splitting: true
+  max-auto-rerun: 2

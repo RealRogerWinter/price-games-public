@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.claude
+*.log
+logs/
+coverage/
+*.db
+*.db-wal
+*.db-shm
+.env

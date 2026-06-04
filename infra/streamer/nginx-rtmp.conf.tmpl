@@ -1,0 +1,63 @@
+# nginx-rtmp config rendered at container start by entrypoint.sh.
+# Each ${*_PUSH} variable is either an empty string (key not set) or
+# a complete `push rtmp://.../<key>;` line so envsubst output stays
+# valid nginx syntax in either case.
+
+# Load the RTMP module — Debian's libnginx-mod-rtmp ships it as a
+# dynamic module rather than baked into the binary, and our custom
+# config bypasses /etc/nginx/modules-enabled/.
+load_module modules/ngx_rtmp_module.so;
+
+worker_processes 1;
+daemon off;
+pid /tmp/nginx-rtmp.pid;
+error_log stderr warn;
+
+events {
+  worker_connections 256;
+}
+
+# Loopback-only RTMP — the bot's ffmpeg connects from inside the
+# container; external traffic only leaves via the push fan-out.
+rtmp {
+  server {
+    listen 127.0.0.1:1935;
+    chunk_size 4096;
+    drop_idle_publisher 30s;
+
+    application live {
+      live on;
+      record off;
+
+      # Fan-out — empty when the env var was unset (no `push` line at all).
+      ${YT_PUSH}
+      ${TWITCH_PUSH}
+      ${KICK_PUSH}
+    }
+  }
+}
+
+# Tiny HTTP server for the rtmp_stat endpoint the operator + healthcheck
+# poll. Loopback only so it never escapes the container.
+http {
+  # nginx writes scratch state under /var/lib/nginx by default;
+  # running as the unprivileged `node` user we don't have permission
+  # there. Redirect every temp/cache path to /tmp where node has
+  # write access.
+  client_body_temp_path /tmp/nginx-client-body;
+  proxy_temp_path       /tmp/nginx-proxy;
+  fastcgi_temp_path     /tmp/nginx-fastcgi;
+  uwsgi_temp_path       /tmp/nginx-uwsgi;
+  scgi_temp_path        /tmp/nginx-scgi;
+  access_log off;
+  server {
+    listen 127.0.0.1:8080;
+    location /stat {
+      rtmp_stat all;
+      rtmp_stat_stylesheet stat.xsl;
+    }
+    location /stat.xsl {
+      return 404;
+    }
+  }
+}

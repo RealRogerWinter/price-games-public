@@ -1,0 +1,639 @@
+[
+  {
+    "asin": "B074PVTPBW",
+    "title": "Hero Cosmetics Mighty Patch Original Pimple Patches",
+    "price_cents": 1299,
+    "image_url": "https://m.media-amazon.com/images/I/71oCRRy9YBL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B00PBX3L7K",
+    "title": "COSRX Snail Mucin 96% Power Repairing Essence, Hydrating Serum for Face with Snail Secretion Filtrate, Korean Skin Care, 100ml",
+    "price_cents": 2500,
+    "image_url": "https://m.media-amazon.com/images/I/61bRiMGGOzL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B08H3JPH74",
+    "title": "Maybelline Lash Sensational Sky High Washable Mascara, Volumizing, Lengthening, Buildable Formula, Blackest Black",
+    "price_cents": 1399,
+    "image_url": "https://m.media-amazon.com/images/I/71qoj8AhkLL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01MSSDEPK",
+    "title": "CeraVe Hydrating Facial Cleanser, Moisturizing Face Wash with Hyaluronic Acid, Ceramides and Glycerin, Fragrance Free",
+    "price_cents": 1597,
+    "image_url": "https://m.media-amazon.com/images/I/61MUoJTdqHL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01M4MCUAF",
+    "title": "TruSkin Vitamin C Serum for Face with Hyaluronic Acid, Vitamin E, Anti Aging Face Serum, 1 fl oz",
+    "price_cents": 1999,
+    "image_url": "https://m.media-amazon.com/images/I/51kji5Cv3bL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0B2RM68G2",
+    "title": "BIODANCE Bio-Collagen Real Deep Mask, Hydrating Overnight Hydrogel Face Mask, Pore Minimizing, Korean Skin Care, 4 Pack",
+    "price_cents": 1999,
+    "image_url": "https://m.media-amazon.com/images/I/71b8p7wKJjL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01N9SPQHQ",
+    "title": "La Roche-Posay Toleriane Double Repair Face Moisturizer with Ceramides and Niacinamide, Oil-Free",
+    "price_cents": 2499,
+    "image_url": "https://m.media-amazon.com/images/I/71kFg-Xr8TL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0D3FGY5D6",
+    "title": "e.l.f. Cosmetics Sheer Slick Lipstick, Lightweight Lip Color",
+    "price_cents": 600,
+    "image_url": "https://m.media-amazon.com/images/I/61RXeCAqOYL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07T883TRN",
+    "title": "Burt's Bees Micellar Makeup Removing Towelettes with Coconut and Lotus Water, 30 Count",
+    "price_cents": 599,
+    "image_url": "https://m.media-amazon.com/images/I/81zD7VMHFAL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DHSXGY8F",
+    "title": "Ruby Kisses Lip Vinyl Tint Liquid Lipstick, High Shine Long-Lasting",
+    "price_cents": 599,
+    "image_url": "https://m.media-amazon.com/images/I/61TsIqEdVgL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DPB7K2XG",
+    "title": "Catrice Under Eye Brightener Setting Powder",
+    "price_cents": 600,
+    "image_url": "https://m.media-amazon.com/images/I/71lRmq8FjgL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0D24BXNN1",
+    "title": "Kiss New York Pearl Highlight Wand, Luminous Face Highlighter",
+    "price_cents": 699,
+    "image_url": "https://m.media-amazon.com/images/I/61X9dE4cxML._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DQM8JD5Q",
+    "title": "Good Molecules 5% Niacinamide Serum, Pore Minimizing Face Serum",
+    "price_cents": 800,
+    "image_url": "https://m.media-amazon.com/images/I/61FvE7RJJzL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DF9BKLVC",
+    "title": "Hawaiian Tropic Sheer Touch Face Sunscreen SPF 60+",
+    "price_cents": 1499,
+    "image_url": "https://m.media-amazon.com/images/I/71Rk7CNNVBL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DHF9X19V",
+    "title": "Maybelline Super Stay Teddy Lip Tint, Long-Lasting Lip Color",
+    "price_cents": 1299,
+    "image_url": "https://m.media-amazon.com/images/I/61Tfs+fGOML._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DQ971Q6H",
+    "title": "Thayers Invisible SOS Acne Patches, Hydrocolloid Pimple Patches",
+    "price_cents": 960,
+    "image_url": "https://m.media-amazon.com/images/I/71wIH4v+pOL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DK7XRDGW",
+    "title": "L'Oreal Paris Paradise Big Deal Mascara, Volumizing and Lengthening",
+    "price_cents": 1599,
+    "image_url": "https://m.media-amazon.com/images/I/61KmFVVVNsL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DR9VMF5N",
+    "title": "Byoma Phyto-Mucin Glow Serum, Hydrating Face Serum",
+    "price_cents": 1599,
+    "image_url": "https://m.media-amazon.com/images/I/61Ln9pY8ECL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B001VMJSCW",
+    "title": "Dermalogica Daily Microfoliant, Exfoliating Face Scrub Powder",
+    "price_cents": 1950,
+    "image_url": "https://m.media-amazon.com/images/I/61T4n0T2SQL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DH92PMKD",
+    "title": "Saie Dew Bronze, Lightweight Liquid Bronzer for Natural Glow",
+    "price_cents": 2600,
+    "image_url": "https://m.media-amazon.com/images/I/51UMJl3G7tL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DKTYRVQL",
+    "title": "Subtl Beauty 3-in-1 Brow Pencil, Eyebrow Pencil and Powder",
+    "price_cents": 2800,
+    "image_url": "https://m.media-amazon.com/images/I/61U5P5bAHaL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DMXH4XBB",
+    "title": "Innisfree Green Tea Enzyme Vitamin C Brightening Toner Pads",
+    "price_cents": 2800,
+    "image_url": "https://m.media-amazon.com/images/I/71Mz5rCDFxL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0D8XCQHZZ",
+    "title": "Kosas Blush is Life Baked Blush, Buildable Color",
+    "price_cents": 2900,
+    "image_url": "https://m.media-amazon.com/images/I/61LUYxAaCKL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DNLV82VY",
+    "title": "Lancome Lash Idole Flutter Extension Mascara, Volumizing and Lengthening",
+    "price_cents": 3000,
+    "image_url": "https://m.media-amazon.com/images/I/61dPYBKnYKL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07LBLK57Q",
+    "title": "Urban Decay Naked 2 Basics Mini Eyeshadow Palette, 6 Matte Nude Shades",
+    "price_cents": 3500,
+    "image_url": "https://m.media-amazon.com/images/I/71x3lsUPJxL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DGHBWLGV",
+    "title": "Anisa Beauty Pinnacle Foundation Brush, Professional Makeup Brush",
+    "price_cents": 3800,
+    "image_url": "https://m.media-amazon.com/images/I/51pFr6o9BmL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DH61LN6B",
+    "title": "OSEA Hyaluronic Acid Body Serum, Hydrating Body Treatment",
+    "price_cents": 4800,
+    "image_url": "https://m.media-amazon.com/images/I/61q3qYdKH3L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0F6SQ5127",
+    "title": "Colorescience Sunforgettable Total Protection Face Shield Flex SPF 50",
+    "price_cents": 5800,
+    "image_url": "https://m.media-amazon.com/images/I/61FjuYWMr5L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DCK8P752",
+    "title": "Wavytalk Steamline Pro Hair Dryer and Styler",
+    "price_cents": 7999,
+    "image_url": "https://m.media-amazon.com/images/I/61+0GhSFbcL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0D1FX5GW8",
+    "title": "Elizabeth Arden Retinol + HPR Ceramide Rapid Skin-Renewing Capsules",
+    "price_cents": 9900,
+    "image_url": "https://m.media-amazon.com/images/I/71s6FWHfxrL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B00T0C9XRK",
+    "title": "essence Lash Princess False Lash Effect Mascara, Gluten & Cruelty Free",
+    "price_cents": 499,
+    "image_url": "https://m.media-amazon.com/images/I/71xK1yR0a-L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0032RMX3U",
+    "title": "Clinique Almost Lipstick in Black Honey",
+    "price_cents": 2100,
+    "image_url": "https://m.media-amazon.com/images/I/51Gzv2TXVFL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B09JL5PCJ6",
+    "title": "e.l.f. Hydrating Core Lip Shine, Moisturizing Lip Gloss",
+    "price_cents": 800,
+    "image_url": "https://m.media-amazon.com/images/I/61Q0Zl6YWYL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B005HGWGVS",
+    "title": "Onyx Professional Hard as Hoof Nail Strengthening Cream with Coconut",
+    "price_cents": 1000,
+    "image_url": "https://m.media-amazon.com/images/I/71WjX7tIqgL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B09W18N3GT",
+    "title": "Sol de Janeiro Cheirosa 62 Hair & Body Fragrance Mist, 8 fl oz",
+    "price_cents": 2600,
+    "image_url": "https://m.media-amazon.com/images/I/61GsMM4i+4L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B013XKHA4M",
+    "title": "Sol de Janeiro Brazilian Bum Bum Cream, Fast-Absorbing Body Cream, 240ml",
+    "price_cents": 4800,
+    "image_url": "https://m.media-amazon.com/images/I/61Kew+q1VJL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B00L2SNFPQ",
+    "title": "L'Oreal Paris Magic Skin Beautifier BB Cream, Tinted Moisturizer",
+    "price_cents": 900,
+    "image_url": "https://m.media-amazon.com/images/I/71YPrGY0RYL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0787GLBMV",
+    "title": "Schick Hydro Silk Touch-Up Dermaplaning Tool, Face Razor for Women, 3 Count",
+    "price_cents": 600,
+    "image_url": "https://m.media-amazon.com/images/I/71q4OOkNRsL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B082KZ8ZGM",
+    "title": "Revlon Face Roller, Jade Stone for Facial Massage and Skincare",
+    "price_cents": 600,
+    "image_url": "https://m.media-amazon.com/images/I/61JVfGVkxkL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B074PTZCNX",
+    "title": "L'Oreal Paris True Match Lumi Glotion Natural Glow Enhancer, Light",
+    "price_cents": 1200,
+    "image_url": "https://m.media-amazon.com/images/I/71bQ+GC9p3L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07CG7JCT8",
+    "title": "NOONI Korean Lip Oil, Appleberry, Moisturizing Lip Treatment",
+    "price_cents": 1500,
+    "image_url": "https://m.media-amazon.com/images/I/61oNw4U9g1L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07TZ6TKWF",
+    "title": "Arishine Magnetic Eyelashes with Eyeliner Kit, Reusable Lashes, 5 Pairs",
+    "price_cents": 1900,
+    "image_url": "https://m.media-amazon.com/images/I/71Nsg+RQFRL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01BSB56OY",
+    "title": "EcoTools Makeup Brush Cleansing Shampoo, Gentle Formula",
+    "price_cents": 600,
+    "image_url": "https://m.media-amazon.com/images/I/71BkRkFPc5L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01F36JEXE",
+    "title": "BEAKEY Makeup Sponge Set, Beauty Blenders for Foundation Blending, 5 Pack",
+    "price_cents": 700,
+    "image_url": "https://m.media-amazon.com/images/I/71PqjVNbX0L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01G1HC3H8",
+    "title": "Docolor Eyelash Comb Separator, Stainless Steel Lash Definer Tool",
+    "price_cents": 400,
+    "image_url": "https://m.media-amazon.com/images/I/51QCmtPlvOL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07PLBV634",
+    "title": "TailaiMei Color Removal Cleaner Sponge, Quickly Switch Eyeshadow Colors",
+    "price_cents": 700,
+    "image_url": "https://m.media-amazon.com/images/I/71KlBjSVS7L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0841T83KH",
+    "title": "Jerome Alexander MagicMinerals AirBrush Foundation, 2-Piece Set with Mineral Powder",
+    "price_cents": 2300,
+    "image_url": "https://m.media-amazon.com/images/I/71Nbd5g6uAL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0037MIMLW",
+    "title": "CND SolarOil Nail & Cuticle Care Oil, 0.5 fl oz",
+    "price_cents": 1100,
+    "image_url": "https://m.media-amazon.com/images/I/61qZ63b7QUL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B074VD6LCB",
+    "title": "Maybelline Total Temptation Eyebrow Definer Pencil, Soft Brown",
+    "price_cents": 1000,
+    "image_url": "https://m.media-amazon.com/images/I/71hB7rKWmFL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07NSH2B4D",
+    "title": "e.l.f. Poreless Face Primer, Silky Smooth Makeup Base",
+    "price_cents": 1100,
+    "image_url": "https://m.media-amazon.com/images/I/61jV0MBlKzL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B018JDMD4K",
+    "title": "Elizabeth Mott Thank Me Later Eye Shadow Primer, Long-Lasting Crease-Free",
+    "price_cents": 1400,
+    "image_url": "https://m.media-amazon.com/images/I/61kd0Qc3EeL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01H1V7WQU",
+    "title": "LAURA GELLER Balance-n-Brighten Powder Foundation, Baked Buildable Coverage",
+    "price_cents": 3600,
+    "image_url": "https://m.media-amazon.com/images/I/81YjWk3h4cL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07GM317JJ",
+    "title": "The Flick Stick Winged Eyeliner Stamp, Quick Perfect Wing",
+    "price_cents": 1800,
+    "image_url": "https://m.media-amazon.com/images/I/61NjVxO8e2L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0C8JSSMNW",
+    "title": "LONDONTOWN Bubble Illuminating Nail Concealer, Nail Brightener",
+    "price_cents": 1700,
+    "image_url": "https://m.media-amazon.com/images/I/61R9N1O0VfL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B085NM71LS",
+    "title": "DEROL Lip Plumper by Vafee, Natural Lip Enhancer for Fuller Lips",
+    "price_cents": 1000,
+    "image_url": "https://m.media-amazon.com/images/I/51cZRvD9t8L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0814RK9SD",
+    "title": "Neutrogena Makeup Remover Eraser Stick, On-the-Go Precise Makeup Removal",
+    "price_cents": 900,
+    "image_url": "https://m.media-amazon.com/images/I/61F+gOBpbCL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01034IN9M",
+    "title": "Neutrogena Ultra Light Cleansing Oil, Face and Eye Makeup Remover",
+    "price_cents": 1800,
+    "image_url": "https://m.media-amazon.com/images/I/71EbZ3qXOdL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B09C8VNWBP",
+    "title": "Lattafa Yara Eau de Parfum for Women, Vanilla Gourmand Fruity Floral, 3.4 oz / 100ml",
+    "price_cents": 2000,
+    "image_url": "https://m.media-amazon.com/images/I/61dLqjCdRNL._SL1200_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0D9ZKD2Y6",
+    "title": "Lattafa Yara Candy Eau de Parfum for Women, Vanilla Fruity Citrus Floral, 3.4 oz",
+    "price_cents": 2099,
+    "image_url": "https://m.media-amazon.com/images/I/51V5yE6fjDL._SL1200_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B005TT8RPM",
+    "title": "Al Rehab Soft Concentrated Perfume Rollerball, Alcohol-Free",
+    "price_cents": 500,
+    "image_url": "https://m.media-amazon.com/images/I/51T6YMXdDVL._SL1000_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01MYEZPC8",
+    "title": "The Ordinary Hyaluronic Acid 2% + B5 Hydrating Serum, 30ml",
+    "price_cents": 990,
+    "image_url": "https://m.media-amazon.com/images/I/61Q5xUiCLnL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07L1PHSY9",
+    "title": "Differin Acne Treatment Gel, Adapalene 0.1% Retinoid Acne Treatment, 15g",
+    "price_cents": 1499,
+    "image_url": "https://m.media-amazon.com/images/I/61ZjPbFiLCL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B08BW46XXK",
+    "title": "Vanicream Daily Facial Moisturizer with Ceramides and Hyaluronic Acid, Sensitive Skin",
+    "price_cents": 1597,
+    "image_url": "https://m.media-amazon.com/images/I/617I2yYcikL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0107QPFBU",
+    "title": "Aquaphor Healing Ointment, Advanced Therapy Skin Protectant, 14 oz",
+    "price_cents": 1359,
+    "image_url": "https://m.media-amazon.com/images/I/71M2mJHvUBL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B00ADRH2OM",
+    "title": "OGX Thick & Full + Biotin & Collagen Volumizing Shampoo, 13 fl oz",
+    "price_cents": 697,
+    "image_url": "https://m.media-amazon.com/images/I/71l0UPzpAtL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0B89P16MC",
+    "title": "Shark FlexStyle Air Styling & Drying System, Hair Dryer Brush & Multi-Styler with Auto-Wrap Curlers, Stone, HD430",
+    "price_cents": 29999,
+    "image_url": "https://m.media-amazon.com/images/I/71eIhHAPxqL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0B4T6RTZ2",
+    "title": "Dyson Supersonic Hair Dryer, No Heat Damage, 5 Attachments with Diffuser & Styling Concentrator",
+    "price_cents": 42999,
+    "image_url": "https://m.media-amazon.com/images/I/61tJqJWDwJL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B09YCG7Q8V",
+    "title": "NuFACE MINI+ Microcurrent Facial Device Kit, FDA Cleared Face Sculpting & Skin Tightening, Sandy Rose",
+    "price_cents": 24500,
+    "image_url": "https://m.media-amazon.com/images/I/71E9x9uJBnL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0BBH8FRYL",
+    "title": "LAURA GELLER The Best of the Best Baked Palette with Bronzer, Blush, Highlighters and Eyeshadows",
+    "price_cents": 4800,
+    "image_url": "https://m.media-amazon.com/images/I/81I8cI5O1fL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B099FK66CL",
+    "title": "Glamnetic Press On Nails - MaDamn, French Tip UV Finish Short Almond, 24 Nail Kit with Glue",
+    "price_cents": 1499,
+    "image_url": "https://m.media-amazon.com/images/I/71UrjgYiuSL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B09D8GYQGS",
+    "title": "Womaness Let's Neck Firming Serum, Anti-Aging Neck and Decollete Treatment",
+    "price_cents": 3499,
+    "image_url": "https://m.media-amazon.com/images/I/61swVbW1d5L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B00121UVU0",
+    "title": "O'Keeffe's Working Hands Hand Cream, Healing and Moisturizing, 3.4 oz",
+    "price_cents": 899,
+    "image_url": "https://m.media-amazon.com/images/I/81Ot-1uXqsL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B07TXJHYKB",
+    "title": "essence Lash Princess Waterproof Mascara, Volume and Definition",
+    "price_cents": 497,
+    "image_url": "https://m.media-amazon.com/images/I/71DL+FHFJWL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B091NJQ29P",
+    "title": "Good Molecules Yerba Mate Wake Up Eye Gel, Depuffing Under Eye Treatment",
+    "price_cents": 597,
+    "image_url": "https://m.media-amazon.com/images/I/61i6fRjYmzL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0CY3QBYQR",
+    "title": "Bioderma Atoderm Shower and Cleansing Oil for Dry Skin, 33.8 fl oz",
+    "price_cents": 1999,
+    "image_url": "https://m.media-amazon.com/images/I/61kJ1fOGAYL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DSWK3KG1",
+    "title": "OUAI Wave Spray, Texture Spray for Beach Waves, 4.9 fl oz",
+    "price_cents": 3000,
+    "image_url": "https://m.media-amazon.com/images/I/61k+j+XMJZL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0BCQZ29B8",
+    "title": "Maybelline Lash Sensational Sky High Serum Infused Lash Primer, Lengthening and Thickening, Soft Black",
+    "price_cents": 1299,
+    "image_url": "https://m.media-amazon.com/images/I/71F5cILhRQL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0977W5QRJ",
+    "title": "TruSkin Vitamin C Cleanser for Face, Brightening Face Wash with Vitamins C & E, Rosehip Oil",
+    "price_cents": 1595,
+    "image_url": "https://m.media-amazon.com/images/I/61eNVFLOXnL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0BKTTBP4M",
+    "title": "TruSkin Vitamin C Super Serum for Face with Retinol, Niacinamide, Hyaluronic Acid & Squalane, 2 fl oz",
+    "price_cents": 2999,
+    "image_url": "https://m.media-amazon.com/images/I/61OT35dlzXL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0GG7VCFVJ",
+    "title": "Baked Face Trio Palette, Highlighter Blush Contour & Eyeshadow, Natural Shades, Waterproof Long-Lasting",
+    "price_cents": 999,
+    "image_url": "https://m.media-amazon.com/images/I/71TUvlUKVTL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0819N524D",
+    "title": "UCANBE Pretty All Set Eyeshadow Palette, 86 Colors with Highlighters Contour Blush",
+    "price_cents": 1599,
+    "image_url": "https://m.media-amazon.com/images/I/81lzVLt+HrL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B09V1CPTR1",
+    "title": "Catrice Under Eye Brightener, Concealer with Light-Reflecting Pigments",
+    "price_cents": 600,
+    "image_url": "https://m.media-amazon.com/images/I/61DQ3UjMl2L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B082X2GSGJ",
+    "title": "Venus Visage Teeth Whitening Pen, Professional Whitening with 35% Carbamide Peroxide",
+    "price_cents": 1400,
+    "image_url": "https://m.media-amazon.com/images/I/61W+ZuNhHEL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DJFCTW17",
+    "title": "Cantu Weightless Smoothing Shampoo with Shea Butter",
+    "price_cents": 799,
+    "image_url": "https://m.media-amazon.com/images/I/71LypKRJ4nL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B00NR1YVYU",
+    "title": "Neutrogena Rapid Clear Stubborn Acne Spot Treatment Gel with Benzoyl Peroxide, 1 oz",
+    "price_cents": 968,
+    "image_url": "https://m.media-amazon.com/images/I/71OYRBcXB+L._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0FGPTDZHF",
+    "title": "Maree Neck Cream with Face Roller, Anti-Wrinkle Firming Treatment",
+    "price_cents": 1995,
+    "image_url": "https://m.media-amazon.com/images/I/71v7BjSJYCL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0DVC5W2R5",
+    "title": "SickScience PowerCycle Scalp Treatment Serum, Hair Growth Support",
+    "price_cents": 6400,
+    "image_url": "https://m.media-amazon.com/images/I/61vQiMZC-KL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B0D3FLSCXN",
+    "title": "Voesh Smooth'd Body Refining Roller Creme, Skin Smoothing Body Lotion",
+    "price_cents": 2900,
+    "image_url": "https://m.media-amazon.com/images/I/61ILJj7qCmL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B00AHAWWO0",
+    "title": "Crest 3D Whitestrips Professional Effects, Teeth Whitening Strips Kit, 20 Treatments",
+    "price_cents": 4599,
+    "image_url": "https://m.media-amazon.com/images/I/71mREgfVLCL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B01M4NFD2N",
+    "title": "Cetaphil Gentle Makeup Removing Face Wipes, Plant-Based and Biodegradable, 25 Count",
+    "price_cents": 685,
+    "image_url": "https://m.media-amazon.com/images/I/71wU5MoR6KL._SL1500_.jpg",
+    "category": "Beauty"
+  },
+  {
+    "asin": "B079S3K238",
+    "title": "Dr. Dan's Cortibalm Lip Balm for Chapped Lips, 0.14 oz",
+    "price_cents": 775,
+    "image_url": "https://m.media-amazon.com/images/I/61mL6cG4sNL._SL1500_.jpg",
+    "category": "Beauty"
+  }
+]

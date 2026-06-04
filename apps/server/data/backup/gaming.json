@@ -1,0 +1,962 @@
+[
+  {
+    "asin": "B08T1KHHR9",
+    "title": "PS5/Slim/Pro Stand and Cooling Station with LED Controller Charging Station for PlayStation 5 Console, Controller Charger, Cooling Stand, PS5/Slim/Pro Accessories Kit with 3 Level Cooler Fan",
+    "image_url": "https://m.media-amazon.com/images/I/81LQpTeS3FL._AC_SL1500_.jpg",
+    "price_cents": 3599,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:55:45.369Z"
+  },
+  {
+    "asin": "B08H75RTZ8",
+    "title": "Xbox Series X - Gaming Console - 1TB SSD - Includes Wireless Controller - 4K Gaming - 120FPS - Carbon Black",
+    "image_url": "https://m.media-amazon.com/images/I/61WV2vIMfFL._AC_SL1500_.jpg",
+    "price_cents": 64800,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:55:58.583Z"
+  },
+  {
+    "asin": "B0D932YWSZ",
+    "title": "Xbox Series S - All Digital Gaming Console - 512GB SSD - Includes Wireless Controller - 120FPS - Robot White",
+    "image_url": "https://m.media-amazon.com/images/I/61ZbpSrtepL._AC_SL1500_.jpg",
+    "price_cents": 39312,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:55:58.583Z"
+  },
+  {
+    "asin": "B0FRTRPQG9",
+    "title": "Xbox Series X 2 TB Disc Drive Galaxy Black Special Edition Bundle Includes Special Edition Wireless Controller",
+    "image_url": "https://m.media-amazon.com/images/I/516JY93vvXL._AC_SL1500_.jpg",
+    "price_cents": 99999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:55:58.583Z"
+  },
+  {
+    "asin": "B07WDGB9P5",
+    "title": "Microsoft Xbox One X 1TB Console with Wireless Controller: Enhanced, HDR, Native 4K, Ultra HD (2017 Model) (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/61O60jiF30L._AC_SL1500_.jpg",
+    "price_cents": 28900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:55:58.583Z"
+  },
+  {
+    "asin": "B0FXJ53S6X",
+    "title": "Xbox Series S - All Digital Gaming Console - 512GB SSD - Includes Wireless Controller - 120FPS (Renewed Premium)",
+    "image_url": "https://m.media-amazon.com/images/I/61PI59RfWvL._AC_SL1500_.jpg",
+    "price_cents": 34999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:55:58.583Z"
+  },
+  {
+    "asin": "B09J652L1P",
+    "title": "Nintendo Switch OLED Model w/ White Joy-Con (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/61U4SKnyS4L._AC_SL1500_.jpg",
+    "price_cents": 28900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:12.932Z"
+  },
+  {
+    "asin": "B098RKWHHZ",
+    "title": "Nintendo Switch – OLED Model w/White Joy-Con",
+    "image_url": "https://m.media-amazon.com/images/I/61nqNujSF2L._AC_SL1500_.jpg",
+    "price_cents": 38495,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:12.932Z"
+  },
+  {
+    "asin": "B09J6BGJ9X",
+    "title": "Nintendo Switch – OLED Model w/Neon Red & Neon Blue Joy-Con (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/51+ThOR5BfL._AC_SL1500_.jpg",
+    "price_cents": 24804,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:12.932Z"
+  },
+  {
+    "asin": "B09Q3QTN1F",
+    "title": "Nintendo Switch Console OLED Model with White Joy-Con, 7 inch 1280 x 720 OLED Touchscreen Display, Built-in Speaker, WiFi, Bluetooth 4.1 (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/71VncWkJy8L._AC_SL1500_.jpg",
+    "price_cents": 29855,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:12.932Z"
+  },
+  {
+    "asin": "B0BP9X52Q1",
+    "title": "Nintendo Switch (OLED Model) - Neon Blue/Neon Red (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/71Q54HnKxwS._AC_SL1500_.jpg",
+    "price_cents": 28240,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:12.932Z"
+  },
+  {
+    "asin": "B0BFJWCYTL",
+    "title": "Nintendo Switch with Neon Blue and Neon Red Joy-Con - Handheld Gaming Console",
+    "image_url": "https://m.media-amazon.com/images/I/71wpE+ZIehL._AC_SL1500_.jpg",
+    "price_cents": 33900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:12.932Z"
+  },
+  {
+    "asin": "B0BS9Y9L2Y",
+    "title": "Nintendo Switch with Neon Blue and Red Joy-Con (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/51fBMSbTG4L._AC_SL1500_.jpg",
+    "price_cents": 22000,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:12.932Z"
+  },
+  {
+    "asin": "B0CJYN4GXK",
+    "title": "Nintendo Switch OLED Model Mario Red Edition (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/71vwxEAbq7L._AC_SL1500_.jpg",
+    "price_cents": 33400,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:12.932Z"
+  },
+  {
+    "asin": "B0DHFSMDXH",
+    "title": "Valve Steam Deck 512GB (1280 x 800) 7\" LCD Display Handheld Gaming Console with Carrying Case (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/51N2sd9uFhL._AC_SL1500_.jpg",
+    "price_cents": 93999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0DTBN55K9",
+    "title": "Legion Go S - 2025 - Mobile Gaming Console - AMD Radeon graphics - 8\" PureSight IPS Display - 120Hz - AMD Ryzen™ Z2 Go - 16GB Memory - 512GB Storage - Glacier White - Free PC Game Pass",
+    "image_url": "https://m.media-amazon.com/images/I/71axrw7z6WL._AC_SL1500_.jpg",
+    "price_cents": 69144,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0B28PCDM2",
+    "title": "Upgraded Docking Station 4K@120Hz for Steam Deck OLED/ROG Ally X/Legion Go/MSI Claw, 5-in-1 Steam Deck Dock with HDMI 2.1, 100Mbps Ethernet, USB 2.0 and 100W Charge for Steam Deck LCD-HB0602",
+    "image_url": "https://m.media-amazon.com/images/I/71peof84jPL._AC_SL1500_.jpg",
+    "price_cents": 2299,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0CS6BWL4Q",
+    "title": "Steam Deck Dock, Docking Station for Steam Deck (OLED)/ROG Ally/Legion Go, 6-in-1 USB C Hub with HDMI 4K@60Hz, 1Gbps Ethernet, 2 USB-A and 1 USB-C Port, 90W Fast Charging (Not for Rog Ally X)",
+    "image_url": "https://m.media-amazon.com/images/I/61HMF4EHokL._AC_SL1500_.jpg",
+    "price_cents": 3599,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0BN5JN8BH",
+    "title": "Kickstand Case Compatible with Steam Deck/OLED, PC0105 Upgrade The Adjustable Angle Stand Steam Deck Cover TPU Protective Case, Shock-Absorption, Non-Slip and Anti-Scratch Design",
+    "image_url": "https://m.media-amazon.com/images/I/71Ljl4elLaL._AC_SL1500_.jpg",
+    "price_cents": 1999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0B55ZD4HL",
+    "title": "2-Pack Screen Protector for Steam Deck, Ultra HD Glass Protector 9H Hardness Easy to Install with Guiding Frame Scratch Resistant Tempered Glass for Steam Deck OLED, Come with Toolkits",
+    "image_url": "https://m.media-amazon.com/images/I/71wJhJe7dTL._AC_SL1500_.jpg",
+    "price_cents": 899,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0C2VG6MB3",
+    "title": "Cooling Fan for Steam Deck, Innovative Cooler with Stand Compatible with Steam Deck OLED-GP0201",
+    "image_url": "https://m.media-amazon.com/images/I/71F6GodLOvL._AC_SL1500_.jpg",
+    "price_cents": 3199,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0CSYS6SWT",
+    "title": "Screen Protector for Steam Deck OLED 7.4-Inch (NEW 2023) - 9H Tempered Glass Film, Anti-Scratch HD Clear, Cowhide box professional packaging，2-Pack",
+    "image_url": "https://m.media-amazon.com/images/I/61djOkC9xGL._AC_SL1500_.jpg",
+    "price_cents": 1399,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0BKT1DT6V",
+    "title": "2-Pack anti-glare Etched Screen Protector for Steam Deck 7.0''/Steam Deck OLED 7.4'', Matte Anti Glare Tempered Glass with Alignment Frame Anti-Scratch Full Coverage Guard for Steam Deck",
+    "image_url": "https://m.media-amazon.com/images/I/71HyHUBRrcL._AC_SL1500_.jpg",
+    "price_cents": 899,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0CGVB39C6",
+    "title": "4K@144Hz Steam Deck Dock, 8-in-1 Docking Station for ASUS ROG Ally X/Legion Go/MSI Claw, ROG Alloy/Valve Stream Deck OLED Hub, HDMI 2.1, 1Gbps Ethernet, 3*USB-A 3.0, 100W Charge",
+    "image_url": "https://m.media-amazon.com/images/I/71CIw0AxDuL._AC_SL1500_.jpg",
+    "price_cents": 2997,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0BP2BSV8M",
+    "title": "PlayVital Back Button Enhancement Set for Steam Deck LCD, Grip Improvement Button Protection Kit for Steam Deck OLED - 2 Different Thickness",
+    "image_url": "https://m.media-amazon.com/images/I/71U8KpK6BNL._AC_SL1500_.jpg",
+    "price_cents": 1399,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:27.919Z"
+  },
+  {
+    "asin": "B0CD1JTBSC",
+    "title": "Meta Quest 3 512GB | VR Headset — Thirty Percent Sharper Resolution — 2X Graphical Processing Power — Virtual Reality Without Wires — Access to 40+ Games with a 3-Month Trial of Meta Horizon+ Included",
+    "image_url": "https://m.media-amazon.com/images/I/61nkctF66PL._AC_SL1500_.jpg",
+    "price_cents": 49900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B0D5H3ZL8T",
+    "title": "Meta Quest 3 512GB | Virtual Reality Headset Without Wires — Thirty Percent Sharper Resolution — 2X Graphical Processing (Renewed Premium)",
+    "image_url": "https://m.media-amazon.com/images/I/317yE3lkIxL._AC_SL1500_.jpg",
+    "price_cents": 44999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B0F257PZM8",
+    "title": "Meta Quest 3S 128GB | VR Headset — Thirty-Three Percent More Memory — Virtual Reality Without Wires — Access to 40+ Games with a 3-Month Trial of Meta Horizon+ Included (Renewed Premium)",
+    "image_url": "https://m.media-amazon.com/images/I/61-SGpdmgRL._AC_SL1500_.jpg",
+    "price_cents": 26999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B0BZ4LZTLY",
+    "title": "Kawaye for Meta Quest 3S/Quest 2/Quest 3 Head Strap, Double Knobs Adjustable Elite Strap Replacement,VR Headset Strap with Two Large Support Pad Enhanced Support, Reduce Pressure",
+    "image_url": "https://m.media-amazon.com/images/I/71loBZsgrrL._AC_SL1500_.jpg",
+    "price_cents": 2339,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B0CSY8PD63",
+    "title": "S3 Pro Battery Strap Accessories,Head Air Cooling System and 10000mah Hot-swappable Battery Pack,Compatible with Meta Quest 3/Quest 3S",
+    "image_url": "https://m.media-amazon.com/images/I/71WIeOVkQyL._AC_SL1500_.jpg",
+    "price_cents": 7999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B0CSYV9VS5",
+    "title": "VR Headset Charging Dock for Meta Quest 3/Quest 3S/Quest 2, VR Charging Stand for Quest 3 Accessories VR Stand Supports Charging Headset with Type C Cable and fit Controller with Cover",
+    "image_url": "https://m.media-amazon.com/images/I/61y+onuww1L._AC_SL1500_.jpg",
+    "price_cents": 2799,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B0DT11YHXC",
+    "title": "for Meta Quest 3S/Quest 2/Quest 3 Head Strap with 7500mAh Hot-Swap Battery Pack, Double Knobs Adjustable VR Headset Strap with Two Large Support Pad Enhanced Support, Reduce Pressure",
+    "image_url": "https://m.media-amazon.com/images/I/81X8gyu54zL._AC_SL1500_.jpg",
+    "price_cents": 3999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B0DHNKM5QP",
+    "title": "Charging Dock for Meta Quest 3S/3, Kinwin Magnetic Charging Station for Oculus Quest 3S/3 Accessories with RGB Light, Charging Stand for VR Headset & Controller with 2 Rechargeable Batteries (White)",
+    "image_url": "https://m.media-amazon.com/images/I/71+9rgoFGuL._AC_SL1500_.jpg",
+    "price_cents": 4369,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B098399X91",
+    "title": "Link Cable 16FT for PCVR Compatible with Oculus/Quest 3/Meta Quest 3S, Quest2/Pro/Pico 4/Ultra Accessories and PC/SteamVR, High Speed PC Data Transfer, USB 3.0 to USB C Cable for VR Headset",
+    "image_url": "https://m.media-amazon.com/images/I/71ZAl+G6m0L._AC_SL1500_.jpg",
+    "price_cents": 1698,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:41.390Z"
+  },
+  {
+    "asin": "B0DSLTZ6M3",
+    "title": "PlayStation Portal Remote Player - Midnight Black",
+    "image_url": "https://m.media-amazon.com/images/I/61LSWoVFRYL._AC_SL1500_.jpg",
+    "price_cents": 19900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0DLX299LZ",
+    "title": "PS Portal + Case + Charging Station",
+    "image_url": "https://m.media-amazon.com/images/I/510XcGVi8yL._AC_SL1500_.jpg",
+    "price_cents": 25698,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0DLX1P2BT",
+    "title": "PlayStation PS Portal + Case",
+    "image_url": "https://m.media-amazon.com/images/I/41HTXIFkkjL._AC_SL1500_.jpg",
+    "price_cents": 22699,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0CQXDN344",
+    "title": "CoBak Hard Carrying Shell Case for PlayStation Portal Remote Player - with 2 Screen Protector, 1 Grip Case, 4 Thumb Grip Caps, Hard Outer Cover for PS5 Portal, Black",
+    "image_url": "https://m.media-amazon.com/images/I/71-HYS2AwyL._AC_SL1500_.jpg",
+    "price_cents": 3499,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0DB66N79Z",
+    "title": "PowerA Protection Case for PlayStation Portal Remote Player",
+    "image_url": "https://m.media-amazon.com/images/I/51f4ZOskZ6L._AC_SL1500_.jpg",
+    "price_cents": 2799,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0DLWZYJBR",
+    "title": "PS Portal + Charging Station",
+    "image_url": "https://m.media-amazon.com/images/I/51g83ri1gcL._AC_SL1500_.jpg",
+    "price_cents": 22899,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0DBR7V3YR",
+    "title": "PowerA Charging Station for PlayStation Portal™ Remote Player with Lumectra™, RGB Lighting, USB Powered, Magnetic Charger, Charge and Display, Weighted Base, Officially Licensed",
+    "image_url": "https://m.media-amazon.com/images/I/51JQOjb2nhL._AC_SL1500_.jpg",
+    "price_cents": 2999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0CT2FS4Q8",
+    "title": "Foluck 3 in 1 Carrying Case for PlayStation Portal Remote Player, EVA Hard Case for PS5 Portal with Soft Silicone Protective Cover Skin Case, 2 Screen Protector, PS5 Portal Console Accessoris Bundle",
+    "image_url": "https://m.media-amazon.com/images/I/81QF5DhffxL._AC_SL1500_.jpg",
+    "price_cents": 2999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0CSYKNX7W",
+    "title": "FYOUNG 3 in 1 Accessories Bundle for Playstation Portal, Carrying Case & Hard PC Clear Cover Skins Set with Screen Protector, Protective Shell Portable Travel Handbag for PS5 Portal Remote Player",
+    "image_url": "https://m.media-amazon.com/images/I/81bSw1qrZEL._AC_SL1500_.jpg",
+    "price_cents": 3299,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0CKVPJJCT",
+    "title": "ivoler 2-Pack Screen Protector Tempered Glass for PlayStation Portal Remote Player 8 inch 2023, Transparent HD Clear Anti-Scratch Screen Protector for PlayStation PS Portal Remote Player 8.0''",
+    "image_url": "https://m.media-amazon.com/images/I/71mjQQhH3oL._AC_SL1500_.jpg",
+    "price_cents": 899,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0CLHW39F8",
+    "title": "amFilm 3 Pack Tempered Glass Screen Protector for PlayStation Portal Remote Player 8 inch - PlayStation 5 with Easy Installation Kit, Transparent Ultra HD, Anti-Scratch, Anti-Fingerprint",
+    "image_url": "https://m.media-amazon.com/images/I/61YAMhrFYNL._AC_SL1500_.jpg",
+    "price_cents": 899,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0CNQ3Q7PG",
+    "title": "Carry Case designed for Playstation Portal remote player for PS5 Console holds accessories, Travel and Storage Protection for headset charger and more WHITE/BLACK - Easy Clean Case Gift box Edition",
+    "image_url": "https://m.media-amazon.com/images/I/61OqYu4ZXqL._AC_SL1500_.jpg",
+    "price_cents": 2491,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B08HKBSPYP",
+    "title": "Sony PS5 multimedia remote control",
+    "image_url": "https://m.media-amazon.com/images/I/61mCQoWt1oL._AC_SL1500_.jpg",
+    "price_cents": 4850,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B0CNGYS1VS",
+    "title": "Screen Protector Compatible with PlayStation Portal Remote Player, 9H Hardness Anti-Scratch Tempered Glass Film, PS5 Portal Screen Film, Bubble-Free, Anti-Fingerprint (2 Pack)",
+    "image_url": "https://m.media-amazon.com/images/I/71brcFdjCxL._AC_SL1500_.jpg",
+    "price_cents": 699,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:56:55.711Z"
+  },
+  {
+    "asin": "B07SFKTLZM",
+    "title": "Xbox Elite Series 2 Core Wireless Gaming Controller – Black – Xbox Series X|S, Xbox One, Windows PC, Android, and iOS",
+    "image_url": "https://m.media-amazon.com/images/I/717XTm0moDL._AC_SL1500_.jpg",
+    "price_cents": 15999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0BS1J43PW",
+    "title": "Xbox Microsoft Elite Wireless Controller Series 2 Core - White (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/61tncw0i36L._AC_SL1500_.jpg",
+    "price_cents": 11198,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B091FWZYHK",
+    "title": "Xbox Elite Series 2 Custom Soft Touch Controller - Soft Touch Feel, Added Grip, Vibrant Purple Color - Compatible with Xbox One, Series X|S",
+    "image_url": "https://m.media-amazon.com/images/I/61SPyhRrxJL._AC_SL1500_.jpg",
+    "price_cents": 23999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0CJCMT5KP",
+    "title": "Accessories for Xbox Elite Controller Series 2-13 in 1 Replacement Paddles Thumbsticks Joystick Analog Sticks Parts Repair Kit Component Set with 2 D-Pads, 1 Tool",
+    "image_url": "https://m.media-amazon.com/images/I/61GTZinIctL._AC_SL1500_.jpg",
+    "price_cents": 2499,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0CGDQC38J",
+    "title": "Complete Component Pack for Elite Controller Series 2 - Accessories Replacement Parts Repair Kit with Storage Case, Charging Dock and Charger Cable, 4 Thumbsticks, 4 Paddles, 1 D-Pad",
+    "image_url": "https://m.media-amazon.com/images/I/61Z-YVHkMpL._AC_SL1500_.jpg",
+    "price_cents": 4199,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0DMVW51L9",
+    "title": "CHARM FOCUS 16-in-1 Metal Thumbsticks Replacement Kits for Xbox Elite Series 2, Xbox Elite 2 Controller Accessories, Includes Magnetic Joysticks, Paddles, Silicone Caps, D-Pads, 1 Tool (Volcano Red)",
+    "image_url": "https://m.media-amazon.com/images/I/71j5u+A1BaL._AC_SL1500_.jpg",
+    "price_cents": 2694,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B08ZNQN1FP",
+    "title": "Xbox Core Wireless Gaming Controller – Electric Volt Series X|S, One, Windows PC, Android, and iOS",
+    "image_url": "https://m.media-amazon.com/images/I/511p8oS7pPL._AC_SL1500_.jpg",
+    "price_cents": 5895,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0FLPXDFCC",
+    "title": "Customized Elite Series 2 Controller-Vest Red,Gaming Controller Compatible with Xbox Elite Series 2,Compatible for Xbox One,Xbox Series X/S,Customized Controller With Accessory Bag [video game] [video game]",
+    "image_url": "https://m.media-amazon.com/images/I/71Jw+XYqxeL._AC_SL1500_.jpg",
+    "price_cents": 16999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0D8KXMCTC",
+    "title": "GameSir G7 SE Wired Controller for Xbox Series X|S, Xbox One & Windows 10/11, Plug and Play Gaming Gamepad with Hall Effect Joysticks/Hall Trigger, 3.5mm Audio Jack (Orange)",
+    "image_url": "https://m.media-amazon.com/images/I/51psQhV+vPL._AC_SL1500_.jpg",
+    "price_cents": 4499,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0F14XLBDJ",
+    "title": "NACON Revolution X Unlimited Advanced Precision Controller Officially Licensed for Xbox Series X | S, Xbox One, Windows 10/11 PC & Android - Wired and Wireless - Charging Station",
+    "image_url": "https://m.media-amazon.com/images/I/71vi+BWnFdL._AC_SL1500_.jpg",
+    "price_cents": 18999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0C74Y9ZZ2",
+    "title": "Microsoft Elite Series 2 Core Wireless Controller for Xbox Series - Blue (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/71wzaSdEZaL._AC_SL1500_.jpg",
+    "price_cents": 12899,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0FWQH957Z",
+    "title": "Customized Elite Series 2 Controller-Panda Black,Gamepad Compatible with Xbox Elite Series 2 Controller,Custom Soft Touch Feel,Gaming Controller Compatible for Xbox Series S/X,Xbox One,With Accessory Bag",
+    "image_url": "https://m.media-amazon.com/images/I/71sGsobCUhL._AC_SL1500_.jpg",
+    "price_cents": 17499,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0DB6S6R89",
+    "title": "Razer Wolverine V3 Pro Wireless Gaming Controller: Licensed for Xbox Series X|S, Xbox One, Windows PC - 6 Remappable Buttons - Fast Triggers - Customizable Thumbsticks - Wired Tournament Mode - Black",
+    "image_url": "https://m.media-amazon.com/images/I/71klIefGnTL._AC_SL1500_.jpg",
+    "price_cents": 12999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0GHVPPD5C",
+    "title": "YouYouGou Elite Series 2 Core Game Controller(Blue), Compatible For Xbox Elite Series 2 Controller,Compatible For Xbox One S/X, Xbox Series S/X",
+    "image_url": "https://m.media-amazon.com/images/I/61BfXocnbzL._AC_SL1500_.jpg",
+    "price_cents": 13599,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:12.116Z"
+  },
+  {
+    "asin": "B0BSYFB99D",
+    "title": "PlayStation DualSense Edge Wireless Controller",
+    "image_url": "https://m.media-amazon.com/images/I/614v99L42vL._AC_SL1500_.jpg",
+    "price_cents": 19900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0DSQQ1P8D",
+    "title": "PlayStation DualSense Edge Wireless Controller - Midnight Black",
+    "image_url": "https://m.media-amazon.com/images/I/516ZUBrUYEL._AC_SL1500_.jpg",
+    "price_cents": 19900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0FNDJZ3YG",
+    "title": "Razer Raiju V3 Pro Wireless Controller: Officially licensed for PlayStation, PS5, PC - Lag-free Esports Grade Performance - 6 Remappable Buttons - Customizable TMR Thumbsticks - Fast Triggers - White",
+    "image_url": "https://m.media-amazon.com/images/I/71N+DiwIVHL._AC_SL1500_.jpg",
+    "price_cents": 17999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0CM728YPY",
+    "title": "SCUF ENVISION PRO Wireless V1 (2023) PC Gaming Controller - Five Remappable G-Keys - Remappable Back Paddles - Instant Triggers - iCUE Compatible - Steel Grey",
+    "image_url": "https://m.media-amazon.com/images/I/71KV2R3t+6L._AC_SL1500_.jpg",
+    "price_cents": 17543,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0F6JWQQB6",
+    "title": "Wireless Controller for PS5, Compatible with PlayStation 5 /PS5 Pro/Slim/PC, with Hall Effect Joysticks, Back Paddles & Macro, Bluetooth 5.0, Turbo, Dual Vibration, 6-Axis Gyro, RGB Ring, 1000mAh, 3.5mm Audio Jack, PS5 Pro Controller Gamepad with Speaker",
+    "image_url": "https://m.media-amazon.com/images/I/61uTKHMQVOL._AC_SL1500_.jpg",
+    "price_cents": 6599,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0DYSDLW9L",
+    "title": "NACON Revolution 5 Pro Officially Licensed PlayStation Wireless Gaming Controller for PS5 / PS4 / PC - Hall Effect, Trigger Stops, Mappable Buttons, Bluetooth Audio - Urban Camo",
+    "image_url": "https://m.media-amazon.com/images/I/617W-61K2GL._AC_SL1500_.jpg",
+    "price_cents": 16999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0DYVVZ4F6",
+    "title": "Turtle Beach Victrix Pro BFG Reloaded Wireless Gaming Controller Officially Licensed for PlayStation 5, PS5, PS4, PC, Fightpad Module, Hall-Effect Sticks/Triggers, Customizable Controls - Black",
+    "image_url": "https://m.media-amazon.com/images/I/71K9LzSWkZL._AC_SL1500_.jpg",
+    "price_cents": 20999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0DHGX69RV",
+    "title": "HEXGAMING PHANTOM Pro Controller with 4 Remappable Buttons, 6 Remapping Profiles, 8 Interchangeable Analog Stick, and Adjustable Triggers Compatible with ps5, PC, Mobile - Hall Effect Shadow Gray",
+    "image_url": "https://m.media-amazon.com/images/I/7155EYJbx3L._AC_SL1500_.jpg",
+    "price_cents": 24999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0F5VTDQL6",
+    "title": "HEXGAMING ULTIMATE Hall Effect Wireless Controller Compatible with ps5-4 Back Buttons, Mouse-Click Hair Triggers, Interchangeable Thumbsticks - Black",
+    "image_url": "https://m.media-amazon.com/images/I/71svLF0hwGL._AC_SL1500_.jpg",
+    "price_cents": 17999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0FMN182G4",
+    "title": "Wireless Controller for PS5 Pro/PlayStation-5/PC/Mac with Hall Effect joystick trigger/Back Paddles/Cool RGB/Motion Sensor/TURBO/3.5mm Audio Jack - Built-in Speakers Support P-S5 Console Audio (Night Black)",
+    "image_url": "https://m.media-amazon.com/images/I/61GQBr2nZGL._AC_SL1500_.jpg",
+    "price_cents": 4299,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0BQ1PDR4R",
+    "title": "Razer Wolverine V2 Pro Wireless Gaming Controller for PlayStation 5 / PS5, PC: Mecha-Tactile Action Buttons - 8-Way Microswitch D-Pad - HyperTrigger - 6 Remappable Buttons - Chroma RGB   - Black",
+    "image_url": "https://m.media-amazon.com/images/I/71jZWKxr95L._AC_SL1500_.jpg",
+    "price_cents": 15700,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0DWXMLSD1",
+    "title": "Gamrombo LED Wireless Controller for PS5, Compatible with PS5 Pro/Slim/PC, Dual Vibration, Macro/Turbo Function, 3.5mm Audio Jack, 6-Axis Motion Contro Gamepad with Speaker(White)",
+    "image_url": "https://m.media-amazon.com/images/I/615RhDhP7CL._AC_SL1500_.jpg",
+    "price_cents": 4499,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0FK4XV9K1",
+    "title": "CHARM FOCUS Modified PS5 Controller with 4 Remappable Back Paddles, TMR Magnetic Anti-Drift Joysticks, 2100mAh Battery for 11H Wireless Play, Ergonomic Soft Rubber Grips for PS5 & PC Gaming, Black",
+    "image_url": "https://m.media-amazon.com/images/I/61rLuF6SjQL._AC_SL1500_.jpg",
+    "price_cents": 26999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0D7WYPB3V",
+    "title": "PDP Victrix Pro BFG Wireless Gaming Controller, Licensed for PlayStation, PS5/PS4/PC Gamepad, Sony 3D Audio, Modular Buttons/Triggers/Thumbstick, Customizable in App, Tekken 8 Rage Art Black/Pink/Teal",
+    "image_url": "https://m.media-amazon.com/images/I/61ACqm+LqkL._AC_SL1500_.jpg",
+    "price_cents": 19999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0DTB3F17W",
+    "title": "SCUF VALOR PRO Wired Performance Xbox Controller – Customizable Back Paddles, Instant Triggers, Hall Effect Thumbsticks, Audio Controls, Xbox Series X|S, Xbox One, Windows PC – Steel Gray",
+    "image_url": "https://m.media-amazon.com/images/I/71WAVcZojoL._AC_SL1500_.jpg",
+    "price_cents": 9299,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0FMF3S9CM",
+    "title": "HEXGAMING ULTIMATE PRO Gaming Controller Compatible with ps5/PC/Mobile - 4 Back Buttons, 6 Custom Profiles, Adjustable Triggers, 8 Swappable Thumbsticks - Hall Effect Chaos Black",
+    "image_url": "https://m.media-amazon.com/images/I/71po9MSB+jL._AC_SL1500_.jpg",
+    "price_cents": 23999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:25.239Z"
+  },
+  {
+    "asin": "B0FX3TJ5RX",
+    "title": "8BitDo Ultimate 2C Wireless Controller for Windows PC and Android, with 1000 Hz Polling Rate, Hall Effect Joysticks and Triggers, and Remappable L4/R4 Bumpers (Transparent Black)",
+    "image_url": "https://m.media-amazon.com/images/I/61t8-7jBzGL._AC_SL1500_.jpg",
+    "price_cents": 2999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:49.911Z"
+  },
+  {
+    "asin": "B0B9BDMWWN",
+    "title": "8BitDo Ultimate Bluetooth Controller with Charging Dock, Wireless Pro Controller with Hall Effect Sensing Joystick, Compatible with Switch, Windows and Steam Deck (White)",
+    "image_url": "https://m.media-amazon.com/images/I/51CY9cBKwRL._AC_SL1500_.jpg",
+    "price_cents": 5999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:49.911Z"
+  },
+  {
+    "asin": "B0DRCRDGP4",
+    "title": "8Bitdo Ultimate 2 Bluetooth Controller with TMR Joysticks, Switchable Hall Effect/Tactile Triggers, Vibration, Motion Control, RGB Fire Ring and Back Buttons for Switch/Switch 2 & Windows PC - Black",
+    "image_url": "https://m.media-amazon.com/images/I/71ascxZNi8L._AC_SL1500_.jpg",
+    "price_cents": 5949,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:49.911Z"
+  },
+  {
+    "asin": "B0DP2GL2DJ",
+    "title": "GENKI x 8BitDo PocketPro Portable Wireless Game Controller with Hall Effect Joysticks Rumble, Gyro, USB-C Cable Gamepad for Portable Consoles, Switch, Windows, Mac OS, Android, Steam Deck",
+    "image_url": "https://m.media-amazon.com/images/I/71oCEibedqL._AC_SL1500_.jpg",
+    "price_cents": 4999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:49.911Z"
+  },
+  {
+    "asin": "B0FDKKRMSQ",
+    "title": "Pro 3 Bluetooth Controller with Swappable ABXY Buttons, TMR Joysticks, Hall Effect Triggers, Pro Back Buttons, Charging Dock, for Switch/Switch 2, Windows, Apple, SteamOS, Android - Purple",
+    "image_url": "https://m.media-amazon.com/images/I/6160KAt3SaL._AC_SL1500_.jpg",
+    "price_cents": 5949,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:49.911Z"
+  },
+  {
+    "asin": "B0FK56G8YV",
+    "title": "VITURE × 8BitDo Ultimate 2C Bluetooth Gaming Controller for Switch & Switch 2 | 6-Axis Motion Control | Hall Effect Joysticks | Rumble Vibration | Turbo Function | Wake on Shake | Smoky Translucent",
+    "image_url": "https://m.media-amazon.com/images/I/61FP3NTOqnL._AC_SL1500_.jpg",
+    "price_cents": 3900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:57:49.911Z"
+  },
+  {
+    "asin": "B0CGGPKBCZ",
+    "title": "Enki X Essential Gaming Chair: All-Day Comfort - Built-in Lumbar Arch - Optimized Cushion Density - Dual-Textured, Eco-Friendly Synthetic Leather - Adjustable 152-degree Recline - Black",
+    "image_url": "https://m.media-amazon.com/images/I/713Sneig0BL._AC_SL1500_.jpg",
+    "price_cents": 34999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0DCHXTGRN",
+    "title": "White Gaming Chair,Ergonomic Massage Computer Office Desk Chair with Footrest,Pocket Spring Cushion,Reclining Leather Adjustable Gamer Chair with Headrest and Lumbar Support,White",
+    "image_url": "https://m.media-amazon.com/images/I/51mG+WC2gbL._AC_SL1500_.jpg",
+    "price_cents": 16999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0BN6RRD5V",
+    "title": "TC100 Relaxed Gaming Chair - Leatherette - Racing-Inspired Design - Lumbar Pillow - Detachable Memory Foam Neck Pillow - Adjustable Seat Height - Adjustable Armrests - Black",
+    "image_url": "https://m.media-amazon.com/images/I/61Oe7NFEqUL._AC_SL1500_.jpg",
+    "price_cents": 22999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B08ZXQTTYK",
+    "title": "Arm Rest Pillow, 2021 New Size 11” Office Chair Armrest Cover Pads, Comfy Desk Chair Cushions for Elbows and Forearms(Large, Set of 2)",
+    "image_url": "https://m.media-amazon.com/images/I/517VNVh1f6L._AC_SL1500_.jpg",
+    "price_cents": 2199,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B08KJ5D9D9",
+    "title": "Replacement Adjustable Arms Armrest Pair Upright Bracket with Pads Fits Most Gaming Chairs (4D)",
+    "image_url": "https://m.media-amazon.com/images/I/71oEwZWWDwL._AC_SL1500_.jpg",
+    "price_cents": 4899,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0FBRKPVFR",
+    "title": "Gaming Chair,Ergonomic Computer Gaming Chair,400lb Load-Bearing,Retractable Footrest/Waist Support/Ergonomic Backrest[Spring + 4D Sponge] (Green)",
+    "image_url": "https://m.media-amazon.com/images/I/71a3tC0DkKL._AC_SL1500_.jpg",
+    "price_cents": 12999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0DHVFWVNG",
+    "title": "Gaming Chair with Footrest, Big and Tall Game Chair 350lb Racing Style Computer Chair, Ergonomic Executive Office Chair High Back with Lumbar Support and Recliner, Light Gray",
+    "image_url": "https://m.media-amazon.com/images/I/61sP-4dFUzL._AC_SL1500_.jpg",
+    "price_cents": 14399,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0BN7FDFVP",
+    "title": "TC100 Relaxed Gaming Chair - Fabric - Racing-Inspired Design - Lumbar Pillow - Detachable Memory Foam Neck Pillow - Adjustable Seat Height - Adjustable Armrests - Gray and Black",
+    "image_url": "https://m.media-amazon.com/images/I/614D02scX+L._AC_SL1500_.jpg",
+    "price_cents": 22999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0DT93JWJP",
+    "title": "ErgoX Premium Ergonomic Office Chair with Footrest- Adjustable 3D Armrests, Dynamic Lumbar Support, Recline & Tilt Function, Mesh Seat, for Home & Office Use,Black",
+    "image_url": "https://m.media-amazon.com/images/I/81uLfsi3c5L._AC_SL1500_.jpg",
+    "price_cents": 41999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0D47CZT4G",
+    "title": "TC500 Luxe Gaming Chair – Premium Breathable Fabric – Wide Seat – Five-Way Adjustable Armrests – Adjustable Built-in Lumbar Support – 90-135 Degree Recline – Sherwood",
+    "image_url": "https://m.media-amazon.com/images/I/61qP+eZLAiL._AC_SL1500_.jpg",
+    "price_cents": 54999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0DXKWX22K",
+    "title": "GTPLAYER Gaming Chair,Office Chair with Pocket Spring Lumbar Support, Ergonomic Comfortable Wide Office Desk Computer Chair with Outward Fixed Soft Armrests and Footrest (PU Leather, Black)",
+    "image_url": "https://m.media-amazon.com/images/I/61DRhYv8yoL._AC_SL1500_.jpg",
+    "price_cents": 14386,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0FXX23Y5C",
+    "title": "Guardian Jujutsu Kaisen Gojo Gaming Chair, Office Chair High Back Computer Chair Leather Desk Chair Racing Executive Ergonomic Adjustable Swivel Task Chair with Headrest and Lumbar Support",
+    "image_url": "https://m.media-amazon.com/images/I/61wydq+4b6L._AC_SL1500_.jpg",
+    "price_cents": 34900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0FP4VHV9T",
+    "title": "Big and Tall Gaming Chair with Footrest, Ergonomic Office Desk Chair with 4.4in Thick Cushion and Wide Wingless Seat, Comfortable Leather Computer Chair, Predator Series, Black",
+    "image_url": "https://m.media-amazon.com/images/I/71FpyHMpoDL._AC_SL1500_.jpg",
+    "price_cents": 13499,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0FWR6HL4M",
+    "title": "Big and Tall Office Chair Heavy Duty Gaming Chair with Deluxe Embossing Leather High Back Wider Ergonomic Computer Chair with Foot Rest 150°Reclining Pocket Spring Lumbar Support",
+    "image_url": "https://m.media-amazon.com/images/I/81sCil97YJL._AC_SL1500_.jpg",
+    "price_cents": 17996,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0DYSV1BDQ",
+    "title": "Gaming Chair 4D Adjustable Armrests - 155° Reclining & 320lb Capacity, High Back Ergonomic Computer Chair with Lumbar Support, Fabric Office Chair for Adults (Black)",
+    "image_url": "https://m.media-amazon.com/images/I/8184zafsESL._AC_SL1500_.jpg",
+    "price_cents": 16999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T01:58:05.907Z"
+  },
+  {
+    "asin": "B0FRGTYSL5",
+    "title": "PlayStation®5 console – 1TB",
+    "image_url": "https://m.media-amazon.com/images/I/51tSjJJl82L._AC_SL1500_.jpg",
+    "price_cents": 54900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:05:53.263Z"
+  },
+  {
+    "asin": "B08L6PYXJR",
+    "title": "TiMOVO Green Backlight Keyboard for Xbox One, Xbox Series X/S,Wireless Chatpad Message KeyPad with Headset & Audio Jack,Mini Game Keyboard Fit Xbox One/One S/One Elite/2, 2.4G Receiver Included, Black",
+    "image_url": "https://m.media-amazon.com/images/I/6130ZDH+18L._AC_SL1500_.jpg",
+    "price_cents": 2695,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:06.099Z"
+  },
+  {
+    "asin": "B0DK74LG91",
+    "title": "2TB C50 Storage Expansion Card, Officially Licensed for Xbox – Quick Resume, Plug & Play, NVMe SSD Expansion for Xbox Series X|S Gaming Consoles - WDBMPH0020BNC-WCSN",
+    "image_url": "https://m.media-amazon.com/images/I/71QxmOXxYVL._AC_SL1500_.jpg",
+    "price_cents": 24999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:06.099Z"
+  },
+  {
+    "asin": "B0DP61XVJP",
+    "title": "GuliKit Hall Effect Joystick Module For Steam Deck OLED, Electromagnetic Thumbstick Replacement with Original Touch Sensing, No Soldering, One-Key Calibration,Joysticks with Caps(Not for LCD)",
+    "image_url": "https://m.media-amazon.com/images/I/41Ny0fF5CZL._AC_SL1500_.jpg",
+    "price_cents": 2970,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:26.944Z"
+  },
+  {
+    "asin": "B0F1TSZ5VT",
+    "title": "PlayVital Cute Demon Protective Case for Steam Deck LCD & OLED, Kawaii Anti-Slip Protector for Steam Deck OLED with Thumb Grip Caps & Trackpads Stickers & Back Button Enhancement Set - Black",
+    "image_url": "https://m.media-amazon.com/images/I/61MxTyWVhrL._AC_SL1500_.jpg",
+    "price_cents": 2399,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:26.944Z"
+  },
+  {
+    "asin": "B0D6VLXH87",
+    "title": "KOVA 13 in 1 Accessories Set for Playstation Portal Remote Player, Carrying Case for PS Portal ,TPU Shell Cover Skin with Kickstand,Portable Charging Dock,2 HD Screen Protector,4 Thumb Grip,Earbud Headphones for PS5 Portal Bundle (Black)",
+    "image_url": "https://m.media-amazon.com/images/I/81U9jUSEdnL._AC_SL1500_.jpg",
+    "price_cents": 4799,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:57.015Z"
+  },
+  {
+    "asin": "B0CYSNTWTL",
+    "title": "Auarte 12 in 1 Accessories Set for Playstation Portal Remote Player, Hard Carrying Case for PS Portal with Clear Skin Case for PS5 Portal, 2 Screen Protector with 4 Thumb Grip",
+    "image_url": "https://m.media-amazon.com/images/I/81iRdHMSknL._AC_SL1500_.jpg",
+    "price_cents": 3399,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:57.015Z"
+  },
+  {
+    "asin": "B0D7GFG5SB",
+    "title": "Charging Stand for PS Portal Remote Player, PS Portal Charging Dock with Light Modes, PS Portal Stand Charger, Portal Dock Station with Magnetic Connector, PS Portal Holder Base",
+    "image_url": "https://m.media-amazon.com/images/I/71-Dyxphi7L._AC_SL1500_.jpg",
+    "price_cents": 1799,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:57.015Z"
+  },
+  {
+    "asin": "B0D2HQCP1B",
+    "title": "STARTRC GAMES Carrying Case for Playstation Portal Remote Player, Hard Shell Travel Case with DIY Customizable Foam for PS Portal, Portable Hard Storage Bag for PS5 Portal and Other Accessories",
+    "image_url": "https://m.media-amazon.com/images/I/71FrHMbzbqL._AC_SL1500_.jpg",
+    "price_cents": 3499,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:57.015Z"
+  },
+  {
+    "asin": "B0DPX16S3S",
+    "title": "Left Joystick for PS5 Portal/PSVR2 Hall Effect Joysticks Replacement for PlayStation Portal Remote Player /VR2 Controller 3D Analog Stick Module Thumbsticks Accessories with Repair Tools",
+    "image_url": "https://m.media-amazon.com/images/I/719IfUmaDDL._AC_SL1500_.jpg",
+    "price_cents": 1299,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:06:57.015Z"
+  },
+  {
+    "asin": "B091FX8BFL",
+    "title": "Xbox Elite Series 2 Custom Soft Touch Controller - Soft Touch Feel, Added Grip, Metallic Red Color - Compatible with Xbox One, Series X, Series S",
+    "image_url": "https://m.media-amazon.com/images/I/71xAKI7VmML._AC_SL1500_.jpg",
+    "price_cents": 23999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:11.803Z"
+  },
+  {
+    "asin": "B0FKFQ9RTL",
+    "title": "KanKanGou Customised Model 1797 Elite Series 2 Controller (Blue),Compatible for Xbox Elite Series 2 Controller, Gaming Controller Compatible With Xbox Series S/X, Xbox One S/X, With Accessory Bag [xbox_series_s]",
+    "image_url": "https://m.media-amazon.com/images/I/61aHlC6V9mL._AC_SL1500_.jpg",
+    "price_cents": 16099,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:11.803Z"
+  },
+  {
+    "asin": "B0CJVQFZ1S",
+    "title": "Turtle Beach Stealth Ultra High-Performance Wireless Gaming Controller Licensed for Xbox Series X|S, Xbox One, Windows PC, Android - LED Dashboard, Rapid Charge Dock, RGB Lighting, Bluetooth, Black",
+    "image_url": "https://m.media-amazon.com/images/I/7120-u+4TTL._AC_SL1500_.jpg",
+    "price_cents": 21900,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:11.803Z"
+  },
+  {
+    "asin": "B0G2SZ9SSH",
+    "title": "Microsoft Series 2 Elite Core Controller Xbox Series X (Renewed)",
+    "image_url": "https://m.media-amazon.com/images/I/61q7x+-m92L._AC_SL1500_.jpg",
+    "price_cents": 11999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:11.803Z"
+  },
+  {
+    "asin": "B0FSQK1PDG",
+    "title": "KanKanGou Elite Series 2 Core Controller Compatible for Xbox Elite Series 2 Controller-Red,Gaming Controller Compatible With Xbox Series S/X, One,Without Accessory Bag",
+    "image_url": "https://m.media-amazon.com/images/I/61vg6SrHfhL._AC_SL1500_.jpg",
+    "price_cents": 12999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:11.803Z"
+  },
+  {
+    "asin": "B0DR8V899R",
+    "title": "8BitDo Ultimate 2 Wireless Controller for Windows PC, Apple, Steam & Android, Gaming Controller with TMR Joysticks, Hall/Tactile Triggers, Motion Control, RGB Fire Ring, 1000Hz Polling Rate, Black",
+    "image_url": "https://m.media-amazon.com/images/I/718TLhNbG-L._AC_SL1500_.jpg",
+    "price_cents": 5999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:42.391Z"
+  },
+  {
+    "asin": "B0FXKCB4N9",
+    "title": "Gaming Chair with Footrest, Ergonomic Computer Game Desk Chair, Reclining Game Chair Seat Height Adjustment, Swivel Rocker with Headrest and Lumbar (Blue)",
+    "image_url": "https://m.media-amazon.com/images/I/61pE1Xcl+LL._AC_SL1500_.jpg",
+    "price_cents": 9980,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:56.254Z"
+  },
+  {
+    "asin": "B0DYSK9GM8",
+    "title": "Gaming Chair 4D Adjustable Armrests - 155° Reclining & 320lb Capacity, High Back Ergonomic Computer Chair with Lumbar Support, Fabric Office Chair for Adults (Black)",
+    "image_url": "https://m.media-amazon.com/images/I/71FWQ9yEE4L._AC_SL1500_.jpg",
+    "price_cents": 17999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:56.254Z"
+  },
+  {
+    "asin": "B0GH6WS166",
+    "title": "Gaming Chair, Ergonomic Computer Office Chairs for Adults with Footrest, Height Adjustable, Linkage Armrests, 90-155° Recline & Headrest Lumbar Support, Colorful Black",
+    "image_url": "https://m.media-amazon.com/images/I/7151bdMJTgL._AC_SL1500_.jpg",
+    "price_cents": 12599,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:56.254Z"
+  },
+  {
+    "asin": "B0FXJZMZDJ",
+    "title": "Pink Gaming Chair Cute with Cat Ears Ergonomic Computer Chair with Cat Embroidery Adjustable Memory Foam Lumbar Support and Headrest Comfortable Reclining Office Chair Soft Velvet Fabric",
+    "image_url": "https://m.media-amazon.com/images/I/71QcSJ2+axL._AC_SL1500_.jpg",
+    "price_cents": 13946,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:56.254Z"
+  },
+  {
+    "asin": "B0FT2QBJXN",
+    "title": "Office Chair Ergonomic Desk Chair,High Back Computer Chair with 3D Headrest & Armrests,Gaming Chair with Lumbar Support,90-135°Tilt Lock Mesh Office Chair with Footrest,Wheels,Black",
+    "image_url": "https://m.media-amazon.com/images/I/811w7AK3m3L._AC_SL1500_.jpg",
+    "price_cents": 15999,
+    "category": "Gaming",
+    "scraped_at": "2026-03-11T02:07:56.254Z"
+  }
+]

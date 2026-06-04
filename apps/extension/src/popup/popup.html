@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Price Games Importer</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+<div id="app">
+  <div id="login-view" class="view hidden">
+    <h2>Price Games</h2><p class="subtitle">Admin Extension Login</p>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Username" autocomplete="username" required>
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit" id="login-btn">Log In</button>
+      <p id="login-error" class="error hidden"></p>
+    </form>
+  </div>
+  <div id="no-product-view" class="view hidden">
+    <div class="header"><h2>Price Games</h2><button id="logout-btn-1" class="btn-link">Logout</button></div>
+    <p class="message">No product detected on this page.</p>
+  </div>
+  <div id="product-view" class="view hidden">
+    <div class="header"><h2>Price Games</h2><button id="logout-btn-2" class="btn-link">Logout</button></div>
+    <div id="product-card">
+      <img id="product-image" src="" alt="Product image">
+      <div class="product-info"><p id="product-title" class="product-title"></p><p id="product-price" class="product-price"></p><p id="product-manufacturer" class="product-mfg"></p><p id="product-asin" class="product-asin"></p></div>
+      <label for="category-select">Category</label><select id="category-select"></select>
+      <button id="import-btn">Import to Price Games</button>
+    </div>
+    <p id="import-status" class="hidden"></p>
+  </div>
+  <div id="generic-product-view" class="view hidden">
+    <div class="header"><h2>Price Games</h2><button id="logout-btn-3" class="btn-link">Logout</button></div>
+    <div class="generic-product-card">
+      <img id="generic-product-image" src="" alt="Product image">
+      <div class="product-info">
+        <p id="generic-product-title" class="product-title"></p>
+        <p id="generic-product-price" class="product-price"></p>
+        <p id="generic-product-brand" class="product-mfg"></p>
+      </div>
+    </div>
+    <div id="search-status" class="search-status">Searching Amazon...</div>
+    <div id="search-results-container" class="search-results-container hidden"></div>
+  </div>
+  <div id="loading-view" class="view hidden"><p>Loading...</p></div>
+</div>
+<script type="module" src="popup.js"></script>
+</body>
+</html>

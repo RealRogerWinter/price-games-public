@@ -1,0 +1,40 @@
+{
+  "name": "price-game",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w apps/server\" \"npm run dev -w apps/web\"",
+    "build": "npm run build -w packages/shared && npm run build -w apps/server && npm run build -w apps/web",
+    "test": "npm run test -w apps/server && npm run test -w apps/web",
+    "test:coverage": "npm run test:coverage -w apps/server && npm run test:coverage -w apps/web",
+    "test:server": "npm run test -w apps/server",
+    "test:web": "npm run test -w apps/web",
+    "seed": "npm run seed -w apps/server",
+    "sandbox": "bash scripts/sandbox.sh up",
+    "sandbox:down": "bash scripts/sandbox.sh down",
+    "sandbox:rebuild": "bash scripts/sandbox.sh rebuild",
+    "sandbox:seed": "bash scripts/sandbox.sh seed",
+    "sandbox:e2e": "tsx scripts/sandbox-e2e.ts",
+    "lh:game": "node scripts/lh-game.mjs",
+    "docs:check": "node scripts/check-docs.mjs",
+    "docs:index": "node scripts/check-docs.mjs --write"
+  },
+  "overrides": {
+    "jsdom": "25.0.1",
+    "d3-color": "^3.1.0",
+    "d3-interpolate": "^3.0.1",
+    "d3-transition": "^3.0.1",
+    "d3-zoom": "^3.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "concurrently": "^8.2.2",
+    "jsdom": "25.0.1",
+    "lighthouse": "^12.8.2",
+    "puppeteer-core": "^24.12.1",
+    "typescript": "^5.4.0"
+  }
+}

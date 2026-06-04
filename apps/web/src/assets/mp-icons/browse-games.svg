@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Browse Games">
+  <defs>
+    <linearGradient id="bgBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#86efac" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.18"/>
+    </linearGradient>
+    <linearGradient id="bgCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="bgLens" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a7f3d0" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.35"/>
+    </linearGradient>
+  </defs>
+  <!-- Backdrop -->
+  <circle cx="32" cy="32" r="30" fill="url(#bgBg)"/>
+  <!-- Three game cards in a fanned stack underneath -->
+  <g>
+    <rect x="10" y="30" width="18" height="22" rx="3" fill="url(#bgCard)" stroke="#4ade80" stroke-width="1.2" transform="rotate(-8 19 41)"/>
+    <rect x="22" y="28" width="20" height="24" rx="3" fill="url(#bgCard)" stroke="#4ade80" stroke-width="1.4"/>
+    <rect x="36" y="30" width="18" height="22" rx="3" fill="url(#bgCard)" stroke="#4ade80" stroke-width="1.2" transform="rotate(8 45 41)"/>
+    <!-- Tiny icons inside the centered card -->
+    <circle cx="32" cy="36" r="1.6" fill="#4ade80"/>
+    <rect x="26" y="42" width="12" height="1.5" rx="0.75" fill="#4ade80" opacity="0.6"/>
+    <rect x="28" y="46" width="8" height="1.5" rx="0.75" fill="#4ade80" opacity="0.4"/>
+  </g>
+  <!-- Magnifying glass tilted over the stack -->
+  <g stroke="#22c55e" stroke-width="2.6" fill="none" stroke-linecap="round">
+    <circle cx="26" cy="22" r="10" fill="url(#bgLens)"/>
+    <line x1="33" y1="29" x2="42" y2="38"/>
+  </g>
+  <!-- Highlight on the lens -->
+  <path d="M20 17 Q22 14 26 14" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+</svg>

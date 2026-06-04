@@ -1,0 +1,65 @@
+# Sandbox environment — builds locally, isolated from production.
+# Each git worktree gets its own project name (derived from directory),
+# so containers, volumes, and networks are fully isolated.
+#
+# Usage:
+#   npm run sandbox                          # build & start (port 3002)
+#   SANDBOX_PORT=3003 npm run sandbox        # custom port (for worktrees)
+#   npm run sandbox:seed                     # seed test products (first run)
+#   npm run sandbox:down                     # stop & remove container
+#   npm run sandbox:rebuild                  # full rebuild (no cache)
+#   SANDBOX_TAILSCALE=0 npm run sandbox       # disable Tailscale (public access)
+
+name: sandbox-ghost-streak
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.sandbox-tts
+    ports:
+      - "${SANDBOX_BIND:-0.0.0.0}:${SANDBOX_PORT:-3002}:3001"
+    env_file:
+      - .env.sandbox
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      # Explicit sandbox marker. Server refuses to boot with SKIP_* flags in
+      # production unless SANDBOX=1 is also set (see apps/server/src/index.ts).
+      # Keeps the sandbox working here while blocking bare SKIP_* typos in
+      # the real prod .env.
+      - SANDBOX=1
+      # Sandbox-only: lets the seeded demo admin reach the dashboard without
+      # enrolling a 2FA authenticator. NEVER set in production.
+      - SKIP_ADMIN_2FA=1
+      # Sandbox-only: bypasses the Cloudflare Turnstile challenge on
+      # registration so smoke testers can create accounts without solving
+      # captchas. The web reads /api/user/auth-config on mount and hides
+      # the widget when this is set. NEVER set in production.
+      - SKIP_TURNSTILE=1
+      # Sandbox-only: bypasses the IP-collision and per-IP daily-cap
+      # gates in services/inviteRewards.ts so a tester sharing one host
+      # IP between inviter + joiner browsers can actually earn the +25%
+      # buff. Boot guard in index.ts refuses prod startup with this flag
+      # unless SANDBOX=1 is also set. NEVER set in production.
+      - SKIP_INVITE_IP_CHECKS=1
+      # Image-gallery archive root inside the container. Mapped via the
+      # volume mount below to the host archive directory.
+      - IMAGE_ARCHIVE_ROOT=/image-archive
+    volumes:
+      - sandbox-data:/app/apps/server/data
+      # Host-level image archive used by the admin asset gallery. Mounted
+      # RW so the gallery's delete/edit actions land back on the host, and
+      # so new images generated outside the container still surface in the
+      # UI. $IMAGE_ARCHIVE_HOST defaults to $HOME/image-archive.
+      - ${IMAGE_ARCHIVE_HOST:-${HOME}/image-archive}:/image-archive
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  sandbox-data:

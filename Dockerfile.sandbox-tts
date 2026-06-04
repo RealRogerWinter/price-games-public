@@ -1,0 +1,95 @@
+# Sandbox image with embedded Piper TTS — debian-based so the
+# Piper x86_64 glibc binary runs without needing musl shims. Only used
+# by docker-compose.sandbox.yml; production keeps the alpine Dockerfile.
+#
+# Why a separate Dockerfile: production runs the bot-streamer in its
+# own container (infra/streamer/Dockerfile) which has Piper. Sandbox
+# wants to drive the lipsync end-to-end via real Piper from inside
+# the app server, so the sandbox image needs the same binary +
+# voice model on disk. Baking it in keeps the test self-contained.
+
+# Stage 1: Build
+FROM node:20-bookworm-slim AS builder
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      python3 make g++ ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/*
+COPY package.json package-lock.json ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/bot-streamer/package.json packages/bot-streamer/
+COPY apps/server/package.json apps/server/
+COPY apps/web/package.json apps/web/
+COPY apps/extension/package.json apps/extension/
+# Skip Playwright's browser-binary postinstall (~300MB) — sandbox
+# image never runs Playwright; bot-streamer's @price-game/bot-streamer
+# manifest is needed for the workspace graph but its runtime is dead
+# code in the server image.
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+RUN npm ci
+COPY . .
+RUN npm run build -w @price-game/shared \
+    && npm run build -w apps/server \
+    && npm run build -w apps/web
+
+# Stage 2: Runtime
+FROM node:20-bookworm-slim
+WORKDIR /app
+
+# Piper binary + voice model (matches infra/streamer/Dockerfile so
+# server-side Piper output is identical to what production streams).
+ARG PIPER_VERSION=2023.11.14-2
+ARG VOICE_NAME=en_US-amy-medium
+# sha256 pinning — guards against a supply-chain compromise on
+# github.com/rhasspy/piper or huggingface.co/rhasspy/piper-voices
+# silently baking a malicious binary into the sandbox image. If the
+# upstream changes (intentional version bump) these need to be
+# updated alongside ARG PIPER_VERSION / VOICE_NAME — `sha256sum` the
+# downloaded files locally and replace the values below.
+ARG PIPER_SHA256=a50cb45f355b7af1f6d758c1b360717877ba0a398cc8cbe6d2a7a3a26e225992
+ARG VOICE_ONNX_SHA256=b3a6e47b57b8c7fbe6a0ce2518161a50f59a9cdd8a50835c02cb02bdd6206c18
+ARG VOICE_JSON_SHA256=95a23eb4d42909d38df73bb9ac7f45f597dbfcde2d1bf9526fdeaf5466977d77
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates curl wget libsqlite3-0 \
+    && curl -fsSL "https://github.com/rhasspy/piper/releases/download/${PIPER_VERSION}/piper_linux_x86_64.tar.gz" \
+        -o /tmp/piper.tar.gz \
+    && echo "${PIPER_SHA256}  /tmp/piper.tar.gz" | sha256sum -c - \
+    && mkdir -p /opt/piper \
+    && tar -xzf /tmp/piper.tar.gz -C /opt/piper --strip-components=1 \
+    && ln -s /opt/piper/piper /usr/local/bin/piper \
+    && rm /tmp/piper.tar.gz \
+    && mkdir -p /opt/voices \
+    && curl -fsSL "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/amy/medium/${VOICE_NAME}.onnx" \
+        -o "/opt/voices/${VOICE_NAME}.onnx" \
+    && echo "${VOICE_ONNX_SHA256}  /opt/voices/${VOICE_NAME}.onnx" | sha256sum -c - \
+    && curl -fsSL "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/amy/medium/${VOICE_NAME}.onnx.json" \
+        -o "/opt/voices/${VOICE_NAME}.onnx.json" \
+    && echo "${VOICE_JSON_SHA256}  /opt/voices/${VOICE_NAME}.onnx.json" | sha256sum -c - \
+    && rm -rf /var/lib/apt/lists/*
+ENV STREAMER_TTS_VOICE_MODEL=/opt/voices/en_US-amy-medium.onnx \
+    BROADCAST_DISABLE_PUBLIC_GATE=1
+
+COPY --from=builder /app/package.json /app/package-lock.json ./
+COPY --from=builder /app/packages/shared/package.json packages/shared/
+COPY --from=builder /app/packages/bot-streamer/package.json packages/bot-streamer/
+COPY --from=builder /app/apps/server/package.json apps/server/
+COPY --from=builder /app/apps/web/package.json apps/web/
+COPY --from=builder /app/apps/extension/package.json apps/extension/
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      python3 make g++ \
+    && npm ci --omit=dev \
+    && apt-get purge -y python3 make g++ \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app/packages/shared/dist packages/shared/dist
+COPY --from=builder /app/apps/server/dist apps/server/dist
+COPY --from=builder /app/apps/server/data apps/server/data
+COPY --from=builder /app/apps/web/dist apps/web/dist
+EXPOSE 3001
+ENV NODE_ENV=production
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser \
+    && chown -R appuser:appgroup /app/apps/server/data
+USER appuser
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3001/api/health || exit 1
+CMD ["node", "apps/server/dist/index.js"]

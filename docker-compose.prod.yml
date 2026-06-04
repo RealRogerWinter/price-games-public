@@ -1,0 +1,127 @@
+services:
+  app:
+    image: ghcr.io/${DOCKER_IMAGE_NAME:-price-game}:latest
+    ports:
+      # Bind to loopback only — Caddy reverse-proxies to localhost:3001.
+      # Publishing on 0.0.0.0 would expose Express directly, bypassing CSP,
+      # HSTS, and the Caddy-level /admin blackhole.
+      - "127.0.0.1:3001:3001"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      # Caddy fronts the Express app with `encode zstd gzip`. Setting this
+      # flag tells Express not to compress responses itself, so Caddy is
+      # the sole compression layer and can negotiate zstd with capable
+      # clients (Express's compression middleware would otherwise force
+      # gzip and block zstd negotiation). Sandbox / direct-served
+      # deployments leave the flag unset and Express compresses itself.
+      - BEHIND_REVERSE_PROXY=1
+    volumes:
+      - app-data:/app/apps/server/data
+    restart: unless-stopped
+    # Graceful shutdown: Docker sends SIGTERM and waits up to 30s before SIGKILL.
+    # The server's shutdown handler force-exits at 25s, so we always exit cleanly.
+    stop_grace_period: 30s
+    # Healthcheck lets `docker compose up -d --wait` block until the new
+    # container is actually serving, so Caddy's retry buffer only needs to
+    # cover the container-swap gap, not also backend warmup.
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  # 24/7 bot streamer. Connects to the broadcast overlay over the
+  # tailnet (https://<tailscale-hostname>.ts.net/?broadcast=1) — the
+  # overlay is intentionally blocked on the public price.games domain
+  # (see Caddyfile + apps/server/src/middleware/broadcastAccess.ts).
+  # The connection still flows through the same Express backend that
+  # serves human players (via `tailscale serve`), so the bot exercises
+  # the same code path; only the entry vhost is different.
+  #
+  # STREAMER_TARGET_URL must be set in `.env` to the tailnet hostname.
+  # Image is built and tagged separately by an ops script
+  # (infra/streamer/Dockerfile); compose just consumes it.
+  #
+  # The service is opt-in via the `streamer` compose profile: a default
+  # `docker compose up -d` does not start it. Operators bring it up
+  # explicitly with `docker compose --profile streamer up -d streamer`.
+  # That keeps deployments without stream keys from spinning the
+  # streamer at all (rather than starting + restart-looping on missing
+  # config).
+  streamer:
+    image: ghcr.io/${DOCKER_IMAGE_NAME:-price-game}-streamer:${STREAMER_IMAGE_TAG:-latest}
+    profiles:
+      # The `streamer` profile keeps this service out of the default
+      # `up` set. Operators opt in with `docker compose --profile
+      # streamer up -d` or by leaving STREAMER_ENABLED set in the
+      # environment that drives the deploy script.
+      - streamer
+    env_file:
+      - .env
+    # Pin the streamer to host CPUs 2 + 3 so the learning worker
+    # thread doesn't compete with the host's other Docker services
+    # (the app + caddy share CPUs 0/1). With this in place the worker
+    # is also given PRIORITY_BELOW_NORMAL inside the container so
+    # Chromium wins ties on CPU contention.
+    cpuset: "2,3"
+    cpu_shares: 1024
+    environment:
+      - NODE_ENV=production
+      # No fallback: the bot refuses to start without an explicit value
+      # (see resolveTargetUrl in packages/bot-streamer/src/runner/targetUrl.ts).
+      # Set STREAMER_TARGET_URL in .env to the tailnet hostname, e.g.
+      # STREAMER_TARGET_URL=https://onestreamer.tail-abcd.ts.net.
+      - STREAMER_TARGET_URL=${STREAMER_TARGET_URL}
+      - STREAMER_HEALTH_PORT=9101
+      # Learning subsystem (default: off). Operators flip these on in
+      # the container env (.env) per the runbook in docs/STREAMER.md.
+      - STREAMER_LEARNING_ENABLED=${STREAMER_LEARNING_ENABLED:-false}
+      - STREAMER_LEARNING_MODE=${STREAMER_LEARNING_MODE:-off}
+      - STREAMER_LEARNING_DATA_DIR=${STREAMER_LEARNING_DATA_DIR:-/var/streamer/data}
+    volumes:
+      - streamer-data:/var/streamer
+      # Music dir is mounted read-only from the host so operators can
+      # drop / rotate tracks without rebuilding the image.
+      #
+      # IMPORTANT: the host path must exist before `docker compose up`.
+      # Docker auto-creates missing bind-mount paths as root, which
+      # leaves the operator unable to drop music files in without
+      # `sudo`. The deploy runbook (docs/STREAMER.md) calls this out
+      # as a pre-step:
+      #   mkdir -p $HOME/streamer-music
+      - ${STREAMER_MUSIC_HOST_DIR:-${HOME}/streamer-music}:/var/streamer/music:ro
+    # Resource caps so the streamer can't starve the game server.
+    # 1080p30 x264 veryfast burns ~1 vCPU; 2.0 leaves headroom for
+    # Chromium + Pulse + the runner. Bump `mem_limit` to 4g if Chromium
+    # OOMs; current default is 2.5g.
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2.5g
+    # Only soft-depend on `app`: the streamer connects to the public
+    # URL, not the local app instance, so a compose `up` race that
+    # starts the streamer before app is fully ready is harmless — the
+    # bot retries.
+    depends_on:
+      - app
+    restart: unless-stopped
+    stop_grace_period: 30s
+    healthcheck:
+      # `curl` ships in the streamer image (debian-slim doesn't include
+      # wget). The previous wget-based probe failed every interval with
+      # "exec: wget: not found", marking the container unhealthy
+      # regardless of actual streamer state.
+      test: ["CMD", "curl", "-fsS", "-m", "3", "-o", "/dev/null", "http://localhost:9101/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  app-data:
+  streamer-data:

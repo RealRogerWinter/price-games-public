@@ -1,0 +1,98 @@
+version: 2.1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PUBLIC-MIRROR CI (price-games-public)
+#
+# Thin, contributor-facing pipeline: install → docs check → typecheck → build →
+# tests with coverage. There is intentionally NO Docker push, NO deploy, NO
+# rollback, and NO secrets/contexts/SSH keys here. The production pipeline lives
+# only in the private source-of-truth repo, so nothing on the public repo can
+# reach production or read credentials — even from fork pull requests.
+#
+# This file is maintained in the PRIVATE repo at
+# scripts/public-overlay/.circleci/config.yml and copied to .circleci/config.yml
+# in the public repo by scripts/sync-public.sh. Edit it there, not on the mirror.
+# ─────────────────────────────────────────────────────────────────────────────
+
+commands:
+  install:
+    description: "Restore node_modules cache and install dependencies"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - nm-pub-v1-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: |
+            if [ -d node_modules ]; then
+              echo "node_modules restored from cache — skipping npm ci"
+            else
+              npm ci
+            fi
+      - save_cache:
+          key: nm-pub-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+            - apps/server/node_modules
+            - apps/web/node_modules
+            - apps/extension/node_modules
+            - packages/shared/node_modules
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:20.19
+    resource_class: medium
+    steps:
+      - install
+      - run:
+          name: Check documentation (frontmatter, index sync, links)
+          command: npm run docs:check
+      - run:
+          name: Typecheck server + web
+          command: |
+            npx tsc --noEmit -p apps/server/tsconfig.json
+            npx tsc --noEmit -p apps/web/tsconfig.json
+      - run:
+          name: Build all workspaces
+          command: npm run build
+      - run:
+          # The bot-streamer package runs in its own container and is not
+          # covered by the test-server / test-web jobs; run its unit suite here.
+          name: Bot-streamer unit tests
+          command: npm run test -w packages/bot-streamer
+
+  test-server:
+    docker:
+      - image: cimg/node:20.19
+    resource_class: large
+    steps:
+      - install
+      - run:
+          name: Build shared package (server tests import @price-game/shared)
+          command: npm run build -w packages/shared
+      - run:
+          name: Server tests + coverage
+          command: npm run test:coverage -w apps/server
+
+  test-web:
+    docker:
+      - image: cimg/node:20.19
+    resource_class: large
+    steps:
+      - install
+      - run:
+          name: Build shared package (web tests import @price-game/shared)
+          command: npm run build -w packages/shared
+      - run:
+          name: Web tests + coverage
+          command: npm run test:coverage -w apps/web
+
+workflows:
+  build-test:
+    # Runs on every branch and pull request. No branch filters, no deploy.
+    jobs:
+      - build
+      - test-server
+      - test-web

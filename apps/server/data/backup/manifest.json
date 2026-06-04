@@ -1,0 +1,30 @@
+{
+  "backed_up_at": "2026-03-11T02:08:22.776Z",
+  "total_products": 3057,
+  "categories": {
+    "Arts & Crafts": 123,
+    "Automotive": 127,
+    "Baby": 128,
+    "Beauty": 129,
+    "Collectibles": 127,
+    "Costumes": 126,
+    "Electronics": 125,
+    "Fashion": 127,
+    "Figurines": 130,
+    "Foods": 128,
+    "Furniture": 130,
+    "Gaming": 120,
+    "Garden & Outdoor": 127,
+    "Home Decor": 128,
+    "Jewelry": 121,
+    "Kitchen": 127,
+    "Music": 130,
+    "Office & School Supplies": 129,
+    "Outdoor Recreation": 130,
+    "Pet": 129,
+    "Sports & Fitness": 130,
+    "Tools & Home Improvement": 127,
+    "Toys": 129,
+    "Weird and Wonderful": 130
+  }
+}
