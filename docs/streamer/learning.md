@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: The online-learning MLP: architecture, replay buffer, worker isolation, operational guards.
+summary: "The online-learning MLP: architecture, replay buffer, worker isolation, operational guards."
 related_code:
   - packages/bot-streamer/src/learning
 ---

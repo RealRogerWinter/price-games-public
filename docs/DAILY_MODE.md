@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: all
 category: game-design
-summary: The once-a-day puzzle: rotation, seeding, streaks, sharing.
+summary: "The once-a-day puzzle: rotation, seeding, streaks, sharing."
 related_code:
   - apps/server/src/routes
   - packages/shared/src

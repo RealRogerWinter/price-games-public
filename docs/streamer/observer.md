@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: What the bot sees: state snapshots and auto-binding myPlayerId.
+summary: "What the bot sees: state snapshots and auto-binding myPlayerId."
 related_code:
   - packages/bot-streamer/src/observer
 ---

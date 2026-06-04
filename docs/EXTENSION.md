@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: extension
-summary: Chrome extension for importing Amazon products: build, install, usage.
+summary: "Chrome extension for importing Amazon products: build, install, usage."
 related_code:
   - apps/extension
 ---
