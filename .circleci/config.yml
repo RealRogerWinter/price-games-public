@@ -50,12 +50,12 @@ jobs:
           name: Check documentation (frontmatter, index sync, links)
           command: npm run docs:check
       - run:
-          name: Typecheck server + web
-          command: |
-            npx tsc --noEmit -p apps/server/tsconfig.json
-            npx tsc --noEmit -p apps/web/tsconfig.json
-      - run:
-          name: Build all workspaces
+          # `npm run build` compiles shared → server → web in order; each
+          # workspace build runs `tsc`, so this also typechecks everything.
+          # Building the @price-game/shared package FIRST is required — the
+          # server/web sources import it, so a standalone typecheck before the
+          # build would fail with "Cannot find module '@price-game/shared'".
+          name: Build all workspaces (compiles + typechecks shared → server → web)
           command: npm run build
       - run:
           # The bot-streamer package runs in its own container and is not
