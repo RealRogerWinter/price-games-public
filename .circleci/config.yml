@@ -73,8 +73,11 @@ jobs:
           name: Build shared package (server tests import @price-game/shared)
           command: npm run build -w packages/shared
       - run:
-          name: Server tests + coverage
-          command: npm run test:coverage -w apps/server
+          # Run the suite without the coverage gate. The ≥85% line/branch
+          # coverage threshold is a maintainer/deploy concern enforced in the
+          # private pipeline; the public mirror's job is "does it build + pass".
+          name: Server tests
+          command: npm run test -w apps/server
 
   test-web:
     docker:
@@ -86,8 +89,9 @@ jobs:
           name: Build shared package (web tests import @price-game/shared)
           command: npm run build -w packages/shared
       - run:
-          name: Web tests + coverage
-          command: npm run test:coverage -w apps/web
+          # No coverage gate here — see the note in test-server.
+          name: Web tests
+          command: npm run test -w apps/web
 
 workflows:
   build-test:
