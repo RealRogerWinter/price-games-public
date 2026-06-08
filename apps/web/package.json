@@ -45,12 +45,12 @@
     "@types/react-dom": "^18.3.7",
     "@types/react-simple-maps": "^3.0.6",
     "@types/three": "^0.183.1",
-    "@vitejs/plugin-react-swc": "^4.2.3",
-    "@vitest/coverage-v8": "4.0.18",
-    "jsdom": "^25.0.1",
-    "typescript": "^5.3.3",
-    "vite": "^7.3.1",
-    "vitest": "4.0.18"
+    "@vitejs/plugin-react-swc": "^4.3.1",
+    "@vitest/coverage-v8": "4.1.8",
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "4.1.8"
   },
   "browserslist": [
     "last 2 Chrome versions",
