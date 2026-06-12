@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: game-design
-summary: AI-enriched product taxonomy, the galaxy visualization, and manufacturer tracking.
+summary: "AI-enriched product taxonomy, the galaxy visualization, and manufacturer tracking."
 related_code:
   - apps/server/src/routes/universe.ts
   - apps/web/src/pages/universe

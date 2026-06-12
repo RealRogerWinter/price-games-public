@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: Piper TTS pipeline, mouth animation, and the visual-only Thinker thought bubbles.
+summary: "Piper TTS pipeline, mouth animation, and the visual-only Thinker thought bubbles."
 related_code:
   - packages/bot-streamer/src/tts
 ---

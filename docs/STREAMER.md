@@ -173,6 +173,21 @@ STREAMER_BITRATE_KBPS=2800
 
 Then `docker compose --profile streamer up -d --force-recreate streamer`. 720p30 at 2800k uses roughly half the CPU of 1080p30 at 4500k.
 
+### Memory stability (OOM crash-loop prevention)
+
+The streamer container packs Chromium + Xvfb + ffmpeg + Node + Piper + mpd into one memory cgroup; at 1080p the working set peaks ~4–5 GiB and creeps higher over long sessions (Chromium renderer + X11 pixmaps). Three layers keep it from OOM-killing Xvfb (which otherwise leaves the encoder a zombie publishing a black frame):
+
+1. **Container limit `6g`** (`docker-compose.prod.yml` → `deploy.resources.limits.memory`). Raised from `2.5g`, which sat *below* the working set and caused a hard-OOM crash-loop. Keep a few GiB of host **swap** provisioned so transient spikes degrade gracefully instead of hard-killing.
+2. **Proactive browser recycle** (`STREAMER_BROWSER_RECYCLE_PLANS`, default `25`). The runner relaunches a fresh Chromium every N lifecycle plans, releasing accumulated renderer/pixmap memory. Mood/stats persist across the recycle. Set `0` to disable.
+3. **Host mem-watchdog** (`infra/streamer/pricey-mem-watchdog.{sh,service,timer}`). A systemd timer that `docker restart`s the container when its cgroup `memory.current` crosses ~5 GiB — a graceful pre-emptive recycle before the 6 GiB hard cap. Install:
+   ```bash
+   sudo cp infra/streamer/pricey-mem-watchdog.sh /usr/local/bin/ && sudo chmod 755 /usr/local/bin/pricey-mem-watchdog.sh
+   sudo cp infra/streamer/pricey-mem-watchdog.{service,timer} /etc/systemd/system/
+   sudo systemctl daemon-reload && sudo systemctl enable --now pricey-mem-watchdog.timer
+   ```
+
+> **Compose v2 required.** The legacy `docker-compose` v1.29.2 crashes with `KeyError: 'ContainerConfig'` against Docker Engine ≥ 26 when *recreating* a container — and it removes the old container before failing, leaving you with **none** running. Use the `docker compose` v2 plugin. If stuck on v1, recover with `docker rm -f <hash>_price-game_streamer_1` then `docker-compose … up -d --no-deps streamer` (the pure-create path sidesteps the bug).
+
 ### Stop streaming entirely
 
 ```bash

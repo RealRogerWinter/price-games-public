@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: Domain knowledge (brand tiers, category ranges) used as fallback or grounding.
+summary: "Domain knowledge (brand tiers, category ranges) used as fallback or grounding."
 related_code:
   - packages/bot-streamer/src/heuristics
 ---

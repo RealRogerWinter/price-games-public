@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: testing
-summary: Vitest setup, coverage thresholds, test patterns, CI integration.
+summary: "Vitest setup, coverage thresholds, test patterns, CI integration."
 related_code:
   - apps/server/vitest.config.ts
   - apps/web/vite.config.ts

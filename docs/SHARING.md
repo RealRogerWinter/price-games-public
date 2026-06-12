@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: growth
 audience: contributor
 category: features
-summary: Wordle-style results sharing — text, PNG, and shareable URLs.
+summary: "Wordle-style results sharing — text, PNG, and shareable URLs."
 related_code:
   - apps/web/src
   - apps/server/src/routes

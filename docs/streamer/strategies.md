@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: How the bot decides what to do per game mode, and how to add a new strategy.
+summary: "How the bot decides what to do per game mode, and how to add a new strategy."
 related_code:
   - packages/bot-streamer/src/strategies
 ---

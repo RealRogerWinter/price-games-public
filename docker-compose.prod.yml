@@ -96,13 +96,16 @@ services:
       - ${STREAMER_MUSIC_HOST_DIR:-${HOME}/streamer-music}:/var/streamer/music:ro
     # Resource caps so the streamer can't starve the game server.
     # 1080p30 x264 veryfast burns ~1 vCPU; 2.0 leaves headroom for
-    # Chromium + Pulse + the runner. Bump `mem_limit` to 4g if Chromium
-    # OOMs; current default is 2.5g.
+    # Chromium + Pulse + the runner. Chromium + Xvfb + ffmpeg + Piper
+    # peak ~4-5g at 1080p; raised to 6g (from 2.5g) on 2026-06-03 to end
+    # an OOM crash-loop on a 16G host that had 11G free. A host
+    # mem-watchdog (systemd: pricey-mem-watchdog.timer) pre-emptively
+    # recycles the container at ~5g so it never reaches the hard cap.
     deploy:
       resources:
         limits:
           cpus: "2.0"
-          memory: 2.5g
+          memory: 6g
     # Only soft-depend on `app`: the streamer connects to the public
     # URL, not the local app instance, so a compose `up` race that
     # starts the streamer before app is fully ready is harmless — the

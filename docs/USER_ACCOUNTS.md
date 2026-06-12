@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: features
-summary: Registration, OAuth (Google, Facebook, Amazon), sessions, password reset.
+summary: "Registration, OAuth (Google, Facebook, Amazon), sessions, password reset."
 related_code:
   - apps/server/src/routes
 ---

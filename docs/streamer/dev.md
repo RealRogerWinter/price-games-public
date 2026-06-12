@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: Running the bot locally without streaming. Test patterns, fixtures, debugging.
+summary: "Running the bot locally without streaming. Test patterns, fixtures, debugging."
 related_code:
   - packages/bot-streamer/src
 ---

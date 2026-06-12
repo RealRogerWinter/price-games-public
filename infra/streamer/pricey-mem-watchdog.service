@@ -1,0 +1,8 @@
+[Unit]
+Description=Pricey streamer memory watchdog (pre-emptive recycle before OOM)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/pricey-mem-watchdog.sh

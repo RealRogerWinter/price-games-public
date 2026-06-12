@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: growth
 audience: contributor
 category: analytics
-summary: What we track, how, and why. Beacon limiter and event schema.
+summary: "What we track, how, and why. Beacon limiter and event schema."
 related_code:
   - apps/server/src/routes
   - apps/web/src

@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: growth
 audience: contributor
 category: features
-summary: Sitemap, robots.txt, per-route meta injection, admin-editable content pages.
+summary: "Sitemap, robots.txt, per-route meta injection, admin-editable content pages."
 related_code:
   - apps/server/src/routes
   - apps/web

@@ -143,7 +143,14 @@ export function createWatchdog(opts: WatchdogOptions): Watchdog {
     panicking = true;
     health.panicCount++;
     health.lastPanicAt = now();
-    health.lastActivityAt = now(); // reset so we don't re-fire immediately
+    // Restart the no-progress clock from this panic. Resetting
+    // lastActivityAt alone is not enough: once the first round has
+    // ever completed, the stall check anchors on the (stale)
+    // lastSuccessfulRoundAt, so every subsequent tick would re-fire
+    // panic and escalate a single stall to give-up in
+    // tickMs * maxPanicsInWindow (~25s) with no chance to recover.
+    health.lastSuccessfulRoundAt = null;
+    health.lastActivityAt = now();
     try {
       await opts.onPanic(reason);
     } catch (err) {

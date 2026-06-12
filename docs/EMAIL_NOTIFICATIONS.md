@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: growth
 audience: contributor
 category: features
-summary: Resend integration, transactional templates, unsubscribe.
+summary: "Resend integration, transactional templates, unsubscribe."
 related_code:
   - apps/server/src/routes
 ---

@@ -5,15 +5,13 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: getting-started
-summary: Fork → clone → install → run, with the minimum env config.
+summary: "Fork → clone → install → run, with the minimum env config."
 related_code:
   - package.json
   - apps
   - .env.example
 ---
 # Quickstart
-
-> **Just want to see it?** Visit **[price.games](https://price.games)** — the live version is free to play and needs no account. Come back here when you want to run it yourself.
 
 A linear path from `git clone` to a working local dev server. If you just want the system overview, read [`ARCHITECTURE.md`](./ARCHITECTURE.md) instead.
 

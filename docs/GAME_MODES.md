@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: all
 category: game-design
-summary: All game modes — rules, products per round, timers, multiplayer support, plus a how-to-add-a-mode walkthrough.
+summary: "All game modes — rules, products per round, timers, multiplayer support, plus a how-to-add-a-mode walkthrough."
 related_code:
   - packages/shared/src
   - apps/server/src/socket

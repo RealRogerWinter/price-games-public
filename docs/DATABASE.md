@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: infra
 audience: operator
 category: operations
-summary: Every table, every migration, backup and restore.
+summary: "Every table, every migration, backup and restore."
 related_code:
   - apps/server/src/db.ts
 ---

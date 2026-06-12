@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: Vibe/morale state machine, prosody, and mood-driven sprite selection.
+summary: "Vibe/morale state machine, prosody, and mood-driven sprite selection."
 related_code:
   - packages/bot-streamer/src/realism
   - packages/bot-streamer/src/persona

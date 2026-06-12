@@ -2,8 +2,6 @@
 
 Everything you need to understand, run, contribute to, or operate Price Games.
 
-> **Try it live first.** The game is running at **[price.games](https://price.games)** — jump in, play a round or two, and come back here when you're ready to dig into the code. It's free, no account required to try it.
-
 **New here?** Start with [Quickstart](./QUICKSTART.md) (fork → run locally), then
 [Architecture](./ARCHITECTURE.md) for the big picture. Otherwise jump to the
 section you need below.

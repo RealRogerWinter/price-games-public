@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: game-design
-summary: Anonymous play, ghost-to-real account conversion, and history retention.
+summary: "Anonymous play, ghost-to-real account conversion, and history retention."
 related_code:
   - apps/server/src/db.ts
   - apps/server/src/routes

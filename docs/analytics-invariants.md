@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: growth
 audience: contributor
 category: analytics
-summary: Invariants the analytics pipeline must uphold; how to add a new event safely.
+summary: "Invariants the analytics pipeline must uphold; how to add a new event safely."
 related_code:
   - apps/server/src/routes
 ---

@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: contributor
 category: streamer
-summary: Twitch chat ingestion, command routing, rate limits, and adding a new chat command.
+summary: "Twitch chat ingestion, command routing, rate limits, and adding a new chat command."
 related_code:
   - packages/bot-streamer/src/chat
 ---

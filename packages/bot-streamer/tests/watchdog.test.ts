@@ -120,6 +120,34 @@ describe("createWatchdog", () => {
     expect(wd.getHealth().panicCount).toBeLessThan(2);
   });
 
+  it("a panic restarts the no-progress clock even after a prior round success", async () => {
+    // Regression: fire() must clear lastSuccessfulRoundAt. With a
+    // stale round stamp the stall check re-fires on every tick,
+    // escalating one stall straight to onGiveUp before the relaunch
+    // can possibly complete a round.
+    let t = 1_000_000;
+    const onPanic = vi.fn();
+    const onGiveUp = vi.fn();
+    const wd = createWatchdog({
+      noProgressPanicMs: 100,
+      maxPanicsInWindow: 5,
+      tickMs: 10,
+      onPanic,
+      onGiveUp,
+      now: () => t,
+    });
+    wd.recordRoundSuccess();
+    wd.start();
+    // Stall past the budget, then let ticks run: exactly one panic
+    // should fire — the next ticks see a fresh clock, not the stale
+    // round stamp.
+    t += 150;
+    await new Promise((r) => setTimeout(r, 80));
+    wd.stop();
+    expect(onPanic).toHaveBeenCalledTimes(1);
+    expect(onGiveUp).not.toHaveBeenCalled();
+  });
+
   it("onGiveUp fires only once even after additional panics past threshold", async () => {
     const onGiveUp = vi.fn();
     const wd = createWatchdog({

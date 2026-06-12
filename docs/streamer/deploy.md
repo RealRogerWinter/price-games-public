@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: streamer
 audience: operator
 category: streamer
-summary: Dockerfile variants, env vars, healthchecks, off-host migration.
+summary: "Dockerfile variants, env vars, healthchecks, off-host migration."
 related_code:
   - infra/streamer
   - packages/bot-streamer

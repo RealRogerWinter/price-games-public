@@ -764,6 +764,25 @@ export function createPlaywrightDriver(opts: PlaywrightDriverOptions): Driver & 
   let sessionStartAnnounced = false;
 
   /**
+   * Proactive browser recycle. The long-lived kiosk Chromium is the
+   * host's biggest RSS consumer; renderer + X11-pixmap memory creeps up
+   * over hours (the slow leak that OOM-killed Xvfb under the old 2.5g
+   * cap). Every `browserRecyclePlans` lifecycle plans, `execute()` tears
+   * the session down so the next `ensureSession()` relaunches a fresh,
+   * lean browser. Mood/stats live in the runner (and on the server), so
+   * a recycle never resets Pricey's emotional arc. Gated by
+   * STREAMER_BROWSER_RECYCLE_PLANS (0 disables); the host mem-watchdog
+   * (systemd: pricey-mem-watchdog) remains the hard safety net.
+   */
+  let plansSinceLaunch = 0;
+  const browserRecyclePlans = (() => {
+    const raw = process.env.STREAMER_BROWSER_RECYCLE_PLANS;
+    if (raw === undefined || raw.trim() === "") return 25;
+    const n = Number(raw);
+    return Number.isFinite(n) && n >= 0 ? Math.floor(n) : 25;
+  })();
+
+  /**
    * Remembers the last hostedRoomCode we narrated so a re-host with
    * a new code fires `hosting_room_created` again, while a no-op
    * re-set of the same code stays silent.
@@ -884,6 +903,12 @@ export function createPlaywrightDriver(opts: PlaywrightDriverOptions): Driver & 
       args: [
         "--no-sandbox",
         "--disable-dev-shm-usage",
+        // Memory hardening (2026-06): the bot soft-navigates constantly;
+        // BackForwardCache would pin whole prior game pages in renderer
+        // memory, feeding the renderer/X11-pixmap creep that OOM-killed
+        // Xvfb. Paired with the proactive browser recycle below and the
+        // host mem-watchdog (infra/streamer/pricey-mem-watchdog.*).
+        "--disable-features=BackForwardCache",
         "--autoplay-policy=no-user-gesture-required",
         // Playwright forces `--enable-automation` which makes
         // Chromium show the address/tab bar (~80px tall) under any
@@ -3022,6 +3047,18 @@ export function createPlaywrightDriver(opts: PlaywrightDriverOptions): Driver & 
   return {
     async execute(plan: LifecyclePlan, signal: AbortSignal): Promise<PlanOutcome> {
       if (signal.aborted) return { plan, status: "no_match" };
+      // Proactive browser recycle (see `browserRecyclePlans` above):
+      // discard the long-lived Chromium every N plans so accumulated
+      // renderer/X11-pixmap memory is released. panicCleanup() nulls the
+      // session; the executeXxx() calls below relaunch via ensureSession.
+      // Nothing between here and those calls needs a live session.
+      if (browserRecyclePlans > 0 && session && plansSinceLaunch >= browserRecyclePlans) {
+        // eslint-disable-next-line no-console
+        console.warn(`[runner] proactive browser recycle after ${plansSinceLaunch} plans (STREAMER_BROWSER_RECYCLE_PLANS=${browserRecyclePlans})`);
+        await panicCleanup();
+        plansSinceLaunch = 0;
+      }
+      plansSinceLaunch += 1;
       // One-shot session_start — announced on the first plan execute
       // for this driver instance only. Pricey says hi to chat once
       // per process boot; subsequent plans roll into mode_change.

@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: api
-summary: All REST endpoints — public, authenticated, and admin.
+summary: "All REST endpoints — public, authenticated, and admin."
 related_code:
   - apps/server/src/routes
 ---

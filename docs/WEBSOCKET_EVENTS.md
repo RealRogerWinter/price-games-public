@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: contributor
 category: api
-summary: All Socket.IO events with payload schemas and ack error codes.
+summary: "All Socket.IO events with payload schemas and ack error codes."
 related_code:
   - apps/server/src/socket
   - packages/shared/src/types.ts

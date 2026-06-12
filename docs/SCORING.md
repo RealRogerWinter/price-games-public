@@ -5,7 +5,7 @@ last_reviewed: 2026-06-03
 owner: core
 audience: all
 category: game-design
-summary: The scoring formulas, tiers, and bonuses for each mode.
+summary: "The scoring formulas, tiers, and bonuses for each mode."
 related_code:
   - packages/shared/src/scoring.ts
 ---
