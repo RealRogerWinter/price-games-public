@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@price-game/shared": "1.0.0",
-    "better-sqlite3": "^11.6.0",
-    "playwright": "^1.49.0",
+    "better-sqlite3": "^12.10.0",
+    "playwright": "^1.60.0",
     "tmi.js": "^1.8.5"
   },
   "devDependencies": {
