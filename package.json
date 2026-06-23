@@ -23,7 +23,7 @@
     "docs:index": "node scripts/check-docs.mjs --write"
   },
   "overrides": {
-    "jsdom": "25.0.1",
+    "jsdom": "29.1.1",
     "d3-color": "^3.1.0",
     "d3-interpolate": "^3.0.1",
     "d3-transition": "^3.0.1",
@@ -31,10 +31,10 @@
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
-    "concurrently": "^8.2.2",
-    "jsdom": "25.0.1",
-    "lighthouse": "^12.8.2",
+    "concurrently": "^10.0.3",
+    "jsdom": "29.1.1",
+    "lighthouse": "^13.3.0",
     "puppeteer-core": "^24.12.1",
-    "typescript": "^5.4.0"
+    "typescript": "^6.0.3"
   }
 }
