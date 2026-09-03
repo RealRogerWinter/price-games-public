@@ -28,7 +28,7 @@
 #   STREAMER_PUSH=0 scripts/...                       # build only, skip push
 #
 # Environment overrides:
-#   DOCKER_IMAGE_NAME    Org/repo prefix on ghcr.io (default: onestreamer/price-game)
+#   DOCKER_IMAGE_NAME    Org/repo prefix on ghcr.io (default: realrogerwinter/price-game)
 #   STREAMER_IMAGE_TAG   Image tag (default: latest)
 #   STREAMER_PLATFORM    Build platform (default: linux/amd64; the streamer
 #                        host is amd64 — building arm64 wastes minutes)
@@ -39,7 +39,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-onestreamer/price-game}"
+DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-realrogerwinter/price-game}"
 STREAMER_IMAGE_TAG="${STREAMER_IMAGE_TAG:-latest}"
 STREAMER_PLATFORM="${STREAMER_PLATFORM:-linux/amd64}"
 STREAMER_PUSH="${STREAMER_PUSH:-1}"
