@@ -7,6 +7,18 @@
     <meta name="description" content="Play Price Games — the free multiplayer price-guessing game. 12 modes, daily challenge, real-time rooms. Guess the price of real products." />
     <meta name="theme-color" content="#1a1a2e" />
 
+    <!-- Google AdSense site-ownership verification. Static, inert meta tag —
+         Google's "AdSense code" (script-tag) verification method does a plain
+         HTML fetch and looks for a literal <script src="...adsbygoogle...">
+         element; it does not execute JavaScript, so it never saw the
+         JS-injected loader below (which is intentionally broadcast-gated —
+         see that block's comment). This meta tag is Google's own alternative
+         verification path for exactly this case (SPA/GTM-style dynamic
+         injection): it makes no network request and runs no code, so unlike
+         the script it's safe to leave in unconditionally on every response,
+         including the 24/7 Twitch bot's ?broadcast=1 capture route. -->
+    <meta name="google-adsense-account" content="ca-pub-3358151050894536" />
+
     <!-- Open Graph (Facebook, iMessage, Discord, Slack, etc.) -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Price Games — Guess the Price of Real Products" />
