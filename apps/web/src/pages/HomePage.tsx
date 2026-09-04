@@ -45,6 +45,11 @@ interface HomePageProps {
    * the fold on mobile. Pass `null`/`undefined` to hide.
    */
   promoBannerSlot?: ReactNode;
+  /**
+   * Optional render slot for the in-feed ad unit below the mode grid.
+   * Sibling of `promoBannerSlot`. Pass `null`/`undefined` to hide.
+   */
+  adSlotBelowModes?: ReactNode;
 }
 
 export default function HomePage({
@@ -67,6 +72,7 @@ export default function HomePage({
   onOpenDailyRecap,
   onQuickPlayBidding,
   promoBannerSlot,
+  adSlotBelowModes,
 }: HomePageProps) {
   // Custom display order for mode cards on the home page
   const MODE_DISPLAY_ORDER = [
@@ -224,6 +230,8 @@ export default function HomePage({
           </button>
         ))}
       </div>
+
+      {adSlotBelowModes}
 
       <div className="random-hero-wrapper">
         <button className="mode-card mode-random random-hero-card" onClick={handleRandomClick}>

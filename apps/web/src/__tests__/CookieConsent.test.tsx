@@ -8,6 +8,8 @@ vi.mock("../utils/analytics", () => ({
   loadGA: vi.fn(),
   grantAnalyticsConsent: vi.fn(),
   revokeAnalyticsConsent: vi.fn(),
+  grantAdConsent: vi.fn(),
+  revokeAdConsent: vi.fn(),
 }));
 
 // Mock Reddit pixel module — CookieConsent wires it alongside GA
@@ -24,7 +26,12 @@ vi.mock("../utils/attribution", () => ({
   trackAttributionOnServer: vi.fn().mockResolvedValue(undefined),
 }));
 
-import { grantAnalyticsConsent, revokeAnalyticsConsent } from "../utils/analytics";
+import {
+  grantAnalyticsConsent,
+  revokeAnalyticsConsent,
+  grantAdConsent,
+  revokeAdConsent,
+} from "../utils/analytics";
 import { grantRedditConsent, revokeRedditConsent } from "../utils/redditPixel";
 import { captureUtmFromUrl, trackAttributionOnServer } from "../utils/attribution";
 
@@ -64,18 +71,18 @@ describe("CookieConsent", () => {
     expect(revokeAnalyticsConsent).toHaveBeenCalled();
   });
 
-  it("Reject all persists necessary=false and analytics=false", () => {
+  it("Reject all persists necessary=false, analytics=false, advertising=false", () => {
     renderConsent();
     fireEvent.click(screen.getByText("Reject all"));
     const saved = JSON.parse(localStorage.getItem("cookie_consent")!);
-    expect(saved).toEqual({ consented: true, necessary: false, analytics: false });
+    expect(saved).toEqual({ consented: true, necessary: false, analytics: false, advertising: false });
   });
 
-  it("Accept all persists necessary=true and analytics=true", () => {
+  it("Accept all persists necessary=true, analytics=true, advertising=true", () => {
     renderConsent();
     fireEvent.click(screen.getByText("Accept all"));
     const saved = JSON.parse(localStorage.getItem("cookie_consent")!);
-    expect(saved).toEqual({ consented: true, necessary: true, analytics: true });
+    expect(saved).toEqual({ consented: true, necessary: true, analytics: true, advertising: true });
   });
 
   it("Reject and Accept buttons in the banner share a sizing class", () => {
@@ -122,6 +129,12 @@ describe("CookieConsent", () => {
     expect(screen.getByLabelText("Enable analytics cookies")).toBeTruthy();
   });
 
+  it("advertising toggle has aria-label", () => {
+    renderConsent();
+    fireEvent.click(screen.getByText("Customise"));
+    expect(screen.getByLabelText("Enable advertising cookies")).toBeTruthy();
+  });
+
   it("necessary toggle is present and defaults on", () => {
     renderConsent();
     fireEvent.click(screen.getByText("Customise"));
@@ -154,7 +167,7 @@ describe("CookieConsent", () => {
     fireEvent.click(screen.getByText("Save preferences"));
 
     const saved = JSON.parse(localStorage.getItem("cookie_consent")!);
-    expect(saved).toEqual({ consented: true, necessary: false, analytics: false });
+    expect(saved).toEqual({ consented: true, necessary: false, analytics: false, advertising: false });
   });
 
   it("closes modal on Escape key", () => {
@@ -179,17 +192,18 @@ describe("CookieConsent", () => {
     fireEvent.click(screen.getByText("Save preferences"));
 
     const saved = JSON.parse(localStorage.getItem("cookie_consent")!);
-    expect(saved).toEqual({ consented: true, necessary: true, analytics: true });
+    expect(saved).toEqual({ consented: true, necessary: true, analytics: true, advertising: false });
   });
 
-  it("Accept all from modal enables analytics", () => {
+  it("Accept all from modal enables analytics and advertising", () => {
     renderConsent();
     fireEvent.click(screen.getByText("Customise"));
     fireEvent.click(screen.getAllByText("Accept all")[0]);
 
     const saved = JSON.parse(localStorage.getItem("cookie_consent")!);
-    expect(saved).toEqual({ consented: true, necessary: true, analytics: true });
+    expect(saved).toEqual({ consented: true, necessary: true, analytics: true, advertising: true });
     expect(grantAnalyticsConsent).toHaveBeenCalled();
+    expect(grantAdConsent).toHaveBeenCalled();
   });
 
   it("responds to open-cookie-settings custom event", () => {
@@ -244,6 +258,54 @@ describe("CookieConsent", () => {
     );
     renderConsent();
     expect(grantRedditConsent).toHaveBeenCalled();
+  });
+
+  // ── Advertising consent wiring (Google Consent Mode v2 ad signals) ──
+
+  it("grants ad consent when user accepts all", () => {
+    renderConsent();
+    fireEvent.click(screen.getByText("Accept all"));
+    expect(grantAdConsent).toHaveBeenCalled();
+  });
+
+  it("revokes ad consent when user rejects all", () => {
+    renderConsent();
+    fireEvent.click(screen.getByText("Reject all"));
+    expect(revokeAdConsent).toHaveBeenCalled();
+  });
+
+  it("revokes ad consent for a returning user with advertising disabled", () => {
+    localStorage.setItem(
+      "cookie_consent",
+      JSON.stringify({ consented: true, necessary: true, analytics: true, advertising: false }),
+    );
+    renderConsent();
+    expect(revokeAdConsent).toHaveBeenCalled();
+  });
+
+  it("grants ad consent for a returning user with advertising enabled", () => {
+    localStorage.setItem(
+      "cookie_consent",
+      JSON.stringify({ consented: true, necessary: true, analytics: false, advertising: true }),
+    );
+    renderConsent();
+    expect(grantAdConsent).toHaveBeenCalled();
+  });
+
+  it("toggling Advertising on and saving persists advertising=true without affecting analytics", () => {
+    renderConsent();
+    fireEvent.click(screen.getByText("Customise"));
+
+    const toggle = screen.getByLabelText("Enable advertising cookies") as HTMLInputElement;
+    expect(toggle.checked).toBe(false);
+    fireEvent.click(toggle);
+    expect(toggle.checked).toBe(true);
+
+    fireEvent.click(screen.getByText("Save preferences"));
+
+    const saved = JSON.parse(localStorage.getItem("cookie_consent")!);
+    expect(saved).toEqual({ consented: true, necessary: true, analytics: false, advertising: true });
+    expect(grantAdConsent).toHaveBeenCalled();
   });
 
   // ── UTM / attribution capture gated on consent ──────────────────────

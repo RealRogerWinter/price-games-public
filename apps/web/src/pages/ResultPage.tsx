@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import type {
   GameSession,
   GameMode,
@@ -35,6 +35,11 @@ interface ResultPageProps {
   onShowLeaderboard: () => void;
   onBackToModes?: () => void;
   onOpenAuth?: () => void;
+  /**
+   * Optional render slot for the ad unit below the round-by-round
+   * breakdown. Pass `null`/`undefined` to hide.
+   */
+  adSlot?: ReactNode;
 }
 
 function ProductRow({
@@ -471,6 +476,7 @@ export default function ResultPage({
   onShowLeaderboard,
   onBackToModes,
   onOpenAuth,
+  adSlot,
 }: ResultPageProps) {
   const { formatPrice } = useCurrency();
   const { user } = useUserAuth();
@@ -556,6 +562,8 @@ export default function ResultPage({
         {gameMode === "budget-builder" && <BudgetBuilderBreakdown results={roundResults} />}
         {gameMode === "chain-reaction" && <ChainReactionBreakdown results={roundResults} />}
       </div>
+
+      {adSlot}
 
       {user && (
         <div className="leaderboard-rank">

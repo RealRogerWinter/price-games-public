@@ -4,8 +4,10 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import BroadcastShell from "./BroadcastShell";
+import BroadcastNavHandle, { BROADCAST_NAV_GLOBAL } from "./BroadcastNavHandle";
 
 function setSearch(search: string): void {
   window.history.replaceState(null, "", `/${search}`);
@@ -210,6 +212,67 @@ describe("BroadcastShell", () => {
     );
     unmountConsumer();
     expect(document.body.classList.contains("broadcast")).toBe(true);
+  });
+
+  it("keeps broadcast mode true for a consumer that first mounts AFTER an SPA soft-nav drops ?broadcast=1 (regression)", async () => {
+    // Closes the leak: BroadcastShell must seed BroadcastModeContext ONCE
+    // at its own mount, so a component that only mounts LATER — on a
+    // route the streamer-bot driver soft-navigates to via
+    // `window.__pgBroadcastNav(url)` (BroadcastNavHandle) — still reads
+    // the value BroadcastShell captured at startup, not a fresh read of
+    // the (by then broadcast-param-less) URL.
+    //
+    // Against the old per-hook `useState(readFlag)` implementation this
+    // test fails: LaterConsumer would independently read
+    // `window.location.search` at ITS OWN mount time (after the nav to
+    // `/leaderboard`, which carries no `?broadcast=1`) and get `false`
+    // even while BroadcastShell's overlay is still actively rendering.
+    setSearch("?broadcast=1");
+
+    function LaterConsumer() {
+      const broadcast = useBroadcastMode();
+      return <div data-testid="later-consumer-value">{String(broadcast)}</div>;
+    }
+
+    render(
+      <BroadcastShell>
+        <MemoryRouter initialEntries={["/?broadcast=1"]}>
+          {/* Mirrors App.tsx: BroadcastNavHandle sits as a sibling of
+              <Routes> inside the router, registering
+              window.__pgBroadcastNav for the bot driver. */}
+          <BroadcastNavHandle />
+          <Routes>
+            <Route path="/" element={<div data-testid="home">home</div>} />
+            {/* LaterConsumer does not exist anywhere in the tree until
+                the bot navigates here — its very first render happens
+                after the URL has already lost ?broadcast=1. */}
+            <Route path="/leaderboard" element={<LaterConsumer />} />
+          </Routes>
+        </MemoryRouter>
+      </BroadcastShell>,
+    );
+
+    // BroadcastShell's own overlay is up, confirming broadcast mode is
+    // active for the session.
+    expect(screen.getByTestId("broadcast-shell")).toBeTruthy();
+    expect(screen.getByTestId("home")).toBeTruthy();
+
+    // Simulate the bot driver's mid-broadcast soft-nav to a URL with NO
+    // broadcast=1 param — exactly the scenario BroadcastNavHandle
+    // documents as reachable (any `?broadcast=1` page exposes the
+    // global, and nothing guarantees the target URL repeats the param).
+    await act(async () => {
+      window[BROADCAST_NAV_GLOBAL]?.("/leaderboard");
+    });
+
+    // BroadcastShell itself never remounted or re-derived anything —
+    // its overlay is still up.
+    expect(screen.getByTestId("broadcast-shell")).toBeTruthy();
+
+    // LaterConsumer mounts for the very first time here, on a URL with
+    // no broadcast param. It must still see `true`.
+    const later = screen.getByTestId("later-consumer-value");
+    expect(later.textContent).toBe("true");
   });
 });
 

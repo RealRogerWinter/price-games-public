@@ -89,6 +89,35 @@
       gtag('js', new Date());
       gtag('config', 'G-94XGMPDVCY');
     </script>
+
+    <!-- Google AdSense — site-ownership verification snippet (ca-pub-3358151050894536).
+         This does NOT gate on the "advertising" cookie-consent category: it is the
+         base loader script only, required site-wide for Google's account-verification
+         crawl, and it respects the Consent Mode v2 defaults set immediately above
+         (denied until the visitor opts in) for anything it does after loading. Actual
+         ad rendering is a separate, later gate — see AdSlot.tsx (VITE_ADS_ENABLED +
+         per-slot credentials + consent.advertising).
+         It DOES gate on broadcast mode: this same index.html is served for the 24/7
+         Twitch bot's `?broadcast=1` capture route (BroadcastShell), and loading any
+         Google ad script into that automated, non-human Chromium session would be
+         invalid traffic on Google's side independent of anything AdSlot.tsx guards
+         client-side in React — so it's excluded here, at the earliest possible point,
+         via a plain URL check rather than relying on React ever mounting. -->
+    <script>
+      (function () {
+        try {
+          if (new URLSearchParams(window.location.search).get('broadcast') === '1') return;
+        } catch (e) {
+          return;
+        }
+        var s = document.createElement('script');
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3358151050894536';
+        document.head.appendChild(s);
+      })();
+    </script>
+
     <!-- Cloudflare Turnstile is injected dynamically by RegisterForm when
          the registration UI mounts. Loading it site-wide burned ~20 KB
          and blocked the main thread on routes that never used it. -->

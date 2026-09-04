@@ -156,6 +156,29 @@ export function revokeAnalyticsConsent(): void {
   }
 }
 
+/**
+ * Grant advertising consent — required (Consent Mode v2) before any AdSense
+ * ad request can fire for EEA/UK visitors. Mirrors grantAnalyticsConsent.
+ */
+export function grantAdConsent(): void {
+  initGA();
+  gtagPush("consent", "update", {
+    ad_storage: "granted",
+    ad_user_data: "granted",
+    ad_personalization: "granted",
+  });
+  injectGtagScript();
+}
+
+/** Revoke advertising consent. Mirrors revokeAnalyticsConsent. */
+export function revokeAdConsent(): void {
+  gtagPush("consent", "update", {
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
+}
+
 /** Send a custom GA4 event. No-op if gtag isn't loaded. */
 export function trackEvent(
   eventName: string,

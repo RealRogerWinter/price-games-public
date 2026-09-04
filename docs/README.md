@@ -61,6 +61,7 @@ the conventions (status values, review dates, staleness checks).
 
 | Doc | Status | Reviewed | What it covers |
 |---|---|---|---|
+| [Ad Monetization](./ADS.md) | draft | 2026-09-03 | Google AdSense scaffolding — inert until manual account setup: chosen network, the 4 real slot locations, the rejected in-round slot, and the gating invariants that must never regress. |
 | [Email Notifications](./EMAIL_NOTIFICATIONS.md) | stable | 2026-06-03 | Resend integration, transactional templates, unsubscribe. |
 | [Web Push Notifications](./NOTIFICATIONS.md) | stable | 2026-06-03 | Web-push: VAPID, urgency, badge format, Chrome quirks. |
 | [SEO](./SEO.md) | stable | 2026-06-03 | Sitemap, robots.txt, per-route meta injection, admin-editable content pages. |

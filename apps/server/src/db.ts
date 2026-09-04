@@ -203,7 +203,7 @@ We do **not** sell your personal information. We may share information in these 
 - **Giveaway Administration:** Winner usernames may be publicly announced; limited contact information may be shared with prize providers for fulfillment
 - **Service Providers:** We use third-party services for email delivery (e.g., transactional emails for account verification and password resets)
 - **Third-Party Authentication Providers:** When you use a third-party sign-in (Login with Amazon, Google, or Facebook), the provider may collect information through its own cookies and tracking technologies during the sign-in process. We do not control data collection by these providers; please review their respective privacy policies.
-- **Third-Party Content & Advertising:** Third parties, including Amazon and other advertisers, may serve content on the Site, collect information directly from visitors, and place or recognize cookies on your browser
+- **Third-Party Content & Advertising:** Third parties, including Amazon and Google AdSense, may serve content and advertisements on the Site, collect information directly from visitors, and place or recognize cookies on your browser. See Section 6 for how you can control advertising cookies.
 - **Legal Requirements:** We may disclose information if required by law, regulation, legal process, or governmental request
 - **Safety & Security:** We may share information to protect the rights, property, or safety of Price Games, our users, or others
 
@@ -214,6 +214,7 @@ We use the following types of cookies:
 - **Essential Cookies:** Required for authentication, session management, and core functionality. These cannot be disabled while using the Site.
 - **Preference Cookies:** Store your settings such as currency selection and cookie consent status.
 - **Analytics Cookies:** Help us understand usage patterns to improve the Site.
+- **Advertising Cookies:** This category includes Google AdSense. Ad personalization may use cookies placed by Google and its advertising partners to serve and measure the effectiveness of advertising. These cookies load with consent defaulted to denied and only begin collecting data if you accept the "Advertising" category in the cookie consent banner.
 
 You can manage cookie preferences through the cookie consent banner shown on your first visit. Most browsers also allow you to control cookies through their settings.
 
@@ -347,6 +348,7 @@ From time to time, we may offer giveaways, sweepstakes, or other promotional eve
 - **As an Amazon Associate, this site earns from qualifying purchases**
 - Product links on the Site may be affiliate links
 - We do not sell products directly; all purchases are made through third-party retailers
+- The Site may display third-party advertising, including through Google AdSense, that is not endorsed by Price Games. Ad content and personalization are subject to the advertiser's own terms and to the Cookies & Tracking section of our Privacy Policy
 
 ## 6. Intellectual Property
 

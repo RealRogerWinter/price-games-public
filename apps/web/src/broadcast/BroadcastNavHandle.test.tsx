@@ -7,14 +7,30 @@
  * inside a MemoryRouter, asserts the helper's presence/absence, and
  * verifies that invoking the helper triggers a React Router
  * navigation rather than a full document load.
+ *
+ * `useBroadcastMode()` now reads `BroadcastModeContext` rather than the
+ * URL directly, so each test wraps its tree in a Provider seeded from
+ * the same `?broadcast=1` flag it sets via `setSearch` — mirroring how
+ * `BroadcastShell` seeds the real Provider once at startup.
  */
+import type { ReactNode } from "react";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render, act } from "@testing-library/react";
 import { MemoryRouter, Routes, Route, useLocation } from "react-router-dom";
 import BroadcastNavHandle, { BROADCAST_NAV_GLOBAL } from "./BroadcastNavHandle";
+import { BroadcastModeContext, readBroadcastFlagOnce } from "./useBroadcastMode";
 
 function setSearch(search: string): void {
   window.history.replaceState(null, "", `/${search}`);
+}
+
+/** Seeds BroadcastModeContext from the current URL, same as BroadcastShell. */
+function BroadcastProviderFromUrl({ children }: { children: ReactNode }) {
+  return (
+    <BroadcastModeContext.Provider value={readBroadcastFlagOnce()}>
+      {children}
+    </BroadcastModeContext.Provider>
+  );
 }
 
 function LocationProbe({ onLocation }: { onLocation: (path: string) => void }): null {
@@ -36,9 +52,11 @@ describe("BroadcastNavHandle", () => {
   it("does not register the window helper when broadcast=0", () => {
     setSearch("");
     render(
-      <MemoryRouter>
-        <BroadcastNavHandle />
-      </MemoryRouter>,
+      <BroadcastProviderFromUrl>
+        <MemoryRouter>
+          <BroadcastNavHandle />
+        </MemoryRouter>
+      </BroadcastProviderFromUrl>,
     );
     expect(typeof window[BROADCAST_NAV_GLOBAL]).toBe("undefined");
   });
@@ -46,9 +64,11 @@ describe("BroadcastNavHandle", () => {
   it("registers a navigation function when broadcast=1", () => {
     setSearch("?broadcast=1");
     render(
-      <MemoryRouter>
-        <BroadcastNavHandle />
-      </MemoryRouter>,
+      <BroadcastProviderFromUrl>
+        <MemoryRouter>
+          <BroadcastNavHandle />
+        </MemoryRouter>
+      </BroadcastProviderFromUrl>,
     );
     expect(typeof window[BROADCAST_NAV_GLOBAL]).toBe("function");
   });
@@ -56,9 +76,11 @@ describe("BroadcastNavHandle", () => {
   it("clears the helper on unmount", () => {
     setSearch("?broadcast=1");
     const { unmount } = render(
-      <MemoryRouter>
-        <BroadcastNavHandle />
-      </MemoryRouter>,
+      <BroadcastProviderFromUrl>
+        <MemoryRouter>
+          <BroadcastNavHandle />
+        </MemoryRouter>
+      </BroadcastProviderFromUrl>,
     );
     expect(typeof window[BROADCAST_NAV_GLOBAL]).toBe("function");
     unmount();
@@ -69,15 +91,17 @@ describe("BroadcastNavHandle", () => {
     setSearch("?broadcast=1");
     let observedPath = "/";
     render(
-      <MemoryRouter initialEntries={["/play/classic?broadcast=1"]}>
-        <BroadcastNavHandle />
-        <Routes>
-          <Route
-            path="*"
-            element={<LocationProbe onLocation={(p) => { observedPath = p; }} />}
-          />
-        </Routes>
-      </MemoryRouter>,
+      <BroadcastProviderFromUrl>
+        <MemoryRouter initialEntries={["/play/classic?broadcast=1"]}>
+          <BroadcastNavHandle />
+          <Routes>
+            <Route
+              path="*"
+              element={<LocationProbe onLocation={(p) => { observedPath = p; }} />}
+            />
+          </Routes>
+        </MemoryRouter>
+      </BroadcastProviderFromUrl>,
     );
     expect(observedPath).toBe("/play/classic?broadcast=1");
     act(() => {
@@ -93,15 +117,17 @@ describe("BroadcastNavHandle", () => {
     setSearch("?broadcast=1");
     let observedPath = "/play/classic";
     render(
-      <MemoryRouter initialEntries={["/play/classic?broadcast=1"]}>
-        <BroadcastNavHandle />
-        <Routes>
-          <Route
-            path="*"
-            element={<LocationProbe onLocation={(p) => { observedPath = p; }} />}
-          />
-        </Routes>
-      </MemoryRouter>,
+      <BroadcastProviderFromUrl>
+        <MemoryRouter initialEntries={["/play/classic?broadcast=1"]}>
+          <BroadcastNavHandle />
+          <Routes>
+            <Route
+              path="*"
+              element={<LocationProbe onLocation={(p) => { observedPath = p; }} />}
+            />
+          </Routes>
+        </MemoryRouter>
+      </BroadcastProviderFromUrl>,
     );
     act(() => {
       window[BROADCAST_NAV_GLOBAL]?.("https://evil.example.com/steal");

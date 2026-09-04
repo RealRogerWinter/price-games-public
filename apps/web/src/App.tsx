@@ -17,6 +17,7 @@ import { useUserAuth } from "./context/UserAuthContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SEO from "./components/SEO";
 import SiteFooter from "./components/SiteFooter";
+import AdSlot from "./components/ads/AdSlot";
 import CookieConsent from "./components/CookieConsent";
 import NotificationPrompt from "./components/NotificationPrompt";
 import IOSInstallPrompt from "./components/IOSInstallPrompt";
@@ -188,8 +189,13 @@ function PlayerProfileRoute() {
   return (
     <div className="app">
       <main className="app-main">
-        <LeaderboardPage onBack={() => navigate("/")} openUsername={username} />
+        <LeaderboardPage
+          onBack={() => navigate("/")}
+          openUsername={username}
+          adSlot={<AdSlot slot="leaderboard_below_table" />}
+        />
       </main>
+      <AdSlot slot="site_anchor_footer" />
       <SiteFooter />
     </div>
   );
@@ -207,8 +213,12 @@ function LeaderboardRoute() {
   return (
     <div className="app">
       <main className="app-main">
-        <LeaderboardPage onBack={() => navigate("/")} />
+        <LeaderboardPage
+          onBack={() => navigate("/")}
+          adSlot={<AdSlot slot="leaderboard_below_table" />}
+        />
       </main>
+      <AdSlot slot="site_anchor_footer" />
       <SiteFooter />
     </div>
   );
@@ -261,6 +271,7 @@ function MultiplayerRoute() {
           <AuthModal onClose={() => setShowAuthModal(false)} initialMode="register" />
         )}
       </main>
+      <AdSlot slot="site_anchor_footer" />
       <SiteFooter />
     </div>
   );
@@ -821,6 +832,13 @@ function SinglePlayerApp() {
     </div>
   ) : null;
 
+  // Same broadcast exclusion pattern as promoBannerNode above. AdSlot also
+  // self-gates on broadcast mode internally (belt-and-suspenders — it has
+  // to, since it's mounted independently in other places too), but
+  // keeping this guard here too matches the existing convention and
+  // avoids even constructing the element during a broadcast session.
+  const adSlotHomeNode = !broadcast ? <AdSlot slot="home_below_mode_grid" /> : null;
+
   return (
     <div className="app">
       <SEO jsonLd={homeJsonLd} />
@@ -894,6 +912,7 @@ function SinglePlayerApp() {
           onOpenDaily={handleOpenDaily}
           onOpenDailyRecap={() => setShowDailyRecap(true)}
           promoBannerSlot={promoBannerNode}
+          adSlotBelowModes={adSlotHomeNode}
         />
       )}
 
@@ -1040,6 +1059,7 @@ function SinglePlayerApp() {
           onShowLeaderboard={() => setScreen("leaderboard")}
           onBackToModes={() => setScreen("home")}
           onOpenAuth={() => { setAuthModalMode("register"); setShowAuthModal(true); }}
+          adSlot={<AdSlot slot="result_page_after_breakdown" />}
         />
       )}
 
@@ -1051,6 +1071,7 @@ function SinglePlayerApp() {
             )
           }
           hasActiveGame={!!session && !session.completed}
+          adSlot={<AdSlot slot="leaderboard_below_table" />}
         />
       )}
 
@@ -1097,6 +1118,7 @@ function SinglePlayerApp() {
       )}
       </main>
 
+      <AdSlot slot="site_anchor_footer" />
       <SiteFooter />
     </div>
   );

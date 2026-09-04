@@ -1,0 +1,71 @@
+/**
+ * AdSlot — shared styling for every AdSense mount point.
+ *
+ * The `.ad-slot` container and `.ad-slot-label` exist specifically to
+ * satisfy a policy/UX requirement found in review: no ad unit on this
+ * site may visually blend with real, clickable game UI (an earlier draft
+ * placed an unlabeled ad slot directly above the same-styled "Random"
+ * mode button — an accidental-click / native-ad-policy risk). Every slot
+ * therefore always renders a bordered container and a visible
+ * "Advertisement" label, regardless of placement.
+ *
+ * Per-slot min-height classes reserve layout space up front so a loaded
+ * creative doesn't cause layout shift once ads go live.
+ */
+
+.ad-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin: 20px auto;
+  padding: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px dashed var(--text-muted, #9a9aad);
+  border-radius: var(--radius, 12px);
+  background: var(--bg-card, #16213e);
+}
+
+.ad-slot-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, #9a9aad);
+}
+
+/* Home — in-feed slot below the mode grid. Taller on mobile (native
+   in-feed shape), shorter on desktop (leaderboard-style banner). */
+.ad-slot-home {
+  min-height: 100px;
+  max-width: 728px;
+}
+
+@media (max-width: 600px) {
+  .ad-slot-home {
+    min-height: 250px;
+  }
+}
+
+/* Result page + leaderboard — medium rectangle. */
+.ad-slot-result,
+.ad-slot-leaderboard {
+  min-height: 250px;
+  max-width: 336px;
+}
+
+/* Global footer anchor — short banner, present on every page that
+   renders SiteFooter. */
+.ad-slot-anchor {
+  min-height: 90px;
+  max-width: 728px;
+}
+
+@media (max-width: 600px) {
+  .ad-slot-anchor {
+    min-height: 50px;
+  }
+}

@@ -1,5 +1,5 @@
-import { lazy, Suspense, useEffect, useMemo, type ReactNode } from "react";
-import { useBroadcastMode } from "./useBroadcastMode";
+import { lazy, Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
+import { BroadcastModeContext, readBroadcastFlagOnce } from "./useBroadcastMode";
 import { useOverlayState } from "./state/overlayBus";
 import { useStreamerStatsRelay } from "./useStreamerStatsRelay";
 import { useStreamerMusicRelay } from "./useStreamerMusicRelay";
@@ -85,7 +85,14 @@ interface BroadcastShellProps {
 export default function BroadcastShell({
   children,
 }: BroadcastShellProps) {
-  const broadcast = useBroadcastMode();
+  // BroadcastShell is the sole owner of the initial URL read — it is
+  // mounted once, above `<BrowserRouter>`, and never remounted for the
+  // life of the session. The value captured here is threaded through
+  // `BroadcastModeContext` below so every descendant (no matter when it
+  // first mounts, including after an in-SPA soft-nav to a URL that no
+  // longer carries `?broadcast=1`) observes this SAME stable value
+  // rather than independently re-reading a URL that may have changed.
+  const [broadcast] = useState<boolean>(readBroadcastFlagOnce);
   const moodDebug = useMoodDebugMode();
   const lipsyncDebug = useLipsyncDebugMode();
   const overlay = useOverlayState();
@@ -135,11 +142,15 @@ export default function BroadcastShell({
   }
 
   if (!broadcast) {
-    return <>{children}</>;
+    return (
+      <BroadcastModeContext.Provider value={broadcast}>
+        {children}
+      </BroadcastModeContext.Provider>
+    );
   }
 
   return (
-    <>
+    <BroadcastModeContext.Provider value={broadcast}>
       {children}
       <div
         className="broadcast-shell"
@@ -276,6 +287,6 @@ export default function BroadcastShell({
           (top:16). Mounted outside the aria-hidden shell so the inline-
           styled card anchors to the viewport, not the 1920×1080 stage. */}
       {lipsyncDebug && <LipsyncDebugHud currentUtterance={overlay.currentUtterance} />}
-    </>
+    </BroadcastModeContext.Provider>
   );
 }

@@ -4,7 +4,12 @@ import {
   savePreferences,
   type CookiePreferences,
 } from "../utils/cookieConsent";
-import { grantAnalyticsConsent, revokeAnalyticsConsent } from "../utils/analytics";
+import {
+  grantAnalyticsConsent,
+  revokeAnalyticsConsent,
+  grantAdConsent,
+  revokeAdConsent,
+} from "../utils/analytics";
 import { grantRedditConsent, revokeRedditConsent } from "../utils/redditPixel";
 import { captureUtmFromUrl, trackAttributionOnServer } from "../utils/attribution";
 import { useBroadcastMode } from "../broadcast/useBroadcastMode";
@@ -48,6 +53,17 @@ export default function CookieConsent() {
     }
   }, [prefs]);
 
+  // Apply advertising preference on mount & whenever it changes. Gates
+  // Google Consent Mode v2 ad signals — required before any AdSense request
+  // can legally fire for EEA/UK visitors.
+  useEffect(() => {
+    if (prefs.consented && prefs.advertising) {
+      grantAdConsent();
+    } else {
+      revokeAdConsent();
+    }
+  }, [prefs.consented, prefs.advertising]);
+
   // Toggle a body class while the banner is visible so pages can reserve
   // bottom space (via CSS) and avoid having their bottom-anchored controls
   // covered by the banner overlay.
@@ -67,11 +83,11 @@ export default function CookieConsent() {
   }, []);
 
   const acceptAll = useCallback(() => {
-    commit({ consented: true, necessary: true, analytics: true });
+    commit({ consented: true, necessary: true, analytics: true, advertising: true });
   }, [commit]);
 
   const rejectAll = useCallback(() => {
-    commit({ consented: true, necessary: false, analytics: false });
+    commit({ consented: true, necessary: false, analytics: false, advertising: false });
   }, [commit]);
 
   const openSettings = useCallback(() => {
@@ -108,7 +124,12 @@ export default function CookieConsent() {
   }, [showSettings]);
 
   const saveDraft = useCallback(() => {
-    commit({ consented: true, necessary: draft.necessary, analytics: draft.analytics });
+    commit({
+      consented: true,
+      necessary: draft.necessary,
+      analytics: draft.analytics,
+      advertising: draft.advertising,
+    });
   }, [draft, commit]);
 
   // Broadcast-mode renders for the 24/7 stream bot — hide the banner so it
@@ -125,7 +146,8 @@ export default function CookieConsent() {
           <span className="cookie-banner-icon" aria-hidden="true">🍪</span>
           <p className="cookie-banner-text">
             We use cookies for core features and, with your permission,{" "}
-            <strong>analytics</strong> to help improve the game.
+            <strong>analytics</strong> and <strong>advertising</strong> to
+            help improve the game and keep it free.
           </p>
           <div className="cookie-banner-actions">
             <button className="btn cookie-btn cookie-btn-link" onClick={openSettings}>
@@ -205,6 +227,26 @@ export default function CookieConsent() {
               <p className="cookie-category-desc">
                 Help us understand how the game is played and measure marketing
                 so we know what to improve.
+              </p>
+            </div>
+
+            <div className="cookie-category">
+              <div className="cookie-category-header">
+                <span className="cookie-category-name">Advertising</span>
+                <label className="cookie-toggle">
+                  <input
+                    type="checkbox"
+                    checked={draft.advertising}
+                    onChange={(e) => setDraft({ ...draft, advertising: e.target.checked })}
+                    aria-label="Enable advertising cookies"
+                  />
+                  <span className="cookie-toggle-slider" />
+                </label>
+              </div>
+              <p className="cookie-category-desc">
+                Show ads that help keep the game free to play. Separate from
+                analytics — you can turn this off without affecting how we
+                measure the game.
               </p>
             </div>
 

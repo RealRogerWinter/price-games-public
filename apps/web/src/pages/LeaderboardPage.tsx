@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import type {
   LeaderboardAvailability,
@@ -22,6 +22,15 @@ interface LeaderboardPageProps {
   openUsername?: string;
   /** When true, the back button says "Back to Game" instead of "Back". */
   hasActiveGame?: boolean;
+  /**
+   * Optional render slot for the ad unit below the ranked table. Rendered
+   * as a STATIC sibling outside the loading/tab-gated conditional blocks
+   * below, so switching tabs or periods (which flips `loading` true
+   * during refetch) never unmounts/remounts it — see the file-level
+   * comment above the render for why that matters. Pass `null`/
+   * `undefined` to hide.
+   */
+  adSlot?: ReactNode;
 }
 
 type LeaderboardTab = "lifetime" | "streak";
@@ -142,7 +151,7 @@ const GAME_TYPE_LABEL: Record<LeaderboardGameType, string> = {
  * Clicking a username opens the PlayerProfileModal.
  * When `openUsername` is set, the modal opens automatically for that user.
  */
-export default function LeaderboardPage({ onBack, openUsername, hasActiveGame }: LeaderboardPageProps) {
+export default function LeaderboardPage({ onBack, openUsername, hasActiveGame, adSlot }: LeaderboardPageProps) {
   const [activeTab, setActiveTab] = useState<LeaderboardTab>("lifetime");
   const [searchParams, setSearchParams] = useSearchParams();
   const period = useMemo(
@@ -576,6 +585,13 @@ export default function LeaderboardPage({ onBack, openUsername, hasActiveGame }:
           )}
         </>
       )}
+
+      {/* Static sibling, deliberately outside the loading/tab-gated
+          blocks above — see the `adSlot` prop doc comment. Always
+          mounted regardless of `loading`, `entries.length`, or
+          `activeTab`, so tab/period switches never destroy/re-request
+          the ad. */}
+      {adSlot}
 
       {profileUsername && (
         <PlayerProfileModal

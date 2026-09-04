@@ -40,13 +40,15 @@ vi.mock("../hooks/usePushNotifications", () => ({
 }));
 
 vi.mock("../utils/cookieConsent", () => ({
-  getPreferences: () => ({ consented: false, necessary: true, analytics: false }),
+  getPreferences: () => ({ consented: false, necessary: true, analytics: false, advertising: false }),
   savePreferences: vi.fn(),
 }));
 
 vi.mock("../utils/analytics", () => ({
   grantAnalyticsConsent: vi.fn(),
   revokeAnalyticsConsent: vi.fn(),
+  grantAdConsent: vi.fn(),
+  revokeAdConsent: vi.fn(),
 }));
 
 vi.mock("../utils/redditPixel", () => ({
@@ -68,6 +70,23 @@ import NotificationPrompt from "../components/NotificationPrompt";
 import IOSInstallPrompt from "../components/IOSInstallPrompt";
 import AuthModal from "../components/auth/AuthModal";
 import { MemoryRouter } from "react-router-dom";
+import { BroadcastModeContext } from "./useBroadcastMode";
+
+/**
+ * `useBroadcastMode()` reads `BroadcastModeContext` rather than the URL
+ * directly (see useBroadcastMode.ts) — in production that context is
+ * seeded once by `BroadcastShell`. These suppression guards live in
+ * components mounted *inside* BroadcastShell's subtree, so each
+ * "broadcast mode is active" case here wraps the component under test
+ * in the same Provider, standing in for BroadcastShell.
+ */
+function BroadcastOn({ children }: { children: React.ReactNode }) {
+  return (
+    <BroadcastModeContext.Provider value={true}>
+      {children}
+    </BroadcastModeContext.Provider>
+  );
+}
 
 describe("chrome suppression in broadcast mode", () => {
   beforeEach(() => {
@@ -83,8 +102,11 @@ describe("chrome suppression in broadcast mode", () => {
     });
 
     it("renders nothing when broadcast mode is active", () => {
-      setSearch("?broadcast=1");
-      const { container } = render(<CookieConsent />);
+      const { container } = render(
+        <BroadcastOn>
+          <CookieConsent />
+        </BroadcastOn>,
+      );
       expect(container.querySelector(".cookie-banner")).toBeNull();
       expect(container.querySelector(".cookie-modal-overlay")).toBeNull();
     });
@@ -92,27 +114,34 @@ describe("chrome suppression in broadcast mode", () => {
 
   describe("NotificationPrompt", () => {
     it("renders nothing when broadcast mode is active", () => {
-      setSearch("?broadcast=1");
-      const { container } = render(<NotificationPrompt />);
+      const { container } = render(
+        <BroadcastOn>
+          <NotificationPrompt />
+        </BroadcastOn>,
+      );
       expect(container.querySelector(".notif-prompt-overlay")).toBeNull();
     });
   });
 
   describe("IOSInstallPrompt", () => {
     it("renders nothing when broadcast mode is active", () => {
-      setSearch("?broadcast=1");
-      const { container } = render(<IOSInstallPrompt />);
+      const { container } = render(
+        <BroadcastOn>
+          <IOSInstallPrompt />
+        </BroadcastOn>,
+      );
       expect(container.querySelector(".ios-install-overlay")).toBeNull();
     });
   });
 
   describe("AuthModal", () => {
     it("renders nothing when broadcast mode is active", () => {
-      setSearch("?broadcast=1");
       const { container } = render(
-        <MemoryRouter>
-          <AuthModal onClose={vi.fn()} />
-        </MemoryRouter>,
+        <BroadcastOn>
+          <MemoryRouter>
+            <AuthModal onClose={vi.fn()} />
+          </MemoryRouter>
+        </BroadcastOn>,
       );
       expect(container.querySelector(".auth-modal-overlay")).toBeNull();
     });
