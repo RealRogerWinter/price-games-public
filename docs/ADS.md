@@ -47,29 +47,42 @@ An earlier draft of this design put an ad inside `RoundResult.tsx`'s result over
 
 If you're adding a new ad placement, route it through `AdSlot` and satisfy all six of the above — don't build a second ad-mount mechanism.
 
+## Site verification
+
+Google's "AdSense code" (script-tag) verification does a plain, non-JS-executing
+HTTP fetch and looks for a literal `<script src="...adsbygoogle...">` element in
+the raw HTML. It never found the loader `AdSlot.tsx`/`index.html` inject at
+runtime — that injection is deliberately gated on broadcast mode (see above),
+so it doesn't exist in the static markup at all, only as JS that constructs it.
+
+Verification actually passed via a second, separate tag: a static
+`<meta name="google-adsense-account" content="ca-pub-3358151050894536">` in
+`index.html`'s `<head>` — Google's documented alternative for exactly this case
+(SPA/GTM-style dynamic script injection). It's inert (no network request, no
+script execution), so unlike the script tag it's safe to leave in
+unconditionally on every response, including `?broadcast=1`.
+
 ## Env vars required to go live
 
 All currently unset in this repo; `AdSlot` renders `null` everywhere until they're filled in. See [`apps/web/.env.example`](../apps/web/.env.example) for the canonical, commented list.
 
 | Var | Purpose |
 |---|---|
-| `VITE_ADS_ENABLED` | Master kill switch. Must be the literal string `"true"`. |
-| `VITE_ADSENSE_CLIENT_ID` | AdSense publisher ID (e.g. `ca-pub-xxxxxxxxxxxxxxxx`). |
-| `VITE_ADSENSE_SLOT_HOME` | Ad-unit ID for the homepage slot. |
-| `VITE_ADSENSE_SLOT_RESULT` | Ad-unit ID for the result-page slot. |
-| `VITE_ADSENSE_SLOT_LEADERBOARD` | Ad-unit ID for the leaderboard slot. |
-| `VITE_ADSENSE_SLOT_ANCHOR` | Ad-unit ID for the site-wide footer anchor slot. |
+| `VITE_ADS_ENABLED` | Go-live switch. Must be the literal string `"true"`. **Not a runtime toggle** — Vite bakes every `VITE_*` var in at build time. With this `"false"`, the build's dead-code elimination proves the entire ad-rendering branch unreachable and strips it — the slot IDs below don't even end up in the JS bundle. There is no "stage credentials now, flip live later" without a fresh build + deploy; changing this always requires one. |
+| `VITE_ADSENSE_CLIENT_ID` | AdSense publisher ID, `ca-pub-3358151050894536`. Already set — verified 2026-09-04. |
+| `VITE_ADSENSE_SLOT_HOME` | Ad-unit ID for the homepage slot. Already set: `2093246606`. |
+| `VITE_ADSENSE_SLOT_RESULT` | Ad-unit ID for the result-page slot. Already set: `3971585855`. |
+| `VITE_ADSENSE_SLOT_LEADERBOARD` | Ad-unit ID for the leaderboard slot. Already set: `2594819801`. |
+| `VITE_ADSENSE_SLOT_ANCHOR` | Ad-unit ID for the site-wide footer anchor slot. Already set: `3959872362`. |
 
 ## Manual AdSense setup checklist (human operator, not code)
 
-None of this has happened yet. It's a manual, one-time sequence outside this codebase:
-
-1. Create a Google AdSense publisher account for the site.
-2. Submit the site for AdSense review and wait for approval.
-3. In the AdSense dashboard, create 4 ad units — one per slot above (home, result, leaderboard, anchor).
-4. Copy the publisher client ID and each ad unit's slot ID into the production env vars listed above.
-5. Add an `ads.txt` file at the domain root with the exact content AdSense provides for this publisher account.
-6. Decide on and configure EEA/UK consent-message certification in the AdSense dashboard (this is separate from — and in addition to — the site's own cookie-consent banner and `advertising` consent category described above).
-7. Flip `VITE_ADS_ENABLED=true` in production once the above is verified.
+1. ✅ Create a Google AdSense publisher account for the site.
+2. ⏳ Submit the site for AdSense review — site ownership verified 2026-09-04 (see "Site verification" below); full site review is still pending as of this writing.
+3. ✅ In the AdSense dashboard, create 4 ad units — one per slot above (home, result, leaderboard, anchor).
+4. ✅ Copy the publisher client ID and each ad unit's slot ID into `apps/web/.env.production` (done, see table above) — `VITE_ADS_ENABLED` stays `"false"` until step 6 is decided, so none of this renders yet.
+5. ✅ `ads.txt` — served dynamically at `/ads.txt` by `createSeoRouter` (mirrors `/robots.txt`), not a static file, so it can't drift out of sync with the publisher ID. Content: `google.com, pub-3358151050894536, DIRECT, f08c47fec0942fa0`.
+6. ⏳ Decide on and configure EEA/UK consent-message certification in the AdSense dashboard (this is separate from — and in addition to — the site's own cookie-consent banner and `advertising` consent category described above).
+7. ⏳ Flip `VITE_ADS_ENABLED=true` in `apps/web/.env.production` and do a full build + deploy once steps 2 and 6 are resolved.
 
 Also see the related legal-doc updates in `apps/server/src/db.ts`'s `DEFAULT_PRIVACY_POLICY`/`DEFAULT_TERMS_OF_SERVICE` constants (Section 5/6 of the Privacy Policy, Section 5 of the Terms) — those are source defaults for a *new* database only; the live site's legal text is a separate database row edited via the admin panel and needs the same wording pasted in as a manual follow-up once AdSense is actually live.

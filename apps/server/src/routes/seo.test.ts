@@ -14,6 +14,7 @@ import path from "path";
 import {
   createSeoRouter,
   buildRobotsTxt,
+  buildAdsTxt,
   createIndexHtmlMetaMiddleware,
   injectMeta,
   renderSitemapXml,
@@ -118,6 +119,24 @@ describe("GET /robots.txt", () => {
     expect(typeof data.body).toBe("string");
     expect(data.body as string).toContain("User-agent: *");
     expect(data.body as string).toContain("Sitemap:");
+  });
+});
+
+describe("buildAdsTxt", () => {
+  it("declares Google AdSense as a DIRECT seller with the bare pub- id", () => {
+    const txt = buildAdsTxt();
+    expect(txt).toContain("google.com, pub-3358151050894536, DIRECT, f08c47fec0942fa0");
+  });
+});
+
+describe("GET /ads.txt", () => {
+  it("returns text/plain with the AdSense authorized-seller line", () => {
+    const handler = getHandler("/ads.txt");
+    expect(handler).toBeDefined();
+    const { res, data } = mockRes();
+    handler!({}, res);
+    expect(data.contentType).toBe("text/plain");
+    expect(data.body as string).toContain("google.com, pub-3358151050894536, DIRECT, f08c47fec0942fa0");
   });
 });
 
@@ -611,11 +630,13 @@ describe("createIndexHtmlMetaMiddleware", () => {
     expect(sent).not.toBeNull();
   });
 
-  it("passes through /robots.txt and /sitemap.xml so their handlers win", () => {
+  it("passes through /robots.txt, /sitemap.xml, and /ads.txt so their handlers win", () => {
     const r1 = call("GET", "/robots.txt");
     const r2 = call("GET", "/sitemap.xml");
+    const r3 = call("GET", "/ads.txt");
     expect(r1.nextCalled).toBe(true);
     expect(r2.nextCalled).toBe(true);
+    expect(r3.nextCalled).toBe(true);
   });
 
   it("is a no-op passthrough when the template file doesn't exist", () => {

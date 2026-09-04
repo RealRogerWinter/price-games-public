@@ -108,6 +108,18 @@ export function buildRobotsTxt(
   return lines.join("\n");
 }
 
+/**
+ * Build the contents of `/ads.txt` (IAB Authorized Digital Sellers).
+ * Declares Google AdSense (publisher `pub-3358151050894536`, i.e. the
+ * `ca-pub-3358151050894536` client ID used client-side without its `ca-`
+ * prefix — ads.txt entries always use the bare `pub-` form) as a DIRECT
+ * seller, using Google's standard, publicly-documented certification
+ * authority ID for AdSense/Ad Manager. See docs/ADS.md.
+ */
+export function buildAdsTxt(): string {
+  return "google.com, pub-3358151050894536, DIRECT, f08c47fec0942fa0\n";
+}
+
 /** Escape an XML attribute/text value (covers the 5 entity characters). */
 function xmlEscape(s: string): string {
   return s
@@ -220,7 +232,7 @@ export function renderSitemapXml(entries: SitemapEntry[]): string {
 }
 
 /**
- * Create the SEO router (serves `/robots.txt` and `/sitemap.xml`).
+ * Create the SEO router (serves `/robots.txt`, `/sitemap.xml`, and `/ads.txt`).
  *
  * @param getDb - Lazy database accessor so tests can swap the instance.
  * @param options.sitemapCacheMs - Server-side cache TTL for the sitemap XML.
@@ -241,6 +253,12 @@ export function createSeoRouter(
     // `noindex` so well-behaved crawlers get three consistent hints.
     const disabled = [...getDisabledPageUrlPaths(getDb)];
     res.send(buildRobotsTxt(undefined, disabled));
+  });
+
+  router.get("/ads.txt", (_req: Request, res: Response) => {
+    res.type("text/plain");
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.send(buildAdsTxt());
   });
 
   router.get("/sitemap.xml", (_req: Request, res: Response) => {
@@ -377,7 +395,7 @@ export function createIndexHtmlMetaMiddleware(
     if (req.method !== "GET") return next();
     if (req.path.startsWith("/api/")) return next();
     if (req.path.startsWith("/assets/")) return next();
-    if (req.path === "/robots.txt" || req.path === "/sitemap.xml") return next();
+    if (req.path === "/robots.txt" || req.path === "/sitemap.xml" || req.path === "/ads.txt") return next();
     if (STATIC_ASSET_EXT.test(req.path)) return next();
     if (!template) return next();
 
