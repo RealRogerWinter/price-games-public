@@ -1,7 +1,7 @@
 ---
 title: SEO
 status: stable
-last_reviewed: 2026-06-03
+last_reviewed: 2026-09-05
 owner: growth
 audience: contributor
 category: features
@@ -25,7 +25,7 @@ How Price Games surfaces itself to search engines, and how to operate it.
 | `/faq`                      | FAQ page (admin-editable, emits FAQPage JSON-LD) | ✅        |
 | `/contact`                  | Contact page (admin-editable)                    | ✅        |
 | `/game-modes`               | All 12 modes with rules + strategy + VideoGame LD¹| ✅        |
-| `/play/<slug>`              | One landing page per single-player mode (11 URLs) with mode-specific title, description, and crawler body | ✅ |
+| `/play/<slug>`              | One canonical page per single-player mode (11 URLs) — plays that mode at that URL, with mode-specific title, description, JSON-LD, and crawler body | ✅ |
 | `/privacy`, `/terms`        | Legal pages (admin-editable via /admin/legal)    | ✅        |
 | `/scoreboard`, `/leaderboard` | Indexable but without per-user PII             | ✅        |
 | `/mp`                       | Multiplayer lobby landing                        | ✅        |
@@ -87,11 +87,66 @@ copy with rules + strategy + an internal link to the mode.
 - Each is registered in `SEO_GAME_MODE_ROUTES` with `sitemap: true` and
   `priority: 0.8`, so `sitemap.xml` lists them automatically.
 - The React router has a single `<Route path="/play/:mode">` that reuses
-  `SinglePlayerApp`. On mount, the component reads `useParams().mode`
-  and starts the game, then replaces the URL with `/` so the in-app
-  navigation stays consistent after the initial deep-link.
-- Legacy `/?mode=<slug>` still works — it's resolved through the same
-  effect. New internal links should use `/play/<slug>`.
+  `SinglePlayerApp`. On mount, the component reads `useParams().mode` and
+  starts that mode's game **at that URL** — the canonical URL stays in the
+  address bar for the whole run, so the page a searcher landed on is the
+  page they stay on, and the URL is shareable and bookmarkable mid-game.
+- The URL used to be rewritten to `/` on mount. That made every one of the
+  eleven mode URLs collapse onto the home page in the rendered DOM: the
+  canonical the crawler indexed never matched what rendered, and the URL
+  disappeared from the address bar. Do not reintroduce that rewrite.
+- Leaving the mode's page — going home, opening the leaderboard, or
+  starting the daily challenge — navigates back to `/` first, so unrelated
+  screens never render under a mode's canonical URL. The `playing` and
+  `result` screens deliberately keep it.
+- Legacy `/?mode=<slug>` still works and is *still* normalized to `/`:
+  `/` is that entry point's own canonical, and it exists as a campaign
+  link rather than an indexable page. New internal links should use
+  `/play/<slug>`.
+- Broadcast (`?broadcast=1`) behaviour is unchanged — it always preserved
+  the URL, and `createPlayModeRouter` exempts those requests before any
+  other check. See [STREAMER.md](STREAMER.md).
+
+### Canonical-URL discipline for `/play/*`
+
+`createPlayModeRouter` (`apps/server/src/routes/seo.ts`), mounted after the
+broadcast hostname gate and before the SPA catch-all, keeps the eleven
+`/play/<mode>` URLs one-to-one with the modes they represent:
+
+Every request is reduced to the single canonical path
+`/play/<lowercase-slug>`; anything that is merely a spelling of that URL is
+301'd onto it rather than served as a second indexable copy.
+
+| Request | Response |
+| --- | --- |
+| `/play/classic` | 200 — the mode's page |
+| `/play/CLASSIC`, `/PLAY/classic`, `/play/classic/` | 301 → `/play/classic` (query preserved) |
+| `/play/bidding` | 301 → `/mp` — multiplayer-only, no SP page to be canonical for |
+| `/play`, `/play/` | 301 → `/game-modes` |
+| `/play/<unknown>` | 404 + `noindex` (was a soft 404 inheriting the home page's meta) |
+| `/play/<anything>?broadcast=1` | passed straight through, never redirected |
+
+Express is case-insensitive and non-strict by default, so `/PLAY/classic`
+and `/play/classic/` both reach the SPA — hence the whole-path comparison
+rather than a slug-only one. Only `GET`/`HEAD` are handled; other methods
+fall through. Redirects carry `Cache-Control: public, max-age=3600`,
+because a bare 301 is cached by the browser indefinitely.
+
+Unknown-slug meta comes from `resolveUnknownPlayModeMeta`, wired into the
+injector's `dynamicResolver` chain. The `?broadcast=1` exemption reuses
+`isBroadcastRequest` from `middleware/broadcastAccess.ts` so there is one
+predicate rather than a second, subtly different copy.
+
+Client-side, `/play` and unknown slugs redirect to `/game-modes` and
+multiplayer-only modes redirect to `/mp` (generated from
+`MULTIPLAYER_ONLY_MODES`, so the two layers cannot drift).
+
+### Structured data on `/play/<mode>`
+
+`SinglePlayerApp` emits `VideoGame` + `BreadcrumbList` JSON-LD scoped to the
+mode (name, canonical URL, registry description, `playMode: SinglePlayer`,
+and a Home → Game Modes → *Mode* trail) in place of the site-level
+`WebSite` + `VideoGame` pair that belongs on `/`.
 
 ### Adding a new route
 

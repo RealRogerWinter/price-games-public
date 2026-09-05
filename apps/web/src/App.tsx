@@ -27,7 +27,7 @@ import BroadcastShell from "./broadcast/BroadcastShell";
 import BroadcastNavHandle from "./broadcast/BroadcastNavHandle";
 import { useBroadcastMode } from "./broadcast/useBroadcastMode";
 import { AnalyticsProvider } from "./analytics";
-import { getGameModeName } from "@price-game/shared";
+import { getGameModeName, resolveSeoMeta } from "@price-game/shared";
 import HomePage from "./pages/HomePage";
 import DailyIntroPage from "./pages/DailyIntroPage";
 const DailyResultPage = lazyWithRetry(() => import('./pages/DailyResultPage'));
@@ -144,6 +144,16 @@ export default function App() {
                   <Route path="/giveaway" element={<GiveawayRedirect />} />
                   <Route path="/player/:username" element={<PlayerProfileRoute />} />
                   <Route path="/mp" element={<MultiplayerRoute />} />
+                  {/* Bare /play is not a page — without this it would fall
+                      through to the /:roomCode route below. */}
+                  <Route path="/play" element={<Navigate to="/game-modes" replace />} />
+                  {/* Multiplayer-only modes have no single-player page to be
+                      canonical for, so they redirect to the lobby (the server
+                      answers the same URLs with a 301 for crawlers). Driven off
+                      the shared set so client and server can't drift. */}
+                  {[...MULTIPLAYER_ONLY_MODES].map((m) => (
+                    <Route key={m} path={`/play/${m}`} element={<Navigate to="/mp" replace />} />
+                  ))}
                   <Route path="/play/:mode" element={<SinglePlayerApp />} />
                   <Route path="/:roomCode" element={<MultiplayerRoute />} />
                 </Routes>
@@ -450,19 +460,27 @@ function SinglePlayerApp() {
     const requestedMode = pathMode ?? params.get("mode");
     if (requestedMode && VALID_GAME_MODES.has(requestedMode) && !MULTIPLAYER_ONLY_MODES.has(requestedMode)) {
       const isBroadcast = params.get("broadcast") === "1";
-      // For human users, normalize the URL to "/" so the in-app
-      // home/play/result navigation is consistent regardless of how
-      // they arrived (deep-link, mode picker, etc.).
+      // `/play/<mode>` is that mode's canonical, indexed URL, so it stays in
+      // the address bar for the whole run. Rewriting it to "/" (which this
+      // used to do for human users) meant the page a searcher landed on
+      // immediately stopped existing: the canonical the crawler indexed
+      // never matched the rendered page, all eleven mode URLs collapsed
+      // onto the home page, and the URL could not be shared or bookmarked.
+      // The leave effect above drops back to "/" when the player navigates
+      // to a screen that genuinely is not this mode's page.
       //
-      // For the streaming bot (broadcast mode), keep the canonical
-      // `/play/<mode>?broadcast=1` URL — the runner reload-recovers
-      // from page_unhealthy by calling `page.reload()`, and a
-      // normalized "/" reload would land on the home page with no
-      // active game (the page's restore-from-storage path is
-      // human-oriented and deliberately stays on home). Preserving
-      // the URL means each reload re-fires this deep-link effect
-      // and spawns a fresh game session.
-      if (!isBroadcast) {
+      // The legacy `?mode=<mode>` query deep-link is still normalized away:
+      // "/" is its own canonical, and it exists only as a campaign entry
+      // point, not as an indexable page.
+      //
+      // For the streaming bot (broadcast mode) the URL was already
+      // preserved — the runner reload-recovers from page_unhealthy by
+      // calling `page.reload()`, and a normalized "/" reload would land on
+      // the home page with no active game (the page's restore-from-storage
+      // path is human-oriented and deliberately stays on home). Preserving
+      // the URL means each reload re-fires this deep-link effect and spawns
+      // a fresh game session.
+      if (!isBroadcast && !pathMode) {
         window.history.replaceState({ ...window.history.state }, "", "/");
       }
       // Clear any stored "active_game" so the home-screen restore
@@ -497,6 +515,46 @@ function SinglePlayerApp() {
     sessionStorage.removeItem("active_game");
     doStartGame(pathMode as GameMode, categories, selectedRounds, "game-browser");
   }, [pathMode, broadcast]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // An unknown `/play/<slug>` has no game to start and no page to be — the
+  // server answers those with 404 + noindex. Send the visitor to the mode
+  // catalog rather than leaving them staring at a blank shell under a URL
+  // that does not exist.
+  useEffect(() => {
+    if (!pathMode || broadcast) return;
+    if (VALID_GAME_MODES.has(pathMode)) return;
+    navigate("/game-modes", { replace: true });
+  }, [pathMode, broadcast, navigate]);
+
+  // Hold the mode's canonical URL for as long as the player is on that
+  // mode's page — the game itself and its result screen — then drop back to
+  // "/" the moment they navigate to a screen that is a different page:
+  // home, the leaderboard, the daily challenge. Without this the home
+  // screen would render under `/play/<mode>`, reintroducing the exact
+  // canonical/content mismatch this route exists to fix.
+  //
+  // The ref gates the first pass. On mount the screen is still "home"
+  // while `doStartGame` is in flight, and navigating away at that point
+  // would undo the deep-link before it ever took effect.
+  const startedOnModeRouteRef = useRef(false);
+  useEffect(() => {
+    if (!pathMode || broadcast) return;
+    if (screen === "playing" || screen === "result") {
+      startedOnModeRouteRef.current = true;
+      return;
+    }
+    // A deep-link start that failed also leaves the home screen rendering
+    // under the mode's URL — the same mismatch, reached through the error
+    // path — so treat it as a leave rather than stranding the player there.
+    if (!startedOnModeRouteRef.current && !error) return;
+    navigate("/", { replace: true });
+    // `navigate(..., { replace: true })` writes a fresh `{ usr, key, idx }`
+    // history state, which drops the `screen` key `useScreenHistory` stamps
+    // onto the entry. Its popstate handler ignores any entry without that
+    // key, so without this re-stamp the browser's forward button would
+    // silently stop working after leaving a mode route.
+    window.history.replaceState({ ...window.history.state, screen }, "");
+  }, [screen, pathMode, broadcast, error, navigate]);
 
   // Deep-link: ?view=leaderboard opens the leaderboard screen. Reactive
   // to location.search so it works even when already on "/" (the mount
@@ -715,7 +773,46 @@ function SinglePlayerApp() {
     clearRejoinBanner();
   }
 
-  const homeJsonLd = screen === "home"
+  // On `/play/<mode>` the page is that mode's own canonical URL, so it emits
+  // mode-specific structured data plus a breadcrumb trail back to the
+  // catalog, rather than the site-level pair that belongs on "/".
+  const isPlayableModeRoute =
+    !!pathMode && VALID_GAME_MODES.has(pathMode) && !MULTIPLAYER_ONLY_MODES.has(pathMode);
+  const playModeJsonLd = isPlayableModeRoute
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "VideoGame",
+          name: `${getGameModeName(pathMode as GameMode)} — Price Games`,
+          alternateName: getGameModeName(pathMode as GameMode),
+          url: `https://price.games/play/${pathMode}`,
+          description: resolveSeoMeta(`/play/${pathMode}`).description,
+          genre: ["Trivia", "Casual", "Puzzle"],
+          applicationCategory: "Game",
+          gamePlatform: "Web browser",
+          operatingSystem: "Web",
+          playMode: "SinglePlayer",
+          isPartOf: { "@type": "VideoGame", name: "Price Games", url: "https://price.games" },
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Price Games", item: "https://price.games" },
+            { "@type": "ListItem", position: 2, name: "Game Modes", item: "https://price.games/game-modes" },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: getGameModeName(pathMode as GameMode),
+              item: `https://price.games/play/${pathMode}`,
+            },
+          ],
+        },
+      ]
+    : undefined;
+
+  const homeJsonLd = screen === "home" && !isPlayableModeRoute
     ? [
         {
           "@context": "https://schema.org",
@@ -841,7 +938,7 @@ function SinglePlayerApp() {
 
   return (
     <div className="app">
-      <SEO jsonLd={homeJsonLd} />
+      <SEO jsonLd={playModeJsonLd ?? homeJsonLd} />
       <main className="app-main">
       {authError && (
         <div className="rejoin-banner" style={{ background: "#c0392b" }}>

@@ -27,7 +27,7 @@ import { createAdminRouter } from "./routes/admin";
 import { createUserRouter } from "./routes/user";
 import { createShortLinkRouter } from "./routes/shortLinks";
 import { createAttributionRouter } from "./routes/attribution";
-import { createSeoRouter, createIndexHtmlMetaMiddleware, resolveIndexHtmlPath, resolveShareMeta, resolvePageVisibilityMeta } from "./routes/seo";
+import { createSeoRouter, createIndexHtmlMetaMiddleware, resolveIndexHtmlPath, resolveShareMeta, resolvePageVisibilityMeta, createPlayModeRouter, resolveUnknownPlayModeMeta } from "./routes/seo";
 import { renderSeoBody } from "./routes/seoBody";
 import { createEventsRouter } from "./routes/events";
 import { createStreamerRouter, createSqlitePersistence } from "./routes/streamer";
@@ -682,7 +682,9 @@ const metaInjector = createIndexHtmlMetaMiddleware(resolveIndexHtmlPath(webDist)
   // to the page-visibility resolver, which forces `noindex` on any SEO
   // page the admin has marked as not visible.
   dynamicResolver: (pathname) =>
-    resolveShareMeta(() => db, pathname) ?? resolvePageVisibilityMeta(() => db, pathname),
+    resolveShareMeta(() => db, pathname) ??
+    resolveUnknownPlayModeMeta(pathname) ??
+    resolvePageVisibilityMeta(() => db, pathname),
   // Per-route body content injected inside `<div id="root">…</div>` so
   // non-JS crawlers (AI search bots, link-preview fetchers) see real
   // page copy. React's `createRoot` replaces these children on
@@ -704,6 +706,13 @@ const metaInjector = createIndexHtmlMetaMiddleware(resolveIndexHtmlPath(webDist)
 // are intentionally NOT covered, since they don't render the
 // overlay (see I1/I2 in the PR review).
 app.use(denyPublicBroadcastFromEnv());
+
+// Canonical-URL discipline for the per-mode `/play/<mode>` pages: 301 the
+// multiplayer-only and wrong-case variants onto the one real URL, and mark
+// unknown slugs 404 so they stop reading as soft 404s. Mounted after the
+// broadcast hostname gate (so bot URLs on public hosts still 404 first) and
+// before the catch-all, whose `res.send` inherits the status set here.
+app.use(createPlayModeRouter());
 
 app.get("*", metaInjector, (_req, res) => {
   // Fallback if the meta injector is disabled (template not found on disk).

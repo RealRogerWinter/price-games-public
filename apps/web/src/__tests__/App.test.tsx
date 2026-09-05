@@ -666,3 +666,188 @@ describe("App", () => {
     });
   });
 });
+
+describe("/play/<mode> canonical URL", () => {
+  // `/play/<mode>` is each mode's indexable, canonical URL. It used to
+  // rewrite itself to "/" on mount, so the page a searcher landed on
+  // stopped existing the moment React booted and all eleven mode URLs
+  // collapsed onto the home page. These tests pin the URL to the route.
+
+  let fetchSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.history.pushState({}, "", "/");
+    fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ rates: {} }))
+    );
+    mockedSocket.getPlayerSession.mockReturnValue(null);
+    mockedApi.startGame.mockClear();
+  });
+
+  afterEach(() => {
+    fetchSpy?.mockRestore();
+  });
+
+  it("keeps the mode URL in the address bar while playing", async () => {
+    mockedApi.startGame.mockResolvedValue(makeSession({ id: "s1", gameMode: "classic" }));
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+
+    expect(mockedApi.startGame.mock.calls[0]![1]).toBe("classic");
+    expect(window.location.pathname).toBe("/play/classic");
+  });
+
+  it("still normalizes the legacy ?mode= deep link to /", async () => {
+    // "/" is that entry point's own canonical — only the path form is
+    // an indexable page.
+    mockedApi.startGame.mockResolvedValue(makeSession({ id: "s2", gameMode: "classic" }));
+    window.history.pushState({}, "", "/?mode=classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+
+    expect(window.location.pathname).toBe("/");
+  });
+
+  it("drops back to / when the player leaves the mode for the home screen", async () => {
+    // The home screen is not the mode's page, so it must not render
+    // under the mode's canonical URL.
+    mockedApi.startGame.mockResolvedValue(makeSession({ id: "s3", gameMode: "classic" }));
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+    expect(window.location.pathname).toBe("/play/classic");
+
+    await act(async () => {
+      fireEvent.click(screen.getByLabelText("Home"));
+    });
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/");
+    });
+  });
+
+  it("keeps the mode URL on the result screen", async () => {
+    // `playing` and `result` are both that mode's page — only screens that
+    // are a different page drop back to "/".
+    const session = makeSession({ id: "s4", gameMode: "classic" });
+    mockedApi.startGame.mockResolvedValue(session);
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      window.history.pushState({ ...window.history.state, screen: "result" }, "");
+      window.dispatchEvent(new PopStateEvent("popstate", { state: { ...window.history.state, screen: "result" } }));
+    });
+
+    expect(window.location.pathname).toBe("/play/classic");
+  });
+
+  it("leaves the mode URL when the deep-link start fails", async () => {
+    // The error path used to strand the player on /play/<mode> rendering
+    // the home screen — the exact canonical/content mismatch this fixes.
+    mockedApi.startGame.mockRejectedValue(new Error("boom"));
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/");
+    });
+  });
+
+  it("preserves the useScreenHistory screen key when leaving a mode route", async () => {
+    // react-router's replace() writes a fresh {usr,key,idx} state object.
+    // Without re-stamping `screen`, useScreenHistory's popstate handler
+    // ignores the entry and the browser forward button silently dies.
+    mockedApi.startGame.mockResolvedValue(makeSession({ id: "s5", gameMode: "classic" }));
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByLabelText("Home"));
+    });
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/");
+    });
+    expect(window.history.state?.screen).toBe("home");
+  });
+
+  it("redirects the multiplayer-only mode to the lobby", async () => {
+    window.history.pushState({}, "", "/play/bidding");
+
+    renderWithProviders(<App />);
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/mp");
+    });
+    expect(mockedApi.startGame).not.toHaveBeenCalled();
+  });
+
+  it("redirects an unknown mode slug to the mode catalog", async () => {
+    window.history.pushState({}, "", "/play/not-a-real-mode");
+
+    renderWithProviders(<App />);
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/game-modes");
+    });
+    expect(mockedApi.startGame).not.toHaveBeenCalled();
+  });
+
+  it("redirects bare /play to the mode catalog", async () => {
+    // Without an explicit route this fell through to /:roomCode.
+    window.history.pushState({}, "", "/play");
+
+    renderWithProviders(<App />);
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/game-modes");
+    });
+  });
+
+  it("emits mode-scoped VideoGame and BreadcrumbList JSON-LD", async () => {
+    mockedApi.startGame.mockResolvedValue(makeSession({ id: "s6", gameMode: "higher-lower" }));
+    window.history.pushState({}, "", "/play/higher-lower");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("higher-lower-page")).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      const blobs = Array.from(
+        document.querySelectorAll('script[type="application/ld+json"]')
+      ).map((el) => JSON.parse(el.textContent ?? "{}"));
+      const game = blobs.find((b) => b["@type"] === "VideoGame");
+      const crumbs = blobs.find((b) => b["@type"] === "BreadcrumbList");
+      expect(game?.url).toBe("https://price.games/play/higher-lower");
+      expect(game?.playMode).toBe("SinglePlayer");
+      // The site-level WebSite blob belongs on "/", not on a mode page.
+      expect(blobs.some((b) => b["@type"] === "WebSite")).toBe(false);
+      expect(crumbs?.itemListElement?.[2]?.item).toBe(
+        "https://price.games/play/higher-lower"
+      );
+    });
+  });
+});

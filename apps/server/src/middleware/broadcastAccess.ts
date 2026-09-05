@@ -72,8 +72,15 @@ export function parseBlockedHosts(raw: string | undefined): Set<string> {
  * web app's own `useBroadcastMode` hook (strict `=== "1"`). Express
  * parses the query string into either a string or string[] when a key
  * is repeated, so we collapse arrays and check the first value.
+ *
+ * Exported so every server-side broadcast check shares one predicate —
+ * a second, subtly different copy would let a request be "broadcast" to
+ * one middleware and not to another.
+ *
+ * @param req - The incoming request.
+ * @returns True when the request carries `?broadcast=1`.
  */
-function isBroadcastRequest(req: Request): boolean {
+export function isBroadcastRequest(req: Request): boolean {
   const raw = req.query.broadcast;
   const value = Array.isArray(raw) ? raw[0] : raw;
   return value === "1";

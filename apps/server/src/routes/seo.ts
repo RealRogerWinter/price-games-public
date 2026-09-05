@@ -15,6 +15,8 @@ import type { Database as DatabaseType } from "better-sqlite3";
 import {
   SEO_ROUTES,
   SEO_GAME_MODE_ROUTES,
+  VALID_GAME_MODES,
+  MULTIPLAYER_ONLY_MODES,
   SITE_ORIGIN,
   SITE_OG_IMAGE,
   SITE_NAME,
@@ -25,6 +27,7 @@ import {
   type SeoMeta,
 } from "@price-game/shared";
 import { getEnabledPages, PAGE_KEYS, type PageKey } from "../services/siteSettings";
+import { isBroadcastRequest } from "../middleware/broadcastAccess";
 
 /** Map each `PageKey` to the canonical URL pathname it renders at. The
  *  storage key uses `game_modes` for JSON-friendliness but the public
@@ -278,6 +281,117 @@ export function createSeoRouter(
     res.type("application/xml");
     res.setHeader("Cache-Control", "public, max-age=600");
     res.send(cached.xml);
+  });
+
+  return router;
+}
+
+/** Matches `/play/<slug>` with exactly one segment after `/play/`. */
+const PLAY_MODE_PATH_REGEX = /^\/play\/([^/]+)\/?$/;
+
+/**
+ * Resolve SEO overrides for a `/play/<slug>` URL that has no landing page of
+ * its own — an unknown or misspelled slug. Those used to inherit the default
+ * (home page) title and description while self-canonicalizing to their own
+ * bogus URL, which is a textbook soft 404. Returning `noindex` here keeps
+ * them out of the index alongside the eleven real per-mode URLs.
+ *
+ * `/play/<valid-mode>` and non-`/play` paths return null so the caller falls
+ * through to the static registry — including `/play/bidding`, which
+ * `createPlayModeRouter` normally redirects to `/mp` before the injector
+ * runs, but which still reaches here on a `?broadcast=1` request (those are
+ * exempt from every redirect).
+ *
+ * @param pathname - Request pathname (no query string).
+ * @returns Partial meta forcing `noindex`, or null when not applicable.
+ */
+export function resolveUnknownPlayModeMeta(pathname: string): Partial<SeoMeta> | null {
+  const match = PLAY_MODE_PATH_REGEX.exec(pathname);
+  if (!match) return null;
+  if (VALID_GAME_MODES.has(match[1])) return null;
+  return {
+    title: "Game Mode Not Found — Price Games",
+    description:
+      "That game mode does not exist. Browse every Price Games mode and pick one to play — free, no signup needed.",
+    noindex: true,
+  };
+}
+
+/**
+ * Router that keeps the eleven `/play/<mode>` canonical URLs one-to-one with
+ * the modes they represent. Every request is reduced to the single canonical
+ * path `/play/<lowercase-slug>`; anything that is merely a spelling of that
+ * URL is 301'd onto it rather than served as a second indexable copy:
+ *
+ * - `/play/bidding` → 301 `/mp`. Bidding War is multiplayer-only, so it has
+ *   no single-player page to be canonical for; without the redirect the URL
+ *   served a second copy of the home page's meta.
+ * - `/play/CLASSIC`, `/PLAY/classic`, `/play/classic/` → 301
+ *   `/play/classic`. Express routing is case-insensitive and non-strict by
+ *   default, so all three reached the SPA and canonicalized to themselves.
+ * - `/play` and `/play/` → 301 `/game-modes`, the real catalog page.
+ * - `/play/<unknown>` → status 404 (the SPA shell is still served, with
+ *   `noindex` meta from `resolveUnknownPlayModeMeta`).
+ *
+ * Only GET and HEAD are handled — a POST to a content URL is not a
+ * canonicalization concern and should fall through to the catch-all.
+ *
+ * The `?broadcast=1` exemption is checked first and unconditionally: the
+ * 24/7 streaming bot polls for an exact `pathname + search` match and
+ * reload-recovers against its own URL, so a redirect on those requests
+ * would break the stream.
+ *
+ * @returns An Express router to mount ahead of the SPA catch-all.
+ */
+export function createPlayModeRouter(): Router {
+  const router = Router();
+
+  /**
+   * Extract the query string from the original request target. Taken from
+   * the first `?` rather than by slicing at `req.path.length`, which is
+   * wrong whenever `originalUrl` is not a plain origin-form path (an
+   * absolute-form request target, or the router mounted under a prefix).
+   */
+  function queryOf(req: Request): string {
+    const i = req.originalUrl.indexOf("?");
+    return i === -1 ? "" : req.originalUrl.slice(i);
+  }
+
+  /** 301 with an explicit TTL — browsers otherwise cache a bare permanent
+   *  redirect for the lifetime of the profile, which makes a mistake here
+   *  effectively unrecoverable for anyone who hit it once. */
+  function permanent(res: Response, location: string): void {
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.redirect(301, location);
+  }
+
+  router.get(["/play", "/play/"], (req: Request, res: Response, next: NextFunction) => {
+    if (isBroadcastRequest(req)) return next();
+    return permanent(res, "/game-modes");
+  });
+
+  router.get("/play/:mode", (req: Request, res: Response, next: NextFunction) => {
+    if (isBroadcastRequest(req)) return next();
+    const slug = String(req.params.mode ?? "");
+    const lower = slug.toLowerCase();
+    const query = queryOf(req);
+
+    if (MULTIPLAYER_ONLY_MODES.has(lower)) {
+      return permanent(res, `/mp${query}`);
+    }
+    if (!VALID_GAME_MODES.has(lower)) {
+      res.status(404);
+      return next();
+    }
+    // Compare the whole path, not just the slug: `/PLAY/classic` matches
+    // this route too, and `/play/classic/` is likewise a distinct URL that
+    // must not be served as its own page. Anything that is not byte-for-byte
+    // the canonical path is a spelling of it, so 301 rather than serve it.
+    const canonicalPath = `/play/${lower}`;
+    if (req.path !== canonicalPath) {
+      return permanent(res, `${canonicalPath}${query}`);
+    }
+    return next();
   });
 
   return router;

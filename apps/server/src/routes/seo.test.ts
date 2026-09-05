@@ -22,6 +22,8 @@ import {
   getTopPlayerEntries,
   resolveShareMeta,
   resolvePageVisibilityMeta,
+  createPlayModeRouter,
+  resolveUnknownPlayModeMeta,
 } from "./seo";
 import { setEnabledPages } from "../services/siteSettings";
 
@@ -685,5 +687,157 @@ describe("createIndexHtmlMetaMiddleware", () => {
     };
     mw(req, res, () => {});
     expect(sent!).toContain("<title>About Price Games</title>");
+  });
+});
+
+describe("resolveUnknownPlayModeMeta", () => {
+  it("returns null for a real per-mode landing URL", () => {
+    expect(resolveUnknownPlayModeMeta("/play/classic")).toBeNull();
+    expect(resolveUnknownPlayModeMeta("/play/higher-lower")).toBeNull();
+  });
+
+  it("returns null for paths outside /play/", () => {
+    expect(resolveUnknownPlayModeMeta("/")).toBeNull();
+    expect(resolveUnknownPlayModeMeta("/game-modes")).toBeNull();
+    expect(resolveUnknownPlayModeMeta("/play/classic/extra")).toBeNull();
+  });
+
+  it("forces noindex on an unknown slug so it stops reading as a soft 404", () => {
+    const meta = resolveUnknownPlayModeMeta("/play/not-a-mode");
+    expect(meta).not.toBeNull();
+    expect(meta!.noindex).toBe(true);
+    // Must not inherit the home page's title/description — that is what
+    // made these URLs look like a duplicate of "/".
+    expect(meta!.title).toContain("Not Found");
+  });
+});
+
+describe("createPlayModeRouter", () => {
+  /** Resolve a handler for `path` from the play router's stack. */
+  function handlerFor(routePath: string): (req: any, res: any, next: any) => void {
+    const r = createPlayModeRouter();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    for (const layer of (r as any).stack) {
+      const p = layer.route?.path;
+      if (p === routePath || (Array.isArray(p) && p.includes(routePath))) {
+        return layer.route.stack[layer.route.stack.length - 1].handle;
+      }
+    }
+    throw new Error(`no handler for ${routePath}`);
+  }
+
+  /**
+   * Drive a handler with a request shaped like Express builds one.
+   * `originalUrl` is passed separately so a test can exercise a request
+   * target that is not a plain origin-form path.
+   */
+  function run(path: string, opts: { originalUrl?: string; query?: any } = {}) {
+    const [pathname, search] = path.split("?");
+    const originalUrl = opts.originalUrl ?? path;
+    const isBare = pathname === "/play" || pathname === "/play/";
+    // Express strips a trailing slash out of the param but leaves it on
+    // `req.path`, which is exactly the asymmetry the canonical check relies on.
+    const slug = isBare
+      ? ""
+      : decodeURIComponent(pathname.replace(/^\/[Pp][Ll][Aa][Yy]\//, "").replace(/\/$/, ""));
+    const req: any = {
+      params: isBare ? {} : { mode: slug },
+      query: opts.query ?? Object.fromEntries(new URLSearchParams(search ?? "")),
+      path: pathname,
+      originalUrl,
+    };
+    let redirectedTo: string | null = null;
+    let redirectStatus: number | null = null;
+    let status: number | null = null;
+    let nexted = false;
+    const headers: Record<string, string> = {};
+    const res: any = {
+      redirect(code: number, to: string) { redirectStatus = code; redirectedTo = to; },
+      status(code: number) { status = code; return res; },
+      setHeader(k: string, v: string) { headers[k] = v; return res; },
+    };
+    handlerFor(isBare ? "/play" : "/play/:mode")(req, res, () => { nexted = true; });
+    return { redirectedTo, redirectStatus, status, nexted, headers };
+  }
+
+  it("301s the multiplayer-only mode to the lobby", () => {
+    // Bidding War has no single-player page, so /play/bidding used to
+    // serve a second copy of the home page's meta under its own canonical.
+    const r = run("/play/bidding");
+    expect(r.redirectStatus).toBe(301);
+    expect(r.redirectedTo).toBe("/mp");
+  });
+
+  it("301s a wrong-case slug onto the canonical lowercase URL", () => {
+    // Express routing is case-insensitive by default, so /play/CLASSIC
+    // rendered a duplicate that canonicalized to itself.
+    const r = run("/play/CLASSIC");
+    expect(r.redirectStatus).toBe(301);
+    expect(r.redirectedTo).toBe("/play/classic");
+  });
+
+  it("301s a wrong-case literal segment and a trailing slash", () => {
+    // Express is case-insensitive on `/play` itself, not just the param,
+    // and non-strict routing makes the trailing slash a distinct URL.
+    expect(run("/PLAY/classic").redirectedTo).toBe("/play/classic");
+    expect(run("/play/classic/").redirectedTo).toBe("/play/classic");
+  });
+
+  it("301s bare /play to the mode catalog", () => {
+    // Without this the client would fall through to the /:roomCode route.
+    expect(run("/play").redirectedTo).toBe("/game-modes");
+    expect(run("/play/").redirectedTo).toBe("/game-modes");
+  });
+
+  it("preserves the query string across a redirect", () => {
+    const r = run("/play/CLASSIC?utm_source=x");
+    expect(r.redirectedTo).toBe("/play/classic?utm_source=x");
+  });
+
+  it("takes the query from the first ? in the original target", () => {
+    // `originalUrl.slice(req.path.length)` looked equivalent but corrupts
+    // the Location header on an absolute-form request target, appending the
+    // authority to the redirect path.
+    const r = run("/play/BIDDING", { originalUrl: "http://evil.example.com/play/BIDDING" });
+    expect(r.redirectedTo).toBe("/mp");
+  });
+
+  it("sets an explicit TTL on permanent redirects", () => {
+    // A bare 301 is cached by the browser indefinitely, which makes a
+    // mistake here unrecoverable for anyone who hit it once.
+    expect(run("/play/bidding").headers["Cache-Control"]).toBe("public, max-age=3600");
+  });
+
+  it("passes a valid canonical slug straight through", () => {
+    const r = run("/play/classic");
+    expect(r.nexted).toBe(true);
+    expect(r.redirectStatus).toBeNull();
+    expect(r.status).toBeNull();
+  });
+
+  it("marks an unknown slug 404 but still serves the SPA shell", () => {
+    const r = run("/play/not-a-mode");
+    expect(r.status).toBe(404);
+    expect(r.nexted).toBe(true);
+  });
+
+  it("never redirects or 404s a broadcast URL", () => {
+    // The 24/7 streaming bot polls for an exact pathname+search match and
+    // reload-recovers against its own URL; a redirect would break the stream.
+    for (const path of ["/play/bidding?broadcast=1", "/play/whatever?broadcast=1", "/play?broadcast=1"]) {
+      const r = run(path);
+      expect(r.redirectStatus).toBeNull();
+      expect(r.status).toBeNull();
+      expect(r.nexted).toBe(true);
+    }
+  });
+
+  it("treats a repeated broadcast param the same way the access gate does", () => {
+    // Express parses a repeated key into an array; a stricter check here
+    // than in broadcastAccess would make one middleware see a broadcast
+    // request and the other not.
+    const r = run("/play/bidding", { query: { broadcast: ["1", "9"] } });
+    expect(r.redirectStatus).toBeNull();
+    expect(r.nexted).toBe(true);
   });
 });
