@@ -578,8 +578,14 @@ function SinglePlayerApp() {
     // `/play/<mode>` is a plain GET, so the browser's forward button lands
     // here with no click to intercept — without this guard, `/` → card →
     // play → Back → Forward would silently discard the session and its
-    // score. Mirrors the same guard in the broadcast effect above.
-    if (pathMode === gameMode && session && !session.completed) return;
+    // score.
+    //
+    // Compares against `session.gameMode` — the mode of the game actually
+    // running — NOT the `gameMode` state, which is set optimistically before
+    // a game exists. Reading the optimistic value here made an explicitly
+    // requested restart look like a duplicate navigation and silently
+    // dropped it.
+    if (session && !session.completed && session.gameMode === pathMode) return;
     // Clear any stored game so the home-screen restore path can't flash a
     // stale Resume banner while doStartGame is in flight. Deliberately after
     // the guard above — bailing out must leave the stored game intact.
@@ -762,11 +768,15 @@ function SinglePlayerApp() {
    * for the browser to follow.
    */
   function handleSelectMode(mode: GameMode) {
-    // `doStartGame` sets this too, but only once the navigation has landed;
-    // setting it here keeps anything reading `gameMode` in between (the
-    // Retry button) from pointing at the previously-played mode.
-    setGameMode(mode);
     setIsPlayingDaily(false);
+    // Only reached when the player has explicitly asked for a new game: the
+    // Random card, or confirming "Start New Game" over a game in progress.
+    // Drop the old session here so the restart guard in the soft-nav effect
+    // sees no running game and starts one — including when the mode chosen
+    // is the same one that was already in progress.
+    setSession(null);
+    setRoundResults([]);
+    sessionStorage.removeItem("active_game");
     navigate(`/play/${mode}`);
   }
 

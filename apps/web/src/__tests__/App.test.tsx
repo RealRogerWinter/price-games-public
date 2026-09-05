@@ -95,6 +95,13 @@ const mockedSocket = vi.mocked(socket);
 // Actually, we can import App and it will render within jsdom's window.location
 import App from "../App";
 
+/** Click a mode card by its label text. Single-player mode cards are `<Link>`
+ *  anchors to `/play/<mode>`; the multiplayer, bidding and Random cards are
+ *  still buttons, so match either. Shared by both describe blocks. */
+function clickModeCard(label: string) {
+  fireEvent.click(screen.getByText(label).closest("a, button")!);
+}
+
 describe("App", () => {
   let fetchSpy: ReturnType<typeof vi.spyOn>;
 
@@ -149,7 +156,7 @@ describe("App", () => {
     await flushMicrotasks();
 
     await act(async () => {
-      clickModeButton("Precision");
+      clickModeCard("Precision");
     });
     await flushMicrotasks();
 
@@ -165,7 +172,7 @@ describe("App", () => {
     await flushMicrotasks();
 
     await act(async () => {
-      clickModeButton("Precision");
+      clickModeCard("Precision");
     });
 
     await waitFor(() => {
@@ -182,7 +189,7 @@ describe("App", () => {
     await flushMicrotasks();
 
     await act(async () => {
-      clickModeButton("Higher or Lower");
+      clickModeCard("Higher or Lower");
     });
 
     await waitFor(() => {
@@ -198,7 +205,7 @@ describe("App", () => {
     await flushMicrotasks();
 
     await act(async () => {
-      clickModeButton("Precision");
+      clickModeCard("Precision");
     });
 
     await waitFor(() => {
@@ -393,7 +400,7 @@ describe("App", () => {
     await flushMicrotasks();
 
     await act(async () => {
-      clickModeButton("Precision");
+      clickModeCard("Precision");
     });
 
     await waitFor(() => {
@@ -469,7 +476,7 @@ describe("App", () => {
       await flushMicrotasks();
 
       await act(async () => {
-        clickModeButton("Precision");
+        clickModeCard("Precision");
       });
 
       await waitFor(() => {
@@ -508,7 +515,7 @@ describe("App", () => {
       await flushMicrotasks();
 
       await act(async () => {
-        clickModeButton("Precision");
+        clickModeCard("Precision");
       });
 
       await waitFor(() => {
@@ -873,6 +880,78 @@ describe("/play/<mode> canonical URL", () => {
     // still there (the removeItem must sit after the guard, not before).
     expect(mockedApi.startGame).toHaveBeenCalledTimes(1);
     expect(sessionStorage.getItem("active_game")).not.toBeNull();
+  });
+
+  it("starts a new game after confirming over one already in progress", async () => {
+    // PRODUCTION REGRESSION. With a game in progress the home card click is
+    // intercepted by the "Game in Progress" prompt, and confirming routes
+    // through handleSelectMode instead of the link. The restart guard read
+    // the optimistic `gameMode` state rather than the running session's
+    // mode, so the explicit restart looked like a duplicate navigation and
+    // was silently dropped: the URL changed and no game ever started.
+    const first = makeSession({ id: "old", gameMode: "classic" });
+    const next = makeSession({ id: "new", gameMode: "higher-lower" });
+    mockedApi.startGame.mockResolvedValueOnce(first).mockResolvedValueOnce(next);
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+    expect(mockedApi.startGame).toHaveBeenCalledTimes(1);
+
+    // Back to home with the game still live, then pick a different mode.
+    await act(async () => {
+      fireEvent.click(screen.getByLabelText("Home"));
+    });
+    await waitFor(() => expect(window.location.pathname).toBe("/"));
+
+    await act(async () => {
+      clickModeCard("Higher or Lower");
+    });
+    expect(screen.getByText("Game in Progress")).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Start New Game"));
+    });
+
+    await waitFor(() => {
+      expect(mockedApi.startGame).toHaveBeenCalledTimes(2);
+    });
+    expect(mockedApi.startGame.mock.calls[1]![1]).toBe("higher-lower");
+    await waitFor(() => {
+      expect(screen.getByTestId("higher-lower-page")).toBeInTheDocument();
+    });
+    expect(window.location.pathname).toBe("/play/higher-lower");
+  });
+
+  it("restarts the same mode when that is what was confirmed", async () => {
+    // The same-mode case is the one a `session.gameMode === pathMode` guard
+    // would still swallow without clearing the session on explicit intent.
+    const first = makeSession({ id: "old", gameMode: "classic" });
+    const again = makeSession({ id: "again", gameMode: "classic" });
+    mockedApi.startGame.mockResolvedValueOnce(first).mockResolvedValueOnce(again);
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => expect(screen.getByTestId("game-page")).toBeInTheDocument());
+
+    await act(async () => {
+      fireEvent.click(screen.getByLabelText("Home"));
+    });
+    await waitFor(() => expect(window.location.pathname).toBe("/"));
+
+    await act(async () => {
+      clickModeCard("Precision");
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByText("Start New Game"));
+    });
+
+    await waitFor(() => {
+      expect(mockedApi.startGame).toHaveBeenCalledTimes(2);
+    });
+    expect(window.location.pathname).toBe("/play/classic");
   });
 
   it("redirects the multiplayer-only mode to the lobby", async () => {
