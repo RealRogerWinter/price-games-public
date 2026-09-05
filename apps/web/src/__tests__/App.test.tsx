@@ -120,11 +120,13 @@ describe("App", () => {
     expect(screen.getByAltText("price.games")).toBeInTheDocument();
   });
 
-  /** Click a game mode button by its label text. */
+  /** Click a game mode card by its label text. Single-player mode cards are
+   *  `<Link>` anchors to `/play/<mode>`; the multiplayer and Random cards are
+   *  still buttons, so match either. */
   function clickModeButton(label: string) {
     const heading = screen.getByText(label);
-    const button = heading.closest("button");
-    fireEvent.click(button!);
+    const card = heading.closest("a, button");
+    fireEvent.click(card!);
   }
 
   it("shows loading state when starting a game", async () => {
@@ -684,6 +686,12 @@ describe("/play/<mode> canonical URL", () => {
     );
     mockedSocket.getPlayerSession.mockReturnValue(null);
     mockedApi.startGame.mockClear();
+    // react-helmet-async appends into the shared jsdom document.head and does
+    // not clean up on unmount, so JSON-LD from an earlier test would
+    // otherwise still be in the DOM when the next one queries it.
+    document
+      .querySelectorAll('script[type="application/ld+json"]')
+      .forEach((el) => el.remove());
   });
 
   afterEach(() => {
@@ -793,6 +801,80 @@ describe("/play/<mode> canonical URL", () => {
     expect(window.history.state?.screen).toBe("home");
   });
 
+  it("starts the game at the canonical URL when a home mode card is clicked", async () => {
+    // `/` and `/play/:mode` share a route element, so React reconciles
+    // instead of remounting and the mount effect never re-fires — the
+    // soft-nav effect is what turns the URL change into a game.
+    mockedApi.startGame.mockResolvedValue(makeSession({ id: "s7", gameMode: "classic" }));
+    renderWithProviders(<App />);
+    await flushMicrotasks();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Precision"));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+    expect(window.location.pathname).toBe("/play/classic");
+    expect(mockedApi.startGame.mock.calls[0]![1]).toBe("classic");
+  });
+
+  it("starts a different mode when navigating between two mode URLs", async () => {
+    const first = makeSession({ id: "a", gameMode: "classic" });
+    const second = makeSession({ id: "b", gameMode: "higher-lower" });
+    mockedApi.startGame.mockResolvedValueOnce(first).mockResolvedValueOnce(second);
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      window.history.pushState({}, "", "/play/higher-lower");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+
+    await waitFor(() => {
+      expect(mockedApi.startGame).toHaveBeenCalledTimes(2);
+    });
+    expect(mockedApi.startGame.mock.calls[1]![1]).toBe("higher-lower");
+    expect(window.location.pathname).toBe("/play/higher-lower");
+  });
+
+  it("does not restart an in-progress game when the mode URL is re-entered", async () => {
+    // `/play/<mode>` is a plain GET, so the browser's forward button lands
+    // here with no click to intercept. Without a guard, / -> card -> play ->
+    // Back -> Forward silently discards the session and its score.
+    const session = makeSession({ id: "keep-me", gameMode: "classic" });
+    mockedApi.startGame.mockResolvedValue(session);
+    window.history.pushState({}, "", "/play/classic");
+
+    renderWithProviders(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("game-page")).toBeInTheDocument();
+    });
+    expect(mockedApi.startGame).toHaveBeenCalledTimes(1);
+    sessionStorage.setItem("active_game", JSON.stringify({ session }));
+
+    // Leave the mode URL, then come back to it the way Forward would.
+    await act(async () => {
+      window.history.pushState({}, "", "/");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+    await act(async () => {
+      window.history.pushState({}, "", "/play/classic");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+    await flushMicrotasks();
+
+    // Same mode, live session → no second start, and the stored game is
+    // still there (the removeItem must sit after the guard, not before).
+    expect(mockedApi.startGame).toHaveBeenCalledTimes(1);
+    expect(sessionStorage.getItem("active_game")).not.toBeNull();
+  });
+
   it("redirects the multiplayer-only mode to the lobby", async () => {
     window.history.pushState({}, "", "/play/bidding");
 
@@ -835,19 +917,23 @@ describe("/play/<mode> canonical URL", () => {
       expect(screen.getByTestId("higher-lower-page")).toBeInTheDocument();
     });
 
+    // Matched by URL rather than by "the first VideoGame blob":
+    // react-helmet-async flushes into the shared jsdom head asynchronously,
+    // so a previous test's tags can still be present when this one runs.
+    const url = "https://price.games/play/higher-lower";
     await waitFor(() => {
       const blobs = Array.from(
         document.querySelectorAll('script[type="application/ld+json"]')
       ).map((el) => JSON.parse(el.textContent ?? "{}"));
-      const game = blobs.find((b) => b["@type"] === "VideoGame");
-      const crumbs = blobs.find((b) => b["@type"] === "BreadcrumbList");
-      expect(game?.url).toBe("https://price.games/play/higher-lower");
-      expect(game?.playMode).toBe("SinglePlayer");
-      // The site-level WebSite blob belongs on "/", not on a mode page.
-      expect(blobs.some((b) => b["@type"] === "WebSite")).toBe(false);
-      expect(crumbs?.itemListElement?.[2]?.item).toBe(
-        "https://price.games/play/higher-lower"
+      const game = blobs.find((b) => b["@type"] === "VideoGame" && b.url === url);
+      const crumbs = blobs.find(
+        (b) => b["@type"] === "BreadcrumbList" && b.itemListElement?.[2]?.item === url
       );
+      expect(game).toBeDefined();
+      expect(game.playMode).toBe("SinglePlayer");
+      expect(game.name).toContain("Higher or Lower");
+      expect(crumbs).toBeDefined();
+      expect(crumbs.itemListElement[1].item).toBe("https://price.games/game-modes");
     });
   });
 });

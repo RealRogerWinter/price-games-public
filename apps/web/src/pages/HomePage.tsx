@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import type { GameMode, RoundCountOption, DailyStreak, DailyTodayResponse } from "@price-game/shared";
 import { GAME_MODES, getGameModeName, DEFAULT_TOTAL_ROUNDS, MULTIPLAYER_ONLY_MODES } from "@price-game/shared";
 import GameOptionsMenu from "../components/GameOptionsMenu";
@@ -104,6 +105,22 @@ export default function HomePage({
     } else {
       onSelectMode(mode);
     }
+  }
+
+  /**
+   * Click handler for a mode card, which is a real `<Link>` to that mode's
+   * canonical `/play/<mode>` URL so the home page gives crawlers (and
+   * middle-click / open-in-new-tab) a followable href to every mode page.
+   *
+   * With no game in progress the browser just follows the link. With one in
+   * progress the navigation is cancelled so the "abandon your game?" prompt
+   * can run first; confirming it calls `onSelectMode`, which navigates to
+   * the same URL.
+   */
+  function handleModeCardClick(e: React.MouseEvent, mode: GameMode) {
+    if (!hasActiveGame) return;
+    e.preventDefault();
+    setConfirmMode(mode);
   }
 
   /** Pick a random game mode (including bidding) and start it. */
@@ -212,10 +229,11 @@ export default function HomePage({
           </button>
         )}
         {enabledModes.map(({ mode, name, description }) => (
-          <button
+          <Link
             key={mode}
+            to={`/play/${mode}`}
             className={`mode-card mode-${mode}`}
-            onClick={() => handleModeClick(mode)}
+            onClick={(e) => handleModeCardClick(e, mode)}
           >
             <span className="mode-icon">
               <img
@@ -227,7 +245,7 @@ export default function HomePage({
             </span>
             <h3 className="mode-name">{name}</h3>
             <p className="mode-description">{description}</p>
-          </button>
+          </Link>
         ))}
       </div>
 

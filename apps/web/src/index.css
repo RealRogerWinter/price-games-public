@@ -3295,6 +3295,14 @@ button.id-card:hover {
 }
 
 .mode-card {
+  /* Mode cards are a mix of <Link> anchors (single-player modes navigate to
+     /play/<mode>) and <button>s (multiplayer, bidding, random), so the
+     element defaults that differ between the two have to be neutralised or
+     the same grid renders in two different fonts: <button> does not inherit
+     font-family from the page, and <a> carries underline + link color. */
+  font-family: inherit;
+  text-decoration: none;
+  color: inherit;
   background: var(--bg-card);
   border: 2px solid var(--bg-card-lighter);
   border-radius: var(--radius);
@@ -3306,6 +3314,11 @@ button.id-card:hover {
   flex-direction: column;
   align-items: center;
   gap: 8px;
+}
+
+.mode-card:focus-visible {
+  outline: 2px solid var(--mode-color, var(--accent-gold));
+  outline-offset: 2px;
 }
 
 .mode-card:hover {

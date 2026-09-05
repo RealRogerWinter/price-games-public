@@ -99,6 +99,17 @@ copy with rules + strategy + an internal link to the mode.
   starting the daily challenge — navigates back to `/` first, so unrelated
   screens never render under a mode's canonical URL. The `playing` and
   `result` screens deliberately keep it.
+- The home page's mode cards are real `<Link>` anchors to `/play/<mode>`,
+  not buttons. That makes the home page the site's primary internal link
+  source for the eleven mode pages — a `<button onClick>` gives a crawler
+  nothing to follow, and it also restores middle-click / open-in-new-tab.
+  Clicking one navigates to the canonical URL, and the game starts there.
+- Because `/` and `/play/:mode` share a route element, React reconciles
+  rather than remounting `SinglePlayerApp`, so the mount effect (deps `[]`)
+  does **not** re-fire on in-app navigation. A separate `pathMode`-keyed
+  effect turns the URL change into a game start. If you ever split these
+  into different route elements, that effect and the leave logic both need
+  revisiting.
 - Legacy `/?mode=<slug>` still works and is *still* normalized to `/`:
   `/` is that entry point's own canonical, and it exists as a campaign
   link rather than an indexable page. New internal links should use

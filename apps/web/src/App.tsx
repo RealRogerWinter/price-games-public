@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, Suspense } from "react";
+import { useState, useCallback, useEffect, useLayoutEffect, useRef, Suspense } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { useScreenHistory } from "./hooks/useScreenHistory";
 import { useModalHistory } from "./hooks/useModalHistory";
@@ -516,6 +516,34 @@ function SinglePlayerApp() {
     doStartGame(pathMode as GameMode, categories, selectedRounds, "game-browser");
   }, [pathMode, broadcast]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Mirrors `screen` into a ref so callbacks that fire outside the render
+  // that created them (the start-failure path below) can re-stamp the
+  // correct value without being recreated on every screen change.
+  //
+  // Written in a layout effect rather than during render: assigning to a ref
+  // while rendering is unsafe under StrictMode and concurrent rendering,
+  // where a render can be thrown away. Layout effects all run before any
+  // passive effect, so the leave effect below still sees the current value.
+  const screenRef = useRef(screen);
+  useLayoutEffect(() => {
+    screenRef.current = screen;
+  }, [screen]);
+
+  /**
+   * Drop back to "/" from a mode's canonical URL.
+   *
+   * `navigate(..., { replace: true })` writes a fresh `{ usr, key, idx }`
+   * history state, which drops the `screen` key `useScreenHistory` stamps
+   * onto the entry. Its popstate handler ignores any entry without that key,
+   * so without the re-stamp the browser's forward button silently stops
+   * working. react-router calls `replaceState` synchronously inside
+   * `navigate`, so there is no window where the key is missing.
+   */
+  const leaveModeUrl = useCallback(() => {
+    navigate("/", { replace: true });
+    window.history.replaceState({ ...window.history.state, screen: screenRef.current }, "");
+  }, [navigate]);
+
   // An unknown `/play/<slug>` has no game to start and no page to be — the
   // server answers those with 404 + noindex. Send the visitor to the mode
   // catalog rather than leaving them staring at a blank shell under a URL
@@ -525,6 +553,39 @@ function SinglePlayerApp() {
     if (VALID_GAME_MODES.has(pathMode)) return;
     navigate("/game-modes", { replace: true });
   }, [pathMode, broadcast, navigate]);
+
+  // In-app navigation to a mode's canonical URL. The home page's mode cards
+  // are real links to `/play/<mode>`, but `/` and `/play/:mode` share a route
+  // element, so React reconciles rather than remounting and the mount effect
+  // above (deps `[]`) never re-fires. Without this the URL would change and
+  // no game would start.
+  //
+  // Broadcast sessions are excluded — the effect above owns that path and
+  // keeps its own duplicate-plan guards.
+  const startedOnModeRouteRef = useRef(false);
+  const lastStartedPathModeRef = useRef<string | undefined>(pathMode);
+  useEffect(() => {
+    if (broadcast) return;
+    if (lastStartedPathModeRef.current === pathMode) return;
+    lastStartedPathModeRef.current = pathMode;
+    // Arriving at (or leaving) a mode URL always reopens the question of
+    // whether we are on that mode's page, so clear the "has played here"
+    // latch the leave effect below relies on.
+    startedOnModeRouteRef.current = false;
+    if (!pathMode) return;
+    if (!VALID_GAME_MODES.has(pathMode) || MULTIPLAYER_ONLY_MODES.has(pathMode)) return;
+    // Don't restart a game that is already running in this mode. Reaching
+    // `/play/<mode>` is a plain GET, so the browser's forward button lands
+    // here with no click to intercept — without this guard, `/` → card →
+    // play → Back → Forward would silently discard the session and its
+    // score. Mirrors the same guard in the broadcast effect above.
+    if (pathMode === gameMode && session && !session.completed) return;
+    // Clear any stored game so the home-screen restore path can't flash a
+    // stale Resume banner while doStartGame is in flight. Deliberately after
+    // the guard above — bailing out must leave the stored game intact.
+    sessionStorage.removeItem("active_game");
+    doStartGame(pathMode as GameMode, categories, selectedRounds, "game-browser");
+  }, [pathMode, broadcast]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Hold the mode's canonical URL for as long as the player is on that
   // mode's page — the game itself and its result screen — then drop back to
@@ -536,25 +597,19 @@ function SinglePlayerApp() {
   // The ref gates the first pass. On mount the screen is still "home"
   // while `doStartGame` is in flight, and navigating away at that point
   // would undo the deep-link before it ever took effect.
-  const startedOnModeRouteRef = useRef(false);
   useEffect(() => {
     if (!pathMode || broadcast) return;
     if (screen === "playing" || screen === "result") {
       startedOnModeRouteRef.current = true;
       return;
     }
-    // A deep-link start that failed also leaves the home screen rendering
-    // under the mode's URL — the same mismatch, reached through the error
-    // path — so treat it as a leave rather than stranding the player there.
-    if (!startedOnModeRouteRef.current && !error) return;
-    navigate("/", { replace: true });
-    // `navigate(..., { replace: true })` writes a fresh `{ usr, key, idx }`
-    // history state, which drops the `screen` key `useScreenHistory` stamps
-    // onto the entry. Its popstate handler ignores any entry without that
-    // key, so without this re-stamp the browser's forward button would
-    // silently stop working after leaving a mode route.
-    window.history.replaceState({ ...window.history.state, screen }, "");
-  }, [screen, pathMode, broadcast, error, navigate]);
+    // `startedOnModeRouteRef` is reset by the soft-nav effect above, which
+    // runs earlier in the same commit whenever `pathMode` changes. That
+    // ordering is what stops this effect from firing on arrival at a mode
+    // URL; keep these two effects adjacent and in this order.
+    if (!startedOnModeRouteRef.current) return;
+    leaveModeUrl();
+  }, [screen, pathMode, broadcast, leaveModeUrl]);
 
   // Deep-link: ?view=leaderboard opens the leaderboard screen. Reactive
   // to location.search so it works even when already on "/" (the mount
@@ -621,11 +676,15 @@ function SinglePlayerApp() {
         setScreen("playing");
       } catch {
         setError("Failed to connect to server.");
+        // A failed start on a mode's canonical URL would otherwise leave the
+        // home screen rendering under `/play/<mode>` — the same
+        // canonical/content mismatch that route exists to avoid.
+        if (pathMode && !broadcast) leaveModeUrl();
       } finally {
         setLoading(false);
       }
     },
-    [selectedRounds]
+    [selectedRounds, pathMode, broadcast, leaveModeUrl]
   );
 
   // Derive the hero card state from the useDaily hook
@@ -694,10 +753,21 @@ function SinglePlayerApp() {
     }
   }
 
+  /**
+   * Start a mode from the home page. Navigates to that mode's canonical
+   * `/play/<mode>` URL rather than starting in place — the mode cards are
+   * real links to the same target, and the soft-nav effect above turns the
+   * URL change into a game. Reached directly only from the Random card and
+   * the "abandon your current game?" confirmation, where there is no anchor
+   * for the browser to follow.
+   */
   function handleSelectMode(mode: GameMode) {
+    // `doStartGame` sets this too, but only once the navigation has landed;
+    // setting it here keeps anything reading `gameMode` in between (the
+    // Retry button) from pointing at the previously-played mode.
     setGameMode(mode);
     setIsPlayingDaily(false);
-    doStartGame(mode, categories, selectedRounds);
+    navigate(`/play/${mode}`);
   }
 
   function handleMultiplayer() {
